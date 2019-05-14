@@ -92,7 +92,7 @@ u8 eefs_mbr_CheckIndex(u16 index);                  // 判断index是否合法
 u8 writeDataToIndex(u16 address, NODE node);        // 写入数据到索引区
 u8 eefs_mbr_load(void);                             // 向全局数组中载入index的status值
 u8 eefs_mbr_create(u16 index, USERNODE node);       // 添加新索引
-u8 eefs_mbr_update(u16 index, USERNODE node);       // 保存索引
+u8 eefs_mbr_update(u16 index, u32 name, u8 status); // 更新索引
 u8 eefs_mbr_delete(u16 index);                      // 删除索引
 u8 eefs_mbr_reset(u16 index);                       // 重置索引数据
 

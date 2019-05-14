@@ -87,7 +87,10 @@ void testEefs_mbr_getIndexStatus(void)
 {
     u8 data;
     // 0 <= index <= 128, 0 <= val <= 3
-    eefs_mbr_setIndexStatus(100, 2);
+    eefs_mbr_setIndexStatus(100, 1);
+    data = eefs_mbr_getIndexStatus(100);
+    // 更新索引
+    eefs_mbr_update(100, 256, 3);
     data = eefs_mbr_getIndexStatus(100);
 }
 

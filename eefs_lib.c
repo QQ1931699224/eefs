@@ -130,7 +130,7 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
     node.name = userNode.name;
     node.address = address;
     node.size = userNode.size;
-    node.status = 0x40;
+    node.status = 0x50;
     //(4)写入数据到索引区, 返回成功
     return writeDataToIndex(indexAddress, node);
 }
@@ -307,6 +307,7 @@ u8 eefs_mbr_setStatus(u16 index ,u8 val)
     startStatus = startIndex + STATUS_OFFSET;
     //(2)设置索引状态
     writeByte(startStatus, &val, 1);
+    G_STATUS_LISI[index] = val;
     return RET_SUCCESS;
 }
 
@@ -493,6 +494,100 @@ u8 eefs_mbr_setGenFlag(u16 index , u8 val)
     newData |= val;
     //(4)写入数据
     eefs_mbr_setStatus(index, newData);
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:更新索引
+ * @index:索引
+ * @name:名字
+ * @status:状态
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_update(u16 index, u32 name, u8 status)
+{
+    // ---------- 局部变量定义区---------- //
+    
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x00) {
+        eefs_mbr_setIndexStatus(index, 2);
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)更新名字
+    eefs_mbr_setName(index, name);
+    //(2)更新状态
+    eefs_mbr_setStatus(index, status);
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:删除索引
+ * @index:索引
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_delete(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
+    
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x00) {
+        eefs_mbr_setIndexStatus(index, 2);
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)将indexStatus变为2
+    eefs_mbr_setIndexStatus(index, 2);
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:重置索引数据
+ * @index:索引
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_reset(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
+    u16 startAddress; // 起始索引位置
+    int i;
+    u8 data = 0x00;
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x00) {
+        eefs_mbr_setIndexStatus(index, 2);
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)找到起始索引位置
+    startAddress = getIndexAddress(index);
+    
+    //(2)循环赋0
+    for (i = 0; i < 9; i++) {
+        if (G_LIST[startAddress + i] != 0x00) {
+            writeByte(startAddress + i, &data, 1);
+        }
+    }
     return RET_SUCCESS;
 }
 
