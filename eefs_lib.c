@@ -19,7 +19,7 @@ u8 G_STATUS_LISI[MAX_INDEX];
  * @len:写入长度
  * @return : 1:成功
  */
-#pragma mark - 写入数据
+
 int writeByte(u16 address ,u8 *value, u16 len)
 {
     memcpy(G_LIST + address, value, len);
@@ -33,7 +33,7 @@ int writeByte(u16 address ,u8 *value, u16 len)
  * @address:读取地址
  * @return : 读出的数据
  */
-#pragma mark - 读数据
+
 unsigned char readByte(int address)
 {
     unsigned char value = *(G_LIST + address);
@@ -47,7 +47,7 @@ unsigned char readByte(int address)
  * @index:索引
  * @return : s8 索引状态
  */
-#pragma mark - 获取索引区对应的状态
+
 s8 eefs_mbr_getStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
@@ -75,7 +75,7 @@ s8 eefs_mbr_getStatus(u16 index)
  * @paramName:无
  * @return : 1成功 0失败
  */
-#pragma mark - 向全局数组中载入index的status值
+
 u8 eefs_mbr_load(void)
 {
     // ---------- 局部变量定义区---------- //
@@ -100,7 +100,7 @@ u8 eefs_mbr_load(void)
  * @userNode:用户输入的结构体
  * @return : 1:成功 0：失败
  */
-#pragma mark - 添加新索引
+
 u8 eefs_mbr_create(u16 index, USERNODE userNode)
 {
     // ---------- 局部变量定义区---------- //
@@ -142,7 +142,7 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
  * @index:索引号
  * @return : 1:成功 0：失败
  */
-#pragma mark - 判断index是否合法
+
 u8 eefs_mbr_CheckIndex(u16 index)
 {
     // index在0-128之间
@@ -162,7 +162,7 @@ u8 eefs_mbr_CheckIndex(u16 index)
  * @paramName:无
  * @return : u16模拟地址
  */
-#pragma mark - 获取模拟地址
+
 u16 getAddress(void)
 {
     return TEMP_ADDRESS;
@@ -175,7 +175,7 @@ u16 getAddress(void)
  * @address:地址
  * @return : 1:成功 0：失败
  */
-#pragma mark - 判断地址合法性
+
 u8 eefs_mbr_CheckAddress(u16 address)
 {
     // TODO:后期根据业务完善
@@ -196,7 +196,7 @@ u8 eefs_mbr_CheckAddress(u16 address)
  * @index:索引号
  * @return : 索引在大数组中的位置
  */
-#pragma mark - 获取索引在大数组中的位置
+
 u16 getIndexAddress(u16 index)
 {
     return EE_START_INDEX + index * INDEX_SIZE;
@@ -210,7 +210,7 @@ u16 getIndexAddress(u16 index)
  * @node:写入的结构体
  * @return : 1:成功 0：失败
  */
-#pragma mark - 写入数据到索引区
+
 u8 writeDataToIndex(u16 myAddress, NODE node)
 {
     u8 data[INDEX_SIZE]; // 索引区中的单个索引
@@ -226,7 +226,7 @@ u8 writeDataToIndex(u16 myAddress, NODE node)
  * @index:索引
  * @return : s8数据状态
  */
-#pragma mark - 获取索引中的数据状态(第九字节)
+
 s8 eefs_mbr_getDataStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
@@ -255,7 +255,7 @@ s8 eefs_mbr_getDataStatus(u16 index)
  * @val:输入的数据
  * @return : 1:成功 0：失败
  */
-#pragma mark - 设置数据状态
+
 u8 eefs_mbr_setDataStatus(u16 index ,u8 val)
 {
     // ---------- 局部变量定义区---------- //
@@ -293,7 +293,7 @@ u8 eefs_mbr_setDataStatus(u16 index ,u8 val)
  * @val:输入的数据
  * @return : 1:成功 0：失败
  */
-#pragma mark - 设置状态
+
 u8 eefs_mbr_setStatus(u16 index ,u8 val)
 {
     // ---------- 局部变量定义区---------- //
@@ -317,7 +317,7 @@ u8 eefs_mbr_setStatus(u16 index ,u8 val)
  * @index:索引
  * @return : s8索引状态
  */
-#pragma mark - 获取索引状态
+
 s8 eefs_mbr_getIndexStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
@@ -344,7 +344,7 @@ s8 eefs_mbr_getIndexStatus(u16 index)
  * @index:索引
  * @return : 1:成功 0：失败
  */
-#pragma mark - 设置索引状态
+
 u8 eefs_mbr_setIndexStatus(u16 index , u8 val)
 {
     // ---------- 局部变量定义区---------- //
@@ -381,7 +381,7 @@ u8 eefs_mbr_setIndexStatus(u16 index , u8 val)
  * @index:索引
  * @return : s8数据
  */
-#pragma mark - 获取网络状态
+
 s8 eefs_mbr_getNetStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
@@ -410,7 +410,7 @@ s8 eefs_mbr_getNetStatus(u16 index)
  * @val:输入的数据
  * @return : 1:成功 0：失败
  */
-#pragma mark - 设置网络状态
+
 u8 eefs_mbr_setNetStatus(u16 index ,u8 val)
 {
     // ---------- 局部变量定义区---------- //
@@ -445,7 +445,7 @@ u8 eefs_mbr_setNetStatus(u16 index ,u8 val)
  * @index:索引
  * @return : s8数据
  */
-#pragma mark - 获取通用标记值
+
 s8 eefs_mbr_getGenFlag(u16 index)
 {
     // ---------- 局部变量定义区---------- //
@@ -471,7 +471,7 @@ s8 eefs_mbr_getGenFlag(u16 index)
  * @val:输入的数据
  * @return : 1:成功 0：失败
  */
-#pragma mark - 设置通用标记值
+
 u8 eefs_mbr_setGenFlag(u16 index , u8 val)
 {
     // ---------- 局部变量定义区---------- //
@@ -494,4 +494,174 @@ u8 eefs_mbr_setGenFlag(u16 index , u8 val)
     //(4)写入数据
     eefs_mbr_setStatus(index, newData);
     return RET_SUCCESS;
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索引区名字
+ * @index:索引
+ * @return u32 名字
+ */
+
+u32 eefs_mbr_getName(u16 index) {
+	// ---------- 局部变量定义区---------- //
+	int i;
+	u16 startIndex;         // 该索引的起始位置
+	u32 name;                // 索引的name信息
+	u8 names[NAME_SIZE];
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到name的位置
+	startIndex = eefs_mbr_getIndexHeadAddress(index);
+	// (2).读取名字的四字节
+	for (i = 0; i < NAME_SIZE; i++)
+	{
+		//写入临时数组
+		names[i] = readByte(startIndex+i);
+	}
+	name = 0;
+	name = *(u32*)names; //赋值name
+	return name;
+}   
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置索引区名字
+ * @index:索引
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_setName(u16 index, u32 name) {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 names[NAME_SIZE];			//临时names
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到name的位置
+	startIndex = eefs_mbr_getIndexHeadAddress(index);
+	// (2).读取名字的四字节
+	memcpy(names, (u8*)&name, NAME_SIZE);
+	writeByte(startIndex, names, NAME_SIZE);
+	return RET_SUCCESS;
+}           
+
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索引区address
+ * @index:索引
+ * @return u16 地址
+ */
+
+u16 eefs_mbr_getAddress(u16 index) {
+	// ---------- 局部变量定义区---------- //
+	int i;
+	u16 startIndex;         // 该索引的起始位置
+	u16 address;                // 索引的address信息
+	u8 addrs[ADDR_SIZE];
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到address的位置
+	startIndex = eefs_mbr_getIndexAddressHeadAddress(index);
+	// (2).读取地址的2字节
+	for (i = 0; i < ADDR_SIZE; i++)
+	{
+		//写入临时数组
+		addrs[i] = readByte(startIndex + i);
+	}
+	address = 0;
+	address = *(u32*)addrs; //赋值address
+	return address;
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置索引区地址
+ * @index:索引
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_setAddress(u16 index, u16 address) {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 addrs[ADDR_SIZE];			//临时addrs
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到address的位置
+	startIndex = eefs_mbr_getIndexAddressHeadAddress(index);
+	// (2).读取address的2字节
+	memcpy(addrs, (u8*)& address, ADDR_SIZE);
+	writeByte(startIndex, addrs, ADDR_SIZE);
+	return RET_SUCCESS;
+}
+
+
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索节点首地址
+ * @index:索引
+ * @return : u16 地址
+ */
+u16 eefs_mbr_getIndexHeadAddress(u16 index) {
+	return EE_START_INDEX + index * INDEX_SIZE;
+}
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索引节点name首地址
+ * @index:索引
+ * @return : u16 地址
+ */
+u16 eefs_mbr_getIndexNameHeadAddress(u16 index) {
+	return eefs_mbr_getIndexAddressHeadAddress;
+}   
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索引节点address首地址
+ * @index:索引
+ * @return : u16 地址
+ */
+u16 eefs_mbr_getIndexAddressHeadAddress(u16 index) {
+	return eefs_mbr_getIndexHeadAddress(index) + ADDR_OFFSET;
+}  
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索引节点size首地址
+ * @index:索引
+ * @return : u16 地址
+ */
+u16 eefs_mbr_getIndexSizeHeadAddress(u16 index) {
+	return eefs_mbr_getIndexHeadAddress(index) + SIZE_OFFSET;
+}   
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取索引节点status首地址
+ * @index:索引
+ * @return : u16 地址
+ */
+u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
+	return eefs_mbr_getIndexHeadAddress(index) + STATUS_OFFSET;
 }

@@ -14,6 +14,8 @@ void testEefs_mbr_getDataStatus(void);
 void testEefs_mbr_getIndexStatus(void);
 void testEefs_mbr_getNetStatus(void);
 void testEefs_mbr_getGenFlagStatus(void);
+void testEefs_mbr_getName(void);
+void testEefs_mbr_getAddress(void);
 
 int main(int argc, const char *argv[]) {
     testEefs_mbr_create();
@@ -21,6 +23,9 @@ int main(int argc, const char *argv[]) {
     testEefs_mbr_getIndexStatus();
     testEefs_mbr_getNetStatus();
     testEefs_mbr_getGenFlagStatus();
+	testEefs_mbr_getName();
+	testEefs_mbr_getAddress();
+	printf("总= %d", G_LIST);
     return 0;
 }
 
@@ -112,4 +117,34 @@ void testEefs_mbr_getGenFlagStatus(void)
     // 0 <= index <= 128, 0 <= val <= 3
     eefs_mbr_setGenFlag(100, 2);
     data = eefs_mbr_getGenFlag(100);
+}
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-14
+ * Desc:测试获取和修改索引的name
+ * @paramName:无
+ * @return : 无
+ */
+void testEefs_mbr_getName(void)
+{
+	u32 data;
+	eefs_mbr_setName(100, 1024);
+	data = eefs_mbr_getName(100);
+	printf("name=%d", data);
+}
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-14
+ * Desc:测试获取和修改索引的address
+ * @paramName:无
+ * @return : 无
+ */
+void testEefs_mbr_getAddress(void)
+{
+	u16 data;
+	eefs_mbr_setAddress(100, 3000);
+	data = eefs_mbr_getAddress(100);
+	printf("address=%d", data);
 }

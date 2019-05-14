@@ -9,7 +9,6 @@
 #ifndef eefs_lib_h
 #define eefs_lib_h
 
-
 #include <stdio.h>
 
 typedef enum {
@@ -25,7 +24,7 @@ typedef   unsigned int   u32;
 
 typedef int  s32;
 typedef short s16;
-typedef __signed char  s8;
+typedef signed char  s8;
 
 #define BIT_DATA_MASK 0xC0                  // (11000000)数据状态位掩码
 #define BIT_DATA_UNMASK 0x63                // (00111111)数据状态位掩码
@@ -46,14 +45,22 @@ typedef __signed char  s8;
 #define EE_MAX_CAPACITY 256 * 64            // 最大容量
 #define EE_SYS_CAPACITY 64                  // 系统预留容量
 
-// error返回值
+                                            // error返回值
 #define RET_SUCCESS 1                       // 成功返回值
 #define RET_FAILD   0                       // u8错误返回值
 #define RET_ERROR   -1                      // s8错误返回值
 #define ERR_INVALIDPARAM 10                 // 无效的参数
 
 #define INDEX_SIZE 9                        // 每个索引节点空间
+#define NAME_OFFSET 0                       // name单个偏移量
+#define ADDR_OFFSET 4                       // 地址单个偏移量
+#define SIZE_OFFSET 6                       // 大小单个偏移量
 #define STATUS_OFFSET 8                     // status单个偏移量
+
+#define NAME_SIZE sizeof(u32)		        //name大小
+#define ADDR_SIZE sizeof(u16)               //address大小
+#define SIZE_SIZE sizeof(u16)               //size大小
+#define STATUS_SIZE sizeof(u8)              //status大小
 
 // 索引区结构体
 typedef struct node{
@@ -74,7 +81,7 @@ typedef struct userNode{
 extern u8 G_LIST[EE_MAX_CAPACITY];                  // 模拟的整个缓存区
 extern u8 G_STATUS_LISI[MAX_INDEX];                 // 索引区数组
 
-#pragma mark - 围绕Index的基础方法
+
 
 int writeByte(u16 address ,u8 *value, u16 len);     // 写入数据
 unsigned char readByte(int address);                // 从内存读数据
@@ -88,10 +95,17 @@ u8 eefs_mbr_create(u16 index, USERNODE node);       // 添加新索引
 u8 eefs_mbr_update(u16 index, USERNODE node);       // 保存索引
 u8 eefs_mbr_delete(u16 index);                      // 删除索引
 u8 eefs_mbr_reset(u16 index);                       // 重置索引数据
-u8 eefs_mbr_getName(u16 index);                     // 获取索引区名字
-u8 eefs_mbr_setName(u16 index,u32 name);            // 设置索引区名字
-u8 eefs_mbr_getAddress(u16 index);                  // 获取索引区地址
-u8 eefs_mbr_setAddress(u16 index, u16 addr);        // 设置索引区地址
+
+u32 eefs_mbr_getName(u16 index);                     // 获取索引区名字
+u8  eefs_mbr_setName(u16 index,u32 name);            // 设置索引区名字
+u16 eefs_mbr_getAddress(u16 index);                  // 获取索引区地址
+u8  eefs_mbr_setAddress(u16 index, u16 addr);        // 设置索引区地址
+u16 eefs_mbr_getIndexHeadAddress(u16 index);        // 获取索引节点首地址
+u16 eefs_mbr_getIndexNameHeadAddress(u16 index);        // 获取索引节点首地址
+u16 eefs_mbr_getIndexAddressHeadAddress(u16 index);        // 获取索引节点首地址
+u16 eefs_mbr_getIndexSizeHeadAddress(u16 index);        // 获取索引节点首地址
+u16 eefs_mbr_getIndexStatusHeadAddress(u16 index);        // 获取索引节点首地址
+
 u8 eefs_mbr_getSize(u16 index);                     // 获取索引对应的数据区大小
 u8 eefs_mbr_setSize(u16 index,u16 size);            // 设置索引对应的数据区大小
 u8 eefs_mbr_check(u16 index);                       //检查索引值是否合法，合法则返回索引首地址
