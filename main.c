@@ -153,3 +153,5 @@ void testEefs_mbr_getAddress(void)
 	data = eefs_mbr_getAddress(100);
 	printf("address=%d", data);
 }
+
+
