@@ -10,6 +10,48 @@
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-15
+ * Desc:写入1字节
+ * @address:写入地址
+ * @value:写入值
+ * @return : 1:成功
+ */
+u8 eefs_base_writeByte(u16 address,u8 *value) {	writeByte(address, value, 1);	return RET_SUCCESS;} /*
+ * Auth: 张添程
+ * Date: 2019-5-15
+ * Desc:读取1字节
+ * @address:地址
+ * @return : 数值
+ */u8 eefs_base_readByte(u16 address) {	return readByte(address);}/*
+ * Auth: 张添程
+ * Date: 2019-5-15
+ * Desc:写入dataLen字节
+ * @address:写入地址
+ * @value:写入值
+ * @return : 1:成功
+ */u8 eefs_base_wrtieBytes(u16 address, u8* data, u16 dataLen) {	int i;	for (i = 0; i < dataLen; i++)
+	{
+		eefs_base_writeByte(address++, data++);
+	}	return RET_SUCCESS;}/*
+ * Auth: 张添程
+ * Date: 2019-5-15
+ * Desc:读取retLen字节
+ * @address:地址
+ * @reData 返回值
+ * @return : 1:成功
+ */u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
+	int i;
+	for (i = 0; i < retLen; i++)
+	{
+		*(retData++) = eefs_base_readByte(address++);
+	}
+	return RET_SUCCESS;
+}
+
+
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
@@ -64,7 +106,7 @@ s8 eefs_mbr_getStatus(u16 index)
     // (2). 找到status的位置
     statusOffset = startIndex + STATUS_OFFSET;
     // (3). 读数据
-    data = readByte(statusOffset);
+    data = eefs_base_readByte(statusOffset);
     return data;
 }
 
@@ -215,7 +257,7 @@ u8 writeDataToIndex(u16 myAddress, NODE node)
 {
     u8 data[INDEX_SIZE]; // 索引区中的单个索引
     memcpy(data, (u8 *)&node, INDEX_SIZE);
-    writeByte(myAddress, data, INDEX_SIZE);
+	eefs_base_wrtieBytes(myAddress, data, INDEX_SIZE);
     return RET_SUCCESS;
 }
 
@@ -306,7 +348,7 @@ u8 eefs_mbr_setStatus(u16 index ,u8 val)
     startIndex = getIndexAddress(index);
     startStatus = startIndex + STATUS_OFFSET;
     //(2)设置索引状态
-    writeByte(startStatus, &val, 1);
+	eefs_base_readByte(startStatus, &val, STATUS_SIZE);
     G_STATUS_LISI[index] = val;
     return RET_SUCCESS;
 }
@@ -582,12 +624,8 @@ u8 eefs_mbr_reset(u16 index)
     //(1)找到起始索引位置
     startAddress = getIndexAddress(index);
     
-    //(2)循环赋0
-    for (i = 0; i < 9; i++) {
-        if (G_LIST[startAddress + i] != 0x00) {
-            writeByte(startAddress + i, &data, 1);
-        }
-    }
+    //(2)写入索引
+	eefs_base_wrtieBytes(startAddress, &data, INDEX_SIZE);
     return RET_SUCCESS;
 }
 
@@ -614,11 +652,7 @@ u32 eefs_mbr_getName(u16 index) {
 	// (1). 找到索引起始位置 找到name的位置
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
 	// (2).读取名字的四字节
-	for (i = 0; i < NAME_SIZE; i++)
-	{
-		//写入临时数组
-		names[i] = readByte(startIndex+i);
-	}
+	eefs_base_readBytes(startIndex, names, NAME_SIZE);
 	name = 0;
 	name = *(u32*)names; //赋值name
 	return name;
@@ -645,7 +679,7 @@ u8 eefs_mbr_setName(u16 index, u32 name) {
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
 	// (2).读取名字的四字节
 	memcpy(names, (u8*)&name, NAME_SIZE);
-	writeByte(startIndex, names, NAME_SIZE);
+	eefs_base_wrtieBytes(startIndex, names, NAME_SIZE);
 	return RET_SUCCESS;
 }           
 
@@ -673,11 +707,7 @@ u16 eefs_mbr_getAddress(u16 index) {
 	// (1). 找到索引起始位置 找到address的位置
 	startIndex = eefs_mbr_getIndexAddressHeadAddress(index);
 	// (2).读取地址的2字节
-	for (i = 0; i < ADDR_SIZE; i++)
-	{
-		//写入临时数组
-		addrs[i] = readByte(startIndex + i);
-	}
+	eefs_base_readBytes(startIndex, addrs, ADDR_SIZE);
 	address = 0;
 	address = *(u32*)addrs; //赋值address
 	return address;
@@ -704,7 +734,7 @@ u8 eefs_mbr_setAddress(u16 index, u16 address) {
 	startIndex = eefs_mbr_getIndexAddressHeadAddress(index);
 	// (2).读取address的2字节
 	memcpy(addrs, (u8*)& address, ADDR_SIZE);
-	writeByte(startIndex, addrs, ADDR_SIZE);
+	eefs_base_wrtieBytes(startIndex, addrs, ADDR_SIZE);
 	return RET_SUCCESS;
 }
 

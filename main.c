@@ -1,7 +1,6 @@
 //
 //  main.c
 //  CTest
-//
 //  Created by 吴晗帅 on 2019/5/9.
 //  Copyright © 2019 吴晗帅. All rights reserved.
 //  程序实现大体思路
@@ -25,11 +24,11 @@ int main(int argc, const char *argv[]) {
     testEefs_mbr_getGenFlagStatus();
 	testEefs_mbr_getName();
 	testEefs_mbr_getAddress();
+	printf("%s", G_STATUS_LISI);
 	printf("总= %d", G_LIST);
     return 0;
 }
 
-/////////////////
 
 /*
  * Auth: 吴晗帅
