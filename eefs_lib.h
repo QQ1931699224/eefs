@@ -119,5 +119,5 @@ s8 eefs_mbr_getNetStatus(u16 index);                //获取网络状态(3,4位)
 u8 eefs_mbr_setNetStatus(u16 index ,u8 val);        //设置网络状态
 s8 eefs_mbr_getDataStatus(u16 index);               //获取数据状态(7,8位)
 u8 eefs_mbr_setDataStatus(u16 index ,u8 val);       //设置数据状态
-
+// 查找返回数据空间的地址, 到update
 #endif /* WriteOrReadByte_h */
