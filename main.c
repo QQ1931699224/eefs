@@ -19,9 +19,9 @@ void testEefs_mbr_getAddress(void);
 int main(int argc, const char *argv[]) { 
     testEefs_mbr_create();
     testEefs_mbr_getDataStatus();
-    testEefs_mbr_getIndexStatus();
-    testEefs_mbr_getNetStatus();
-    testEefs_mbr_getGenFlagStatus();
+    //testEefs_mbr_getIndexStatus();
+    //testEefs_mbr_getNetStatus();
+    //testEefs_mbr_getGenFlagStatus();
 	testEefs_mbr_getName();
 	testEefs_mbr_getAddress();
 	printf("%s", G_STATUS_LISI);
@@ -73,6 +73,7 @@ void testEefs_mbr_getDataStatus(void)
     // 0 <= index <= 128, 0 <= val <= 3
     eefs_mbr_setDataStatus(100, 3);
     data = eefs_mbr_getDataStatus(100);
+	printf("Data=%X", data);
 }
 
 /*
@@ -91,6 +92,7 @@ void testEefs_mbr_getIndexStatus(void)
     // 更新索引
     eefs_mbr_update(100, 256, 3);
     data = eefs_mbr_getIndexStatus(100);
+	printf("index=%d", data);
 }
 
 /*
@@ -106,6 +108,7 @@ void testEefs_mbr_getNetStatus(void)
     // 0 <= index <= 128, 0 <= val <= 3
     eefs_mbr_setNetStatus(100, 3);
     data = eefs_mbr_getNetStatus(100);
+	printf("Net=%d", data);
 }
 
 /*
@@ -121,7 +124,7 @@ void testEefs_mbr_getGenFlagStatus(void)
     // 0 <= index <= 128, 0 <= val <= 3
     eefs_mbr_setGenFlag(100, 2);
     data = eefs_mbr_getGenFlag(100);
-	printf("%d", data);
+	printf("GenFlag=%d", data);
 }
 
 /*

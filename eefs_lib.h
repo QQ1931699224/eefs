@@ -106,10 +106,10 @@ u8  eefs_mbr_setName(u16 index, u32 name);                     // 设置索引�
 u16 eefs_mbr_getAddress(u16 index);                            // 获取索引区地址
 u8  eefs_mbr_setAddress(u16 index, u16 addr);                  // 设置索引区地址
 u16 eefs_mbr_getIndexHeadAddress(u16 index);                   // 获取索引节点首地址
-u16 eefs_mbr_getIndexNameHeadAddress(u16 index);               // 获取索引节点首地址
-u16 eefs_mbr_getIndexAddressHeadAddress(u16 index);            // 获取索引节点首地址
-u16 eefs_mbr_getIndexSizeHeadAddress(u16 index);               // 获取索引节点首地址
-u16 eefs_mbr_getIndexStatusHeadAddress(u16 index);             // 获取索引节点首地址
+u16 eefs_mbr_getIndexNameHeadAddress(u16 index);               // 获取索引节点name首地址
+u16 eefs_mbr_getIndexAddressHeadAddress(u16 index);            // 获取索引节点address首地址
+u16 eefs_mbr_getIndexSizeHeadAddress(u16 index);               // 获取索引节点size首地址
+u16 eefs_mbr_getIndexStatusHeadAddress(u16 index);             // 获取索引节点首status地址
 
 u8 eefs_mbr_getSize(u16 index);                                // 获取索引对应的数据区大小 
 u8 eefs_mbr_setSize(u16 index, u16 size);                      // 设置索引对应的数据区大小

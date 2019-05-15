@@ -20,7 +20,8 @@ u8 G_STATUS_LISI[MAX_INDEX];
  */
 
 u8 eefs_base_writeByte(u16 address,u8 *value) {
-	writeByte(address, value, 1);
+
+	writeByte(address, &value, 1);
 	return RET_SUCCESS;
 } 
 /*
@@ -117,7 +118,7 @@ s8 eefs_mbr_getStatus(u16 index)
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置
-	startIndex = EE_START_INDEX + index * INDEX_SIZE;
+	startIndex = eefs_mbr_getIndexHeadAddress(index);
 	// (2). 找到status的位置
 	statusOffset = startIndex + STATUS_OFFSET;
 	// (3). 读数据
@@ -354,16 +355,16 @@ u8 eefs_mbr_setDataStatus(u16 index, u8 val)
 u8 eefs_mbr_setStatus(u16 index, u8 val)
 {
 	// ---------- 局部变量定义区---------- //
-	u16 startIndex;     // 索引的起始位置
 	u16 startStatus;    // 索引状态的起始位置
 	// ---------- 输入参数条件检测---------- //
 
 	// ---------- 业务处理---------- //
 	//(1)找到索引状态的起始位置
-	startIndex = getIndexAddress(index);
-	startStatus = eefs_mbr_getIndexStatusHeadAddress;
+	startStatus = eefs_mbr_getIndexStatusHeadAddress(index);
 	//(2)设置索引状态
-	eefs_base_readByte(startStatus);
+	
+	//eefs_base_writeByte(index, &val);
+	writeByte(startStatus, &val, 1);
 	G_STATUS_LISI[index] = val;
 	return RET_SUCCESS;
 }
@@ -772,7 +773,7 @@ u16 eefs_mbr_getIndexHeadAddress(u16 index) {
  * @return : u16 地址
  */
 u16 eefs_mbr_getIndexNameHeadAddress(u16 index) {
-	return eefs_mbr_getIndexAddressHeadAddress;
+	return eefs_mbr_getIndexAddressHeadAddress(index);
 }
 /*
  * Auth:张添程
