@@ -19,30 +19,51 @@ u8 G_STATUS_LISI[MAX_INDEX];
  * @value:写入值
  * @return : 1:成功
  */
-u8 eefs_base_writeByte(u16 address, u8* value) {	writeByte(address, value, 1);	return RET_SUCCESS;}/*
+
+u8 eefs_base_writeByte(u16 address,u8 *value) {
+	writeByte(address, value, 1);
+	return RET_SUCCESS;
+} 
+
+u8 eefs_base_writeByte(u16 address, u8* value) {
+	writeByte(address, value, 1);
+	return RET_SUCCESS;
+}
+
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取1字节
  * @address:地址
  * @return : 数值
- */u8 eefs_base_readByte(u16 address) {	return readByte(address);}/*
+ */
+u8 eefs_base_readByte(u16 address) {
+	return readByte(address);
+}
+/*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:写入dataLen字节
  * @address:写入地址
  * @value:写入值
  * @return : 1:成功
- */u8 eefs_base_wrtieBytes(u16 address, u8* data, u16 dataLen) {	int i;	for (i = 0; i < dataLen; i++)
+ */
+u8 eefs_base_wrtieBytes(u16 address, u8* data, u16 dataLen) {
+	int i;
+	for (i = 0; i < dataLen; i++)
 	{
 		eefs_base_writeByte(address++, data++);
-	}	return RET_SUCCESS;}/*
+	}
+	return RET_SUCCESS;
+}
+/*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取retLen字节
  * @address:地址
  * @reData 返回值
  * @return : 1:成功
- */u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
+ */
+u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
 	int i;
 	for (i = 0; i < retLen; i++)
 	{
@@ -800,5 +821,14 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
 u16 eefs_data_getDescHeadAddress(u16 index) {
 	return eefs_mbr_getAddress(index) + eefs_mbr_getSize(index);
 }
-u16 eefs_data_getDesc(u16 index) {	u16 desc;	eefs_base_readBytes(eefs_data_getDescHeadAddress(index), desc, DESC_SIZE);	return desc;}                             //获取数据区描述符//u8 eefs_data_setDesc(u16 index, u16 value);                   //设置数据区描述符//u8 eefs_data_getDescHigh(u16 index);                          //获取数据区描述符高位//u8 eefs_data_setDescHigh(u16 index, u8 value);                //设置数据区描述符高位//u8 eefs_data_getDescLow(u16 index);                           //获取数据区描述符低位//u8 eefs_data_setDescLow(u16 index, u8 value);                 //设置数据区描述符低位
+u16 eefs_data_getDesc(u16 index) {
+	u16 desc;
+	eefs_base_readBytes(eefs_data_getDescHeadAddress(index), desc, DESC_SIZE);
+	return desc;
+}                             //获取数据区描述符
+//u8 eefs_data_setDesc(u16 index, u16 value);                   //设置数据区描述符
+//u8 eefs_data_getDescHigh(u16 index);                          //获取数据区描述符高位
+//u8 eefs_data_setDescHigh(u16 index, u8 value);                //设置数据区描述符高位
+//u8 eefs_data_getDescLow(u16 index);                           //获取数据区描述符低位
+//u8 eefs_data_setDescLow(u16 index, u8 value);                 //设置数据区描述符低位
 
