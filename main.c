@@ -162,7 +162,13 @@ void todo(void) {
 	printf("hello world2");
 }
 
+
 void todo2(void) {
 	printf("hello world");
 	printf("hello world2");
+}
+void helloworld()
+{
+    printf("haha");
+
 }
