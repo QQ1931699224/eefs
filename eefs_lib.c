@@ -761,8 +761,3 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
 	return eefs_mbr_getIndexHeadAddress(index) + STATUS_OFFSET;
 }
 
-u8 hello()
-{
-    u8 data = '\0';
-    return data;
-}

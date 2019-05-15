@@ -17,9 +17,6 @@ void testEefs_mbr_getGenFlagStatus(void);
 void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
 
-void todo(void);
-
-
 int main(int argc, const char *argv[]) {
     testEefs_mbr_create();
     testEefs_mbr_getDataStatus();
@@ -155,20 +152,4 @@ void testEefs_mbr_getAddress(void)
 	eefs_mbr_setAddress(100, 3000);
 	data = eefs_mbr_getAddress(100);
 	printf("address=%d", data);
-}
-
-void todo(void) {
-	printf("hello world");
-	printf("hello world2");
-}
-
-
-void todo2(void) {
-	printf("hello world");
-	printf("hello world2");
-}
-void helloworld()
-{
-    printf("haha");
-
 }
