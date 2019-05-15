@@ -1,7 +1,6 @@
 //
 //  WriteOrReadByte.c
 //  CTest
-//
 //  Created by 吴晗帅 on 2019/5/10.
 //  Copyright © 2019 吴晗帅. All rights reserved.
 //
@@ -24,12 +23,7 @@ u8 eefs_base_writeByte(u16 address,u8 *value) {
 	writeByte(address, value, 1);
 	return RET_SUCCESS;
 } 
-
-u8 eefs_base_writeByte(u16 address, u8* value) {
-	writeByte(address, value, 1);
-	return RET_SUCCESS;
-}
-
+/*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取1字节
@@ -214,7 +208,7 @@ u8 eefs_mbr_CheckIndex(u16 index)
 	}
 	else
 	{
-		return RET_FAILD;
+		return RET_FAILD; 
 	}
 }
 
@@ -629,7 +623,6 @@ u8 eefs_mbr_reset(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 startAddress; // 起始索引位置
-	int i;
 	u8 data = 0x00;
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
@@ -817,15 +810,16 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
  * Desc:获取数据描述区首地址
  * @index:索引
  * @return : u16 地址
- */
+ 
 u16 eefs_data_getDescHeadAddress(u16 index) {
 	return eefs_mbr_getAddress(index) + eefs_mbr_getSize(index);
 }
 u16 eefs_data_getDesc(u16 index) {
 	u16 desc;
+	desc = 0;
 	eefs_base_readBytes(eefs_data_getDescHeadAddress(index), desc, DESC_SIZE);
 	return desc;
-}                             //获取数据区描述符
+}   */                          //获取数据区描述符
 //u8 eefs_data_setDesc(u16 index, u16 value);                   //设置数据区描述符
 //u8 eefs_data_getDescHigh(u16 index);                          //获取数据区描述符高位
 //u8 eefs_data_setDescHigh(u16 index, u8 value);                //设置数据区描述符高位
