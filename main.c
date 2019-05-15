@@ -111,7 +111,7 @@ void testEefs_mbr_getNetStatus(void)
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
- * Desc:测试获取通用标记状态, 设置通用标记状态函数
+ * Desc:测试获取通用标记状态, 设置通用标记状态函数 
  * @paramName:无
  * @return : 无
  */
