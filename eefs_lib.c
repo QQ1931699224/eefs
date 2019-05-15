@@ -10,35 +10,27 @@
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
-/*
- * Auth: 吴晗帅
- * Date: 2019-5-10
- * Desc:写入数据
- * @address:写入地址
- * @value:写入值
- * @len:写入长度
- * @return : 1:成功
- */
-
-int writeByte(u16 address ,u8 *value, u16 len)
-{
-    memcpy(G_LIST + address, value, len);
-    return 1;
+//在eeprom的指定位置读取1个字节
+u8 eefs_base_readByte(u16 address) {
+	unsigned char value = *(G_LIST + address);
+	return value;
+} 
+//在eeprom的指定位置读取1个字节
+u8 eefs_base_writeByte(u16 address,u8 *data) {
+	memcpy(G_LIST + address, data,1);
+	return RET_SUCCESS;
+}
+//在eeprom的指定位置写入dataLen个字节
+u8 eefs_base_writeBytes(u16 address, u8* data, u16 dataLen) {	memcpy(G_LIST + address, data, dataLen);	return RET_SUCCESS;}//从eeprom的指定位置读取retLen个字节
+u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
+	u16 i;
+	for (i = 0; i < retLen; i++)
+	{
+		*(retData++) = *(G_LIST + address + i);
+	}
+	return RET_SUCCESS;
 }
 
-/*
- * Auth: 吴晗帅
- * Date: 2019-5-10
- * Desc:读数据
- * @address:读取地址
- * @return : 读出的数据
- */
-
-unsigned char readByte(int address)
-{
-    unsigned char value = *(G_LIST + address);
-    return value;
-}
 
 /*
  * Auth: 吴晗帅
@@ -64,7 +56,8 @@ s8 eefs_mbr_getStatus(u16 index)
     // (2). 找到status的位置
     statusOffset = startIndex + STATUS_OFFSET;
     // (3). 读数据
-    data = readByte(statusOffset);
+    //data = readByte(statusOffset);
+	data = eefs_base_readByte(statusOffset);
     return data;
 }
 
@@ -215,7 +208,8 @@ u8 writeDataToIndex(u16 myAddress, NODE node)
 {
     u8 data[INDEX_SIZE]; // 索引区中的单个索引
     memcpy(data, (u8 *)&node, INDEX_SIZE);
-    writeByte(myAddress, data, INDEX_SIZE);
+    //writeByte(myAddress, data, INDEX_SIZE);
+	eefs_base_readBytes(myAddress, data, INDEX_SIZE);
     return RET_SUCCESS;
 }
 
@@ -306,7 +300,8 @@ u8 eefs_mbr_setStatus(u16 index ,u8 val)
     startIndex = getIndexAddress(index);
     startStatus = startIndex + STATUS_OFFSET;
     //(2)设置索引状态
-    writeByte(startStatus, &val, 1);
+    //writeByte(startStatus, &val, 1);
+	eefs_base_writeByte(startStatus, &val);
     G_STATUS_LISI[index] = val;
     return RET_SUCCESS;
 }
@@ -583,9 +578,10 @@ u8 eefs_mbr_reset(u16 index)
     startAddress = getIndexAddress(index);
     
     //(2)循环赋0
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < INDEX_SIZE; i++) {
         if (G_LIST[startAddress + i] != 0x00) {
-            writeByte(startAddress + i, &data, 1);
+            //writeByte(startAddress + i, &data, 1);
+			eefs_base_writeByte(startAddress + i,&data);
         }
     }
     return RET_SUCCESS;
@@ -601,7 +597,6 @@ u8 eefs_mbr_reset(u16 index)
 
 u32 eefs_mbr_getName(u16 index) {
 	// ---------- 局部变量定义区---------- //
-	int i;
 	u16 startIndex;         // 该索引的起始位置
 	u32 name;                // 索引的name信息
 	u8 names[NAME_SIZE];
@@ -614,11 +609,7 @@ u32 eefs_mbr_getName(u16 index) {
 	// (1). 找到索引起始位置 找到name的位置
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
 	// (2).读取名字的四字节
-	for (i = 0; i < NAME_SIZE; i++)
-	{
-		//写入临时数组
-		names[i] = readByte(startIndex+i);
-	}
+	eefs_base_readBytes(startIndex, names, NAME_SIZE);
 	name = 0;
 	name = *(u32*)names; //赋值name
 	return name;
@@ -645,7 +636,8 @@ u8 eefs_mbr_setName(u16 index, u32 name) {
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
 	// (2).读取名字的四字节
 	memcpy(names, (u8*)&name, NAME_SIZE);
-	writeByte(startIndex, names, NAME_SIZE);
+	//writeByte(startIndex, names, NAME_SIZE);
+	eefs_base_writeBytes(startIndex, names, NAME_SIZE);
 	return RET_SUCCESS;
 }           
 
@@ -660,7 +652,6 @@ u8 eefs_mbr_setName(u16 index, u32 name) {
 
 u16 eefs_mbr_getAddress(u16 index) {
 	// ---------- 局部变量定义区---------- //
-	int i;
 	u16 startIndex;         // 该索引的起始位置
 	u16 address;                // 索引的address信息
 	u8 addrs[ADDR_SIZE];
@@ -673,13 +664,9 @@ u16 eefs_mbr_getAddress(u16 index) {
 	// (1). 找到索引起始位置 找到address的位置
 	startIndex = eefs_mbr_getIndexAddressHeadAddress(index);
 	// (2).读取地址的2字节
-	for (i = 0; i < ADDR_SIZE; i++)
-	{
-		//写入临时数组
-		addrs[i] = readByte(startIndex + i);
-	}
+	eefs_base_readBytes(startIndex, addrs, ADDR_SIZE);
 	address = 0;
-	address = *(u32*)addrs; //赋值address
+	address = *(u16*)addrs; //赋值address
 	return address;
 }
 
@@ -704,7 +691,8 @@ u8 eefs_mbr_setAddress(u16 index, u16 address) {
 	startIndex = eefs_mbr_getIndexAddressHeadAddress(index);
 	// (2).读取address的2字节
 	memcpy(addrs, (u8*)& address, ADDR_SIZE);
-	writeByte(startIndex, addrs, ADDR_SIZE);
+	//writeByte(startIndex, addrs, ADDR_SIZE);
+	eefs_base_writeBytes(startIndex, addrs, ADDR_SIZE);
 	return RET_SUCCESS;
 }
 
@@ -728,7 +716,7 @@ u16 eefs_mbr_getIndexHeadAddress(u16 index) {
  * @return : u16 地址
  */
 u16 eefs_mbr_getIndexNameHeadAddress(u16 index) {
-	return eefs_mbr_getIndexAddressHeadAddress;
+	return eefs_mbr_getIndexAddressHeadAddress(index);
 }   
 /*
  * Auth:张添程
@@ -759,5 +747,154 @@ u16 eefs_mbr_getIndexSizeHeadAddress(u16 index) {
  */
 u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
 	return eefs_mbr_getIndexHeadAddress(index) + STATUS_OFFSET;
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取数据节点desc首地址
+ * @index:索引
+ * @return : u16 地址
+ */
+u16 eefs_data_getDescHeadAddress(u16 index) {
+   return eefs_mbr_getAddress(index) + eefs_mbr_getSize(index);
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取数据节点desc
+ * @index:索引
+ * @return : u16 数据区描述
+ */
+u16 eefs_data_getDesc(u16 index) {
+	// ---------- 局部变量定义区---------- //
+	int i;
+	u16 startIndex;         // 该索引的起始位置
+	u16 desc;                // 索引的name信息
+	u8 descs[DESC_SIZE];
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到name的位置
+	startIndex = eefs_data_getDescHeadAddress(index);
+	// (2).读取desc的2字节
+	eefs_base_readBytes(startIndex, descs, DESC_SIZE);
+	desc = 0;
+	desc = *(u16*)descs; //赋值desc
+	return desc;
+} 
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置数据节点desc
+ * @index:索引
+ * @desc：描述
+ * @return : 1 成功
+ */
+u8 eefs_data_setDesc(u16 index, u16 desc) {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 descs[DESC_SIZE];			//临时names
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到desc的位置
+	startIndex = eefs_data_getDescHeadAddress(index);
+	// (2).读取描述的2字节
+	memcpy(descs, (u8*)& desc, DESC_SIZE);
+	//writeByte(startIndex, descs, DESC_SIZE);
+	//eefs_base_writeBytes(startIndex, descs, DESC_SIZE);
+	return RET_SUCCESS;
+}
+  
+  //临时方法
+u16 eefs_mbr_getSize(u16 index) {
+	return 10;
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置数据节点desc高位
+ * @index:索引
+ * @desc：描述
+ * @return : 1 成功
+ */u8 eefs_data_setDescHigh(u16 index, u8 value) {	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该数据的起始位置
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到desc高位的位置
+	startIndex = eefs_data_getDescHeadAddress(index);
+	// (2).写入描述的高位
+	//writeByte(startIndex, &value, 1);
+	eefs_base_writeByte(startIndex, &value);
+	return RET_SUCCESS;}/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取数据节点desc高位
+ * @index:索引
+ * @return : u8 数据区描述高位
+ */u8 eefs_data_getDescHigh(u16 index) {	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 descHigh;                // 索引的name信息
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到描述高位的位置
+	startIndex = eefs_data_getDescHeadAddress(index);
+	// (2).读取描述高位的1字节
+	descHigh = eefs_base_readByte(startIndex);
+	return descHigh;}/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取数据节点desc低位
+ * @index:索引
+ * @return : u8 数据区描述低位
+ */u8 eefs_data_getDescLow(u16 index) {	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 descLow;                // 索引的name信息
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到描述低位的位置
+	startIndex = eefs_data_getDescHeadAddress(index)+1;
+	// (2).读取描述低位的1字节
+	descLow = eefs_base_readByte(startIndex);
+	return descLow;}/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置数据节点desc低位
+ * @index:索引
+ * @desc：描述
+ * @return : 1 成功
+ */u8 eefs_data_setDescLow(u16 index, u8 value) {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该数据的起始位置
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_ERROR;
+	}
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到desc低位的位置
+	startIndex = eefs_data_getDescHeadAddress(index)+1;
+	// (2).写入描述的低位
+	//writeByte(startIndex, &value, 1);
+	eefs_base_writeByte(startIndex, &value);
+	return RET_SUCCESS;
 }
 
