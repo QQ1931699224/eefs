@@ -9,7 +9,7 @@
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
-
+ 
 /*
  * Auth: 张添程
  * Date: 2019-5-15
@@ -27,7 +27,7 @@ u8 eefs_base_writeByte(u16 address,u8 *value) {
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取1字节
- * @address:地址
+ * @address:地址 
  * @return : 数值
  */
 u8 eefs_base_readByte(u16 address) {
@@ -361,7 +361,7 @@ u8 eefs_mbr_setStatus(u16 index, u8 val)
 	// ---------- 业务处理---------- //
 	//(1)找到索引状态的起始位置
 	startIndex = getIndexAddress(index);
-	startStatus = startIndex + STATUS_OFFSET;
+	startStatus = eefs_mbr_getIndexStatusHeadAddress;
 	//(2)设置索引状态
 	eefs_base_readByte(startStatus);
 	G_STATUS_LISI[index] = val;

@@ -5,7 +5,7 @@
 //  Copyright © 2019 吴晗帅. All rights reserved.
 //  程序实现大体思路
 
-#include <stdio.h>
+#include <stdio.h> 
 #include <string.h>
 #include "eefs_lib.h"
 void testEefs_mbr_create(void);
@@ -16,7 +16,7 @@ void testEefs_mbr_getGenFlagStatus(void);
 void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
 
-int main(int argc, const char *argv[]) {
+int main(int argc, const char *argv[]) { 
     testEefs_mbr_create();
     testEefs_mbr_getDataStatus();
     testEefs_mbr_getIndexStatus();
@@ -121,6 +121,7 @@ void testEefs_mbr_getGenFlagStatus(void)
     // 0 <= index <= 128, 0 <= val <= 3
     eefs_mbr_setGenFlag(100, 2);
     data = eefs_mbr_getGenFlag(100);
+	printf("%d", data);
 }
 
 /*
