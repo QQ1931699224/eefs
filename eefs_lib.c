@@ -363,7 +363,7 @@ u8 eefs_mbr_setStatus(u16 index, u8 val)
 	startIndex = getIndexAddress(index);
 	startStatus = startIndex + STATUS_OFFSET;
 	//(2)设置索引状态
-	eefs_base_readByte(startStatus, &val, STATUS_SIZE);
+	eefs_base_readByte(startStatus);
 	G_STATUS_LISI[index] = val;
 	return RET_SUCCESS;
 }
