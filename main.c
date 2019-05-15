@@ -166,3 +166,8 @@ void helloworld()
 {
     printf("haha");
 }
+
+void hello3()
+{
+    printf("haha");
+}
