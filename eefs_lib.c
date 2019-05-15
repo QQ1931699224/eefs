@@ -9,7 +9,12 @@
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
- 
+u16 isEffectiveAddress (u16 address); // 判断地址合法性
+// 接收数据的结构体
+typedef struct dataStruct {
+    u16 index;
+    u16 address;
+}DATAStRUCT;
 /*
  * Auth: 张添程
  * Date: 2019-5-15
@@ -177,7 +182,7 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
 
 	// ---------- 业务处理---------- //
 	//(1)获取数据存放地址
-	address = getAddress();
+	address = getAddress(userNode.size);
 	if (eefs_mbr_CheckAddress(address) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
@@ -220,9 +225,9 @@ u8 eefs_mbr_CheckIndex(u16 index)
  * @return : u16模拟地址
  */
 
-u16 getAddress(void)
+u16 getAddress(u16 size)
 {
-	return TEMP_ADDRESS;
+	return eefs_data_findUnusedAddr(size);
 }
 
 /*
@@ -836,7 +841,28 @@ u16 eefs_data_getDesc(u16 index) {
 u16 eefs_data_getHeadAddr(u16 index)
 {
     // ---------- 局部变量定义区---------- //
+    s16 address;
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取节点数据区的地址数据
+    address = eefs_mbr_getAddress(index);
+    return address;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取节点数据的数据区尾地址
+ * @index:索引
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_data_getTailAddr(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
     s16 startAddress;
+    s16 endAddress = 0;
     // ---------- 输入参数条件检测---------- //
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
         return RET_FAILD;
@@ -844,13 +870,190 @@ u16 eefs_data_getHeadAddr(u16 index)
     // ---------- 业务处理---------- //
     //(1)获取节点数据区的首地址
     startAddress = eefs_mbr_getAddress(index);
-    return startAddress;
+    endAddress = startAddress + eefs_mbr_getSize(index);
+    return endAddress;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取数据区总容量
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_data_getTotalCapacity(void)
+{
+    return EE_MAX_CAPACITY - TEMP_ADDRESS;
 }
 
-u16 eefs_data_getTailAddr(u16 index);   //获取节点数据的数据区尾地址
-u16 eefs_data_getTotalCapacity(void);   //获取数据区总容量
-u16 eefs_data_getUsedCapacity(void);    //获取已使用总容量
-u16 eefs_data_getUnusedCapacity(void);  //获取未使用空间总容量
-u16 eefs_data_findUnusedAddr(u16 size);     //返回可以使用的一个合适的地址
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取已使用总容量
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_data_getUsedCapacity(void)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    u16 capacity = 0;   // 总容量
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)遍历索引区, 取出size相加
+    for (i = 0; i < 128; i++) {
+        capacity += eefs_mbr_getSize(i);
+    }
+    return capacity;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取索引对应的数据区大小
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_getSize(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
+    u16 startIndex;         // 该索引的起始位置
+    u16 size;                // 索引的name信息
+    u8 sizes[SIZE_SIZE];
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    
+    // ---------- 业务处理---------- //
+    // (1). 找到索引起始位置 找到size的位置
+    startIndex = eefs_mbr_getIndexSizeHeadAddress(index);
+    // (2).读取size的两字节
+    eefs_base_readBytes(startIndex, sizes, NAME_SIZE);
+    size = 0;
+    size = *(u16*)sizes + 2; //赋值name
+    return size;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取未使用空间总容量
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_data_getUnusedCapacity(void)
+{
+    // ---------- 局部变量定义区---------- //
+    u16 capacity;   //数据区总容量
+    u16 usedCapacity;   // 已使用数据区容量
+    u16 unUsedCapacity; // 未使用数据区容量
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)获取数据区总容量
+    capacity = eefs_data_getTotalCapacity();
+    //(2)获取已使用的容量
+    usedCapacity = eefs_data_getUsedCapacity();
+    //(3)总容量 - 已使用的容量
+    unUsedCapacity = capacity - usedCapacity;
+    return unUsedCapacity;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:返回可以使用的一个合适的地址
+ * @size:数据大小
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_data_findUnusedAddr(u16 size)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    int n;
+    n = 0;
+    int j;
+    
+    DATAStRUCT data;
+    u16 effectiveAddress;   // 有效地址
+    u16 nextAddress;        // 下一个有效地址
+    DATAStRUCT dataList[MAX_INDEX];    // 结构体数组
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_data_getUsedCapacity() == 0) { // 如果已使用空间为0
+        return EE_START_DATA;
+    }
+    // ---------- 业务处理---------- //
+    //(1)遍历索引, 获取所有address有效的首地址
+    for (i = 0; i < MAX_INDEX; i++) {
+        if (isEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
+            data.address = eefs_data_getHeadAddr(i);
+            data.index = i;
+            dataList[n] = data;
+            n++;
+        }
+    }
+    //(2)将数组从小到大排序
+    int ii, jj;
+    jj = 0;
+    DATAStRUCT temp;
+    for(ii = 0; ii < MAX_INDEX; ii++){
+        
+        for(jj = ii + 1; jj < MAX_INDEX; jj++){
+            
+            if(dataList[jj].address < dataList[ii].address){    //如果后一个元素小于前一个元素则交换
+                
+                temp = dataList[ii];
+                
+                dataList[ii] = dataList[jj];
+                
+                dataList[jj] = temp;
+                
+            }
+        }
+    }
+    //(3)遍历地址数组
+    for (j = 0; j < MAX_INDEX - 1; j++) {
+        effectiveAddress = dataList[j].address;  // 有效地址
+        if (effectiveAddress == 0) {    // 第一个如果为0, 则空间一点没有被使用
+            return EE_START_DATA;       // 返回起始位置
+        }
+        else
+        {
+            nextAddress = dataList[j + 1].address;   // 下一个地址
+            if (nextAddress == 0) {
+                // 返回第一段的尾地址
+                return eefs_data_getTailAddr(dataList[j].index);
+            }
+            else
+            {
+                // 首地址-尾地址
+                if (nextAddress -  eefs_data_getTailAddr(dataList[j].index) >= size) { // 如果两者之间>=size
+                    return eefs_data_getTailAddr(dataList[j].index);// 返回第一段的尾地址
+                }
+            }
+        }
+    }
+    return RET_FAILD;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:判断有效地址
+ * @address:地址
+ * @return : 1:有效 0：无效
+ */
+u16 isEffectiveAddress (u16 address)
+{
+    if (address < EE_START_DATA || address > EE_MAX_CAPACITY) {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+}
+
 u8 eefs_data_create(u16 addr,u16 size); //创建数据区，并初始化
 u8 eefs_data_update(u16 addr,u16 size); //更新数据区全部内容

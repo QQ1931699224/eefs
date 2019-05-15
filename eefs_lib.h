@@ -44,7 +44,7 @@ typedef signed char  s8;
 #define EE_MAX_CAPACITY 256 * 64            // 最大容量
 #define EE_SYS_CAPACITY 64                  // 系统预留容量
 
-											// error返回值
+// 返回值
 #define RET_SUCCESS 1                       // 成功返回值
 #define RET_FAILD   0                       // u8错误返回值
 #define RET_ERROR   -1                      // s8错误返回值
@@ -90,7 +90,7 @@ u8 eefs_base_wrtieBytes(u16 address, u8* data, u16 dataLen);   //在eeprom的指
 u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen);  //从eeprom的指定位置读取retLen个字节
 int writeByte(u16 address, u8* value, u16 len);                // 写入数据
 unsigned char readByte(int address);                           // 从内存读数据
-u16 getAddress(void);                                          // 获取模拟地址
+u16 getAddress(u16 size);                                          // 获取模拟地址
 u8 eefs_mbr_CheckAddress(u16 address);                         // 检查地址合法性
 u16 getIndexAddress(u16 index);                                // 返回索引地址
 u8 eefs_mbr_CheckIndex(u16 index);                             // 判断index是否合法
@@ -112,7 +112,6 @@ u16 eefs_mbr_getIndexSizeHeadAddress(u16 index);               // 获取索引�
 u16 eefs_mbr_getIndexStatusHeadAddress(u16 index);             // 获取索引节点首地址
 
 u8 eefs_mbr_getSize(u16 index);                                // 获取索引对应的数据区大小 
-u8 eefs_mbr_setSize(u16 index, u16 size);                      // 设置索引对应的数据区大小
 u8 eefs_mbr_check(u16 index);                                  //检查索引值是否合法，合法则返回索引首地址
 s8 eefs_mbr_getStatus(u16 index);                              //获取状态
 u8 eefs_mbr_setStatus(u16 index, u8 val);                      //设置状态
