@@ -723,7 +723,7 @@ u16 eefs_mbr_getAddress(u16 index) {
 	// (2).读取地址的2字节
 	eefs_base_readBytes(startIndex, addrs, ADDR_SIZE);
 	address = 0;
-	address = *(u32*)addrs; //赋值address
+	address = *(u16*)addrs; //赋值address
 	return address;
 }
 
@@ -826,3 +826,31 @@ u16 eefs_data_getDesc(u16 index) {
 //u8 eefs_data_getDescLow(u16 index);                           //获取数据区描述符低位
 //u8 eefs_data_setDescLow(u16 index, u8 value);                 //设置数据区描述符低位
 
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取节点数据的数据区首地址
+ * @index:索引
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_data_getHeadAddr(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
+    s16 startAddress;
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取节点数据区的首地址
+    startAddress = eefs_mbr_getAddress(index);
+    return startAddress;
+}
+
+u16 eefs_data_getTailAddr(u16 index);   //获取节点数据的数据区尾地址
+u16 eefs_data_getTotalCapacity(void);   //获取数据区总容量
+u16 eefs_data_getUsedCapacity(void);    //获取已使用总容量
+u16 eefs_data_getUnusedCapacity(void);  //获取未使用空间总容量
+u16 eefs_data_findUnusedAddr(u16 size);     //返回可以使用的一个合适的地址
+u8 eefs_data_create(u16 addr,u16 size); //创建数据区，并初始化
+u8 eefs_data_update(u16 addr,u16 size); //更新数据区全部内容

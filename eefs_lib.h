@@ -125,6 +125,15 @@ u8 eefs_mbr_setNetStatus(u16 index, u8 val);                   //设置网络状
 s8 eefs_mbr_getDataStatus(u16 index);                          //获取数据状态(7,8位)
 u8 eefs_mbr_setDataStatus(u16 index, u8 val);                  //设置数据状态
 
+u16 eefs_data_getHeadAddr(u16 index);   //获取节点数据的数据区首地址
+u16 eefs_data_getTailAddr(u16 index);   //获取节点数据的数据区尾地址
+u16 eefs_data_getTotalCapacity(void);   //获取数据区总容量
+u16 eefs_data_getUsedCapacity(void);    //获取已使用总容量
+u16 eefs_data_getUnusedCapacity(void);  //获取未使用空间总容量
+u16 eefs_data_findUnusedAddr(u16 size);     //返回可以使用的一个合适的地址
+u8 eefs_data_create(u16 addr,u16 size); //创建数据区，并初始化
+u8 eefs_data_update(u16 addr,u16 size); //更新数据区全部内容
+
 u16 eefs_data_getDescHeadAddress(u16 index);				   //获取数据描述区首地址
 u16 eefs_data_getDesc(u16 index);                              //获取数据区描述符
 u8 eefs_data_setDesc(u16 index, u16 value);                    //设置数据区描述符
