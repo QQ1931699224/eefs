@@ -16,7 +16,9 @@ void testEefs_mbr_getNetStatus(void);
 void testEefs_mbr_getGenFlagStatus(void);
 void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
+
 void todo(void);
+
 
 int main(int argc, const char *argv[]) {
     testEefs_mbr_create();
