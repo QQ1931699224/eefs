@@ -42,7 +42,7 @@ void testEefs_mbr_create(void)
 {
     USERNODE userNode;
     userNode.name = 2048;
-    userNode.size = 256;
+    userNode.size = 2;
     // index在0 - 128之间
     eefs_mbr_create(100, userNode);
     NODE *myNode;
@@ -152,5 +152,6 @@ void testEefs_mbr_getAddress(void)
 	data = eefs_mbr_getAddress(100);
 	printf("address=%d", data);
 }
+
 
 
