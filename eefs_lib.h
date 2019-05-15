@@ -8,7 +8,7 @@
 #ifndef eefs_lib_h
 #define eefs_lib_h
 
-#include <stdio.h>
+#include <stdio.h>  
 
 typedef enum {
 	data_none = 0,
@@ -64,14 +64,12 @@ typedef signed char  s8;
 #define DESC_SIZE sizeof(u16)              //数据区desc大小
 
 // 索引区结构体
-
 typedef struct node {
-u32 name;
-u16 address;
+	u32 name;
+	u16 address;
 	u16 size;
 	u8 status;
 }NODE;
-
 
 // 用户使用的索引区结构体
 typedef struct userNode {
@@ -80,7 +78,7 @@ typedef struct userNode {
 }USERNODE;
 
 // 全局变量G_变量名(全大写)
-															   // 局部变量小写(驼峰)
+                                                               // 局部变量小写(驼峰)
 extern u8 G_LIST[EE_MAX_CAPACITY];                             // 模拟的整个缓存区
 extern u8 G_STATUS_LISI[MAX_INDEX];                            // 索引区数组
 

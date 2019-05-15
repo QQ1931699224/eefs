@@ -9,7 +9,7 @@
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
-
+ 
 /*
  * Auth: 张添程
  * Date: 2019-5-15
@@ -19,15 +19,15 @@ u8 G_STATUS_LISI[MAX_INDEX];
  * @return : 1:成功
  */
 
-u8 eefs_base_writeByte(u16 address, u8* value) {
+u8 eefs_base_writeByte(u16 address,u8 *value) {
 	writeByte(address, value, 1);
 	return RET_SUCCESS;
-}
+} 
 /*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取1字节
- * @address:地址
+ * @address:地址 
  * @return : 数值
  */
 u8 eefs_base_readByte(u16 address) {
@@ -208,7 +208,7 @@ u8 eefs_mbr_CheckIndex(u16 index)
 	}
 	else
 	{
-		return RET_FAILD;
+		return RET_FAILD; 
 	}
 }
 
@@ -361,7 +361,7 @@ u8 eefs_mbr_setStatus(u16 index, u8 val)
 	// ---------- 业务处理---------- //
 	//(1)找到索引状态的起始位置
 	startIndex = getIndexAddress(index);
-	startStatus = startIndex + STATUS_OFFSET;
+	startStatus = eefs_mbr_getIndexStatusHeadAddress;
 	//(2)设置索引状态
 	eefs_base_readByte(startStatus);
 	G_STATUS_LISI[index] = val;
@@ -723,7 +723,7 @@ u16 eefs_mbr_getAddress(u16 index) {
 	// (2).读取地址的2字节
 	eefs_base_readBytes(startIndex, addrs, ADDR_SIZE);
 	address = 0;
-	address = *(u32*)addrs; //赋值address
+	address = *(u16*)addrs; //赋值address
 	return address;
 }
 
@@ -810,7 +810,7 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
  * Desc:获取数据描述区首地址
  * @index:索引
  * @return : u16 地址
-
+ 
 u16 eefs_data_getDescHeadAddress(u16 index) {
 	return eefs_mbr_getAddress(index) + eefs_mbr_getSize(index);
 }

@@ -5,7 +5,7 @@
 //  Copyright © 2019 吴晗帅. All rights reserved.
 //  程序实现大体思路
 
-#include <stdio.h>
+#include <stdio.h> 
 #include <string.h>
 #include "eefs_lib.h"
 void testEefs_mbr_create(void);
@@ -16,17 +16,17 @@ void testEefs_mbr_getGenFlagStatus(void);
 void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
 
-int main(int argc, const char* argv[]) {
-	testEefs_mbr_create();
-	testEefs_mbr_getDataStatus();
-	testEefs_mbr_getIndexStatus();
-	testEefs_mbr_getNetStatus();
-	testEefs_mbr_getGenFlagStatus();
+int main(int argc, const char *argv[]) { 
+    testEefs_mbr_create();
+    testEefs_mbr_getDataStatus();
+    testEefs_mbr_getIndexStatus();
+    testEefs_mbr_getNetStatus();
+    testEefs_mbr_getGenFlagStatus();
 	testEefs_mbr_getName();
 	testEefs_mbr_getAddress();
 	printf("%s", G_STATUS_LISI);
 	printf("总= %d", G_LIST);
-	return 0;
+    return 0;
 }
 
 
@@ -40,24 +40,24 @@ int main(int argc, const char* argv[]) {
 #pragma mark - 测试创建索引函数
 void testEefs_mbr_create(void)
 {
-	USERNODE userNode;
-	userNode.name = 2048;
-	userNode.size = 2;
-	// index在0 - 128之间
-	eefs_mbr_create(100, userNode);
-	NODE* myNode;
-	u8 data[9];
-	int i;
-	for (i = 0; i < 9; i++) {
-		data[i] = readByte(164 + i);
-	}
-	myNode = malloc(9);
-	memcpy((u8*)myNode, data, 9);
-	printf("%s", G_LIST);
-
-	eefs_mbr_load();
-	printf("%s", G_STATUS_LISI);
-
+    USERNODE userNode;
+    userNode.name = 2048;
+    userNode.size = 2;
+    // index在0 - 128之间
+    eefs_mbr_create(100, userNode);
+    NODE *myNode;
+    u8 data[9];
+    int i;
+    for (i = 0; i < 9; i++) {
+        data[i] = readByte(164 + i);
+    }
+    myNode = malloc(9);
+    memcpy((u8 *)myNode, data, 9);
+    printf("%s", G_LIST);
+    
+    eefs_mbr_load();
+    printf("%s", G_STATUS_LISI);
+    
 }
 
 /*
@@ -69,10 +69,10 @@ void testEefs_mbr_create(void)
  */
 void testEefs_mbr_getDataStatus(void)
 {
-	u8 data;
-	// 0 <= index <= 128, 0 <= val <= 3
-	eefs_mbr_setDataStatus(100, 3);
-	data = eefs_mbr_getDataStatus(100);
+    u8 data;
+    // 0 <= index <= 128, 0 <= val <= 3
+    eefs_mbr_setDataStatus(100, 3);
+    data = eefs_mbr_getDataStatus(100);
 }
 
 /*
@@ -84,13 +84,13 @@ void testEefs_mbr_getDataStatus(void)
  */
 void testEefs_mbr_getIndexStatus(void)
 {
-	u8 data;
-	// 0 <= index <= 128, 0 <= val <= 3
-	eefs_mbr_setIndexStatus(100, 1);
-	data = eefs_mbr_getIndexStatus(100);
-	// 更新索引
-	eefs_mbr_update(100, 256, 3);
-	data = eefs_mbr_getIndexStatus(100);
+    u8 data;
+    // 0 <= index <= 128, 0 <= val <= 3
+    eefs_mbr_setIndexStatus(100, 1);
+    data = eefs_mbr_getIndexStatus(100);
+    // 更新索引
+    eefs_mbr_update(100, 256, 3);
+    data = eefs_mbr_getIndexStatus(100);
 }
 
 /*
@@ -102,25 +102,26 @@ void testEefs_mbr_getIndexStatus(void)
  */
 void testEefs_mbr_getNetStatus(void)
 {
-	u8 data;
-	// 0 <= index <= 128, 0 <= val <= 3
-	eefs_mbr_setNetStatus(100, 3);
-	data = eefs_mbr_getNetStatus(100);
+    u8 data;
+    // 0 <= index <= 128, 0 <= val <= 3
+    eefs_mbr_setNetStatus(100, 3);
+    data = eefs_mbr_getNetStatus(100);
 }
 
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
- * Desc:测试获取通用标记状态, 设置通用标记状态函数
+ * Desc:测试获取通用标记状态, 设置通用标记状态函数 
  * @paramName:无
  * @return : 无
  */
 void testEefs_mbr_getGenFlagStatus(void)
 {
-	u8 data;
-	// 0 <= index <= 128, 0 <= val <= 3
-	eefs_mbr_setGenFlag(100, 2);
-	data = eefs_mbr_getGenFlag(100);
+    u8 data;
+    // 0 <= index <= 128, 0 <= val <= 3
+    eefs_mbr_setGenFlag(100, 2);
+    data = eefs_mbr_getGenFlag(100);
+	printf("%d", data);
 }
 
 /*
