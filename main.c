@@ -160,3 +160,8 @@ void testEefs_mbr_getAddress(void)
 void todo(void) {
 	printf("hello world");
 }
+
+void helloworld()
+{
+    printf("haha");
+}
