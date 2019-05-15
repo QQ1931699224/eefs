@@ -19,30 +19,45 @@ u8 G_STATUS_LISI[MAX_INDEX];
  * @value:写入值
  * @return : 1:成功
  */
-u8 eefs_base_writeByte(u16 address,u8 *value) {	writeByte(address, value, 1);	return RET_SUCCESS;} /*
+u8 eefs_base_writeByte(u16 address,u8 *value) {
+	writeByte(address, value, 1);
+	return RET_SUCCESS;
+} 
+/*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取1字节
  * @address:地址
  * @return : 数值
- */u8 eefs_base_readByte(u16 address) {	return readByte(address);}/*
+ */
+u8 eefs_base_readByte(u16 address) {
+	return readByte(address);
+}
+/*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:写入dataLen字节
  * @address:写入地址
  * @value:写入值
  * @return : 1:成功
- */u8 eefs_base_wrtieBytes(u16 address, u8* data, u16 dataLen) {	int i;	for (i = 0; i < dataLen; i++)
+ */
+u8 eefs_base_wrtieBytes(u16 address, u8* data, u16 dataLen) {
+	int i;
+	for (i = 0; i < dataLen; i++)
 	{
 		eefs_base_writeByte(address++, data++);
-	}	return RET_SUCCESS;}/*
+	}
+	return RET_SUCCESS;
+}
+/*
  * Auth: 张添程
  * Date: 2019-5-15
  * Desc:读取retLen字节
  * @address:地址
  * @reData 返回值
  * @return : 1:成功
- */u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
+ */
+u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
 	int i;
 	for (i = 0; i < retLen; i++)
 	{
