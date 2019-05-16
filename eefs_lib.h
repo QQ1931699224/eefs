@@ -25,11 +25,12 @@ typedef   unsigned int   u32;
 typedef int  s32;
 typedef short s16;
 typedef signed char  s8;
-
+///////////////////////////////////////////////////////////////
 #define EE_SYS_FLAG_OFFSET 0; //系统保留区标志位偏移量
 #define EE_SYS_VERSION_OFFSET 1; //系统保留区版本号偏移量
 #define EE_SYS_USEDCAPACITY_OFFSET 3; //系统保留区已使用空间标志偏移量
 #define EE_SYS_UNUSEDCAPACITY_OFFSET 5; //系统保留区未使用空间标志偏移量
+///////////////////////////////////////////////////////////////
 
 #define BIT_DATA_MASK 0xC0                  // (11000000)数据状态位掩码
 #define BIT_DATA_UNMASK 0x63                // (00111111)数据状态位掩码
@@ -69,10 +70,13 @@ typedef signed char  s8;
 #define STATUS_SIZE sizeof(u8)              //status大小
 
 #define DESC_SIZE sizeof(u16)              //desc大小
+
+///////////////////////////////////////////////////////////////
 #define UNUSEDCAPACITY_SIZE sizeof(u16)    //UnusedCapacity标识大小
 #define USEDCAPACITY_SIZE sizeof(u16)    //UsedCapacity标识大小
 #define EE_SYS_FLAG_SIZE sizeof(u8); //系统保留区标志位大小
 #define EE_SYS_VERSION_SIZE sizeof(u8); //系统保留区版本号大小
+///////////////////////////////////////////////////////////////
 
 // 索引区结构体
 typedef struct node{
@@ -152,11 +156,13 @@ u8 eefs_data_setDescHigh(u16 index, u8 value); //设置数据区描述符高位
 u8 eefs_data_getDescLow(u16 index); //获取数据区描述符低位
 u8 eefs_data_setDescLow(u16 index, u8 value); //设置数据区描述符低位
 
-u8 eefs_sys_getFlag();  //系统保留区标志位读取u8 eefs_sys_setFlag(u8 value);  //系统保留区标志位写入u8 eefs_sys_getVersion(); //取得写入索引版本
+///////////////////////////////////////////////////////////////
+u8 eefs_sys_getFlag();  //系统保留区标志位读取u8 eefs_sys_setFlag(u8 value);  //系统保留区标志位写入u8 eefs_sys_getVersion(void); //取得写入索引版本
 u8 eefs_sys_setVersion(); //写入索引版本
 u16 eefs_sys_getUsedCapacity(); //获取已使用空间容量
 u8 eefs_sys_setUsedCapacity(u16 size); //设置已使用空间容量
 u16 eefs_sys_getUnusedCapacity(); //获取未使用空间容量
 u8 eefs_sys_setUnusedCapacity(u16 size); //设置未使用空间容量
+///////////////////////////////////////////////////////////////
 
 #endif /* WriteOrReadByte_h */

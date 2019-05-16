@@ -1148,7 +1148,7 @@ u16 isEffectiveAddress(u16 address)
 u8 eefs_data_create(u16 addr, u16 size); //创建数据区，并初始化
 u8 eefs_data_update(u16 addr, u16 size); //更新数据区全部内容
 
-
+/////////////////////////////////////////////////////////////////////////
 /*
  * Auth:张添程
  * Date: 2019-5-14
@@ -1323,7 +1323,7 @@ u8 eefs_sys_setUnusedCapacity(u16 size) {
 	eefs_base_writeBytes(startIndex, datas, UNUSEDCAPACITY_SIZE);
 	return RET_SUCCESS;
 }
-
+///////////////////////////////////////////////////////////////
 
 
 

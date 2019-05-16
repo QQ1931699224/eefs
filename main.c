@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "eefs_lib.h"
+extern u8 eefs_sys_getVersion(void);
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
 void testEefs_mbr_getIndexStatus(void);
@@ -18,10 +19,14 @@ void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
 void testEefs_data_getDesc(void);
 void testEefs_mbr_create1(void);
+///////////////////////////////////////////////////////////////
 void testEefs_data_getSys(void);
+///////////////////////////////////////////////////////////////
 
 int main(int argc, const char *argv[]) {
+	///////////////////////////////////////////////////////////////
 	testEefs_data_getSys();
+	///////////////////////////////////////////////////////////////
     testEefs_mbr_create();
 	testEefs_mbr_create1();			   
     testEefs_mbr_getDataStatus();
@@ -34,7 +39,7 @@ int main(int argc, const char *argv[]) {
 	// 更新索引
 	eefs_mbr_update(100, 256, 3);
 	testEefs_data_getDesc();
-	//printf("%s",G_LIST);
+	printf("%s",G_LIST);
     return 0;
 }
 
@@ -207,7 +212,7 @@ void testEefs_data_getDesc(void)
 	printf("desc=%d\n", data);
 }
 
-
+///////////////////////////////////////////////////////////////
 /*
  * Auth: 张添程
  * Date: 2019-5-14
@@ -234,4 +239,4 @@ void testEefs_data_getSys(void)
 	unused = eefs_sys_getUnusedCapacity();
 	printf("unused=%d\n", unused);
 }
-
+///////////////////////////////////////////////////////////////
