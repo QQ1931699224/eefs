@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "eefs_lib.h"
+
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
 void testEefs_mbr_getIndexStatus(void);
@@ -18,10 +19,16 @@ void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
 void testEefs_data_getDesc(void);
 void testEefs_mbr_create1(void);
+void testEefs_create(void);
+void testEefs_allCreate(void);
+void testEefs_setValueWithOffset(void);
 
 int main(int argc, const char *argv[]) {
     testEefs_mbr_create();
-	testEefs_mbr_create1();			   
+    testEefs_mbr_create1();
+//    testEefs_create();
+//    testEefs_allCreate();
+    testEefs_setValueWithOffset();
     testEefs_mbr_getDataStatus();
     testEefs_mbr_getIndexStatus();
     testEefs_mbr_getNetStatus();
@@ -32,7 +39,7 @@ int main(int argc, const char *argv[]) {
 	// 更新索引
 	//eefs_mbr_update(100, 256, 3);
 	testEefs_data_getDesc();
-	printf("总= %d", G_LIST);
+	printf("总= %s", G_LIST);
     return 0;
 }
 
@@ -59,7 +66,7 @@ void testEefs_mbr_create(void)
     for (i = 0; i < 9; i++) {
         data[i] = eefs_base_readByte(164 + i);
     }
-    myNode = malloc(9);
+    myNode = (void *)malloc(9);
     memcpy((u8 *)myNode, data, 9);
     printf("%s", G_LIST);
     
@@ -210,4 +217,59 @@ void testEefs_data_getDesc(void)
 	printf("desc=%d\n", data);
 }
 
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:测试创建索引和删除索引
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+void testEefs_create()
+{
+    USERNODE userNode;
+    userNode.name = 20;
+    userNode.size = 100;
+    eefs_create(2, userNode);
+    printf("%s", G_LIST);
+    
+    eefs_delete(2);
+    printf("%s", G_LIST);
+}
 
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:测试创建全部索引和删除全部索引
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+void testEefs_allCreate()
+{
+    USERNODE list[10];
+    int i;
+    for (i = 0; i < 10; i++) {
+        list[i].name = 200+i;
+        list[i].size = 100;
+    }
+    eefs_createAll(list, 10);
+    printf("%s", G_LIST);
+    eefs_deleteAll();
+    printf("%s", G_LIST);
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:测试根据偏移量给数据区赋值和取值
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+void testEefs_setValueWithOffset()
+{
+    u8 data;
+    data = 1;
+    u8 ret_data;
+    eefs_setValueWithOffset(2048, 50, &data, 1);
+    eefs_getValueWithOffset(2048, 50, &ret_data, 1);
+    printf("%s", G_LIST);
+}

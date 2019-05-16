@@ -56,6 +56,7 @@ typedef signed char  s8;
 #define ADDR_OFFSET 4                       // 地址单个偏移量
 #define SIZE_OFFSET 6                       // 大小单个偏移量
 #define STATUS_OFFSET 8                     // status单个偏移量
+#define DATA_DESCRIBE 2                     // 数据区描述
 
 #define NAME_SIZE sizeof(u32)		        //name大小
 #define ADDR_SIZE sizeof(u16)               //address大小
@@ -142,4 +143,16 @@ u8 eefs_data_setDescHigh(u16 index, u8 value); //设置数据区描述符高位
 u8 eefs_data_getDescLow(u16 index); //获取数据区描述符低位
 u8 eefs_data_setDescLow(u16 index, u8 value); //设置数据区描述符低位
 
+// eefs方法
+u8 eefs_createAll(USERNODE list[], u8 len);   //创建（申请）多个数据空间
+u8 eefs_create(u16 index, USERNODE node);      //创建1个
+u8 eefs_delete(u16 index);      //删除（释放）一个数据空间
+u8 eefs_deleteAll(void);
+u8 eefs_reset(u16 index);       //将指定1个数据的空间清零
+u8 eefs_resetAll(void);
+u8 eefs_init(void);        //初始化全部空间
+u8 eefs_setValue(u32 name, u8 *data, u16 len);         // 设置数据区全部内容
+u8 eefs_getValue(u32 name, u8 *ret_data, u16 *len);         // 获取数据区全部内容
+u8 eefs_setValueWithOffset(u32 name, u16 offset,u8 *data, u16 len);         // 设置数据区全部内容
+u8 eefs_getValueWithOffset(u32 name, u16 offset, u8 *ret_data, u16 len);         // 获取数据区全部内容
 #endif /* WriteOrReadByte_h */
