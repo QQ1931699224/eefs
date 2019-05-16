@@ -332,6 +332,7 @@ s8 eefs_mbr_getIndexStatus(u16 index)
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
         return RET_ERROR;
     }
+    
     // ---------- 业务处理---------- //
     //(1)获取状态位数据 11111100
     statusData = eefs_mbr_getStatus(index);
@@ -777,6 +778,7 @@ u16 eefs_data_getDescHeadAddress(u16 index) {
  */
 u16 eefs_data_getDesc(u16 index) {
 	// ---------- 局部变量定义区---------- //
+	int i;
 	u16 startIndex;         // 该索引的起始位置
 	u16 desc;                // 索引的name信息
 	u8 descs[DESC_SIZE];
@@ -1016,7 +1018,7 @@ u16 eefs_mbr_getSize(u16 index)
 	// (2).读取size的两字节
 	eefs_base_readBytes(startIndex, sizes, SIZE_SIZE);
 	size = 0;
-	size = *(u16*)sizes + 2; //赋值name
+	size = *(u16*)sizes + DATA_DESCRIBE; //赋值name
 	return size;
 }
 
@@ -1069,7 +1071,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	}
 	// ---------- 业务处理---------- //
 	//(1)遍历索引, 获取所有address有效的首地址
-    
+    printf("%s", G_LIST);
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (isEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
 			data.address = eefs_data_getHeadAddr(i);
@@ -1148,14 +1150,309 @@ u16 isEffectiveAddress(u16 address)
 u8 eefs_data_create(u16 addr, u16 size); //创建数据区，并初始化
 u8 eefs_data_update(u16 addr, u16 size); //更新数据区全部内容
 
-/////////////////////////////////////////////////////////////////////////
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:创建（申请）多个数据空间
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_createAll(USERNODE list[], u8 len)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    int j;
+    j = 0;
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)循环遍历数组取出结构体
+    for (i = 0; i < MAX_INDEX; i++) {
+        if (eefs_mbr_getIndexStatus(i) == 0x00) {
+            eefs_mbr_setIndexStatus(i, 2);
+        }
+        if (eefs_mbr_getIndexStatus(i) == 2) { // 如果索引状态为2, 可以使用
+            USERNODE node = list[j];
+            eefs_create(i, node);
+            if (j == len - 1) {
+                return RET_SUCCESS;
+            }
+            j++;
+        }
+    }
+    return RET_FAILD;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:创建1个
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_create(u16 index, USERNODE node)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    // ---------- 输入参数条件检测---------- //
+    // (1)判断index是否合法
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    // (2)判断node size
+    // TODO:该处判断应该用剩余空间容量函数的返回值进行判断
+    if (node.size > EE_MAX_CAPACITY - EE_SYS_CAPACITY) {
+        return ERR_INVALIDPARAM;
+    }
+    // ---------- 业务处理---------- //
+    //(1)循环判断是否已经包含name
+    for (i = 0; i < MAX_INDEX; i++) {
+        if (node.name == eefs_mbr_getName(i)) {
+            return RET_FAILD;
+        }
+    }
+    //(2)创建索引
+    eefs_mbr_create(index, node);
+    return RET_SUCCESS;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:删除（释放）一个索引空间
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_delete(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
+    u32 name;
+    u16 address;
+    u16 size;
+    u8 status;
+    name = 0;
+    address = 0;
+    size = 0;
+    status = 0x20;
+    // ---------- 输入参数条件检测---------- //
+    // (1)判断index是否合法
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)将索引空间赋为初始值
+    eefs_mbr_setName(index, name);
+    eefs_mbr_setAddress(index, address);
+    eefs_mbr_setSize(index, size);
+    eefs_mbr_setStatus(index, status);
+    eefs_reset(index);
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:设置空间大小
+ * @index:索引
+ * @size:空间
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_mbr_setSize(u16 index, u16 size)
+{
+    // ---------- 局部变量定义区---------- //
+    u16 startIndex;         // 该索引的起始位置
+    u8 sizes[SIZE_SIZE];            //临时sizes
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    
+    // ---------- 业务处理---------- //
+    // (1). 找到索引起始位置 找到address的位置
+    startIndex = eefs_mbr_getIndexSizeHeadAddress(index);
+    // (2).读取address的2字节
+    memcpy(sizes, (u8*)& size, SIZE_SIZE);
+    //writeByte(startIndex, addrs, ADDR_SIZE);
+    eefs_base_writeBytes(startIndex, sizes, SIZE_SIZE);
+    return RET_SUCCESS;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:删除所有索引空间
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_deleteAll(void)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)循环删除所有索引空间
+    for (i = 0; i < MAX_INDEX; i++) {
+        eefs_delete(i);
+    }
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:将指定1个数据的空间清零
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+
+u8 eefs_reset(u16 index)
+{
+    // ---------- 局部变量定义区---------- //
+    u16 firstAddress;
+    u16 size;
+    u8 data;
+    // ---------- 输入参数条件检测---------- //
+    // (1)判断index是否合法
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)根据索引找到数据空间首地址
+    firstAddress = eefs_data_getHeadAddr(index);
+    //(2)根据索引获取数据size
+    size = eefs_mbr_getSize(index);
+    //(3)将这段空间清空
+    //在指定位置写入dataLen个字节
+    data = 0x00;
+    eefs_base_writeBytes(firstAddress, &data, size);
+    return RET_SUCCESS;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:将所有数据空间清零
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_resetAll(void)
+{
+    // ---------- 局部变量定义区---------- //
+    u8 data;
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)给所有空间赋0
+    //在指定位置写入dataLen个字节
+    data = 0x00;
+    eefs_base_writeBytes(EE_START_DATA, &data, EE_MAX_CAPACITY - EE_START_DATA);
+    return RET_SUCCESS;
+}
+u8 eefs_init(void);        //初始化全部空间
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:设置数据区全部内容
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_setValue(u32 name, u8 *data, u16 len)
+{
+    // ---------- 局部变量定义区---------- //
+    
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)偏移量为0
+    eefs_setValueWithOffset(name, 0, data, len);
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:获取数据区全部内容
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_getValue(u32 name, u8 *ret_data, u16 *len)
+{
+    eefs_getValueWithOffset(name, 0, ret_data, len);
+    return RET_SUCCESS;
+}
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:根据偏移量设置数据区全部内容
+ * @name:名字
+ * @offset:偏移量
+ * @data:写入的数据
+ * @len:写入的长度
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_setValueWithOffset(u32 name, u16 offset,u8 *data, u16 len)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    u16 address;
+    u16 size;
+    // ---------- 输入参数条件检测---------- //
+    // ---------- 业务处理---------- //
+    //(1)循环获取name对应的index, address
+    for (i = 0; i < MAX_INDEX; i++) {
+        if (name == eefs_mbr_getName(i)) {
+            address = eefs_mbr_getAddress(i);
+            size = eefs_mbr_getSize(i);
+            if (offset + len > size) {
+                return RET_FAILD;
+            }
+            //(2)写入数据
+            eefs_base_writeBytes(address + offset, data, len);
+            return RET_SUCCESS;
+        }
+    }
+    return RET_FAILD;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-10
+ * Desc:根据偏移量获取数据区全部内容
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 eefs_getValueWithOffset(u32 name, u16 offset, u8 *ret_data, u16 len)
+{
+    // ---------- 局部变量定义区---------- //
+    int i;
+    u16 address;
+    u16 size;
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)找到name对应的index, size
+    for (i = 0; i < MAX_INDEX; i++) {
+        if (name == eefs_mbr_getName(i)) {
+            address = eefs_mbr_getAddress(i);
+            size = eefs_mbr_getSize(i);
+            if (offset + len > size) {
+                return RET_FAILD;
+            }
+            //(2)读取数据
+            eefs_base_readBytes(address + offset, ret_data, len);
+            return RET_SUCCESS;
+        }
+    }
+    return RET_FAILD;
+    
+}
+
 /*
  * Auth:张添程
  * Date: 2019-5-14
  * Desc:系统保留区标志位读取
  * @return u16 信息
- */										
-u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
+ */
+u8 eefs_sys_getFlag() {
+	// ---------- 局部变量定义区---------- //
 	u16 flagOffset;       // 系统描述区的Flag的位置
 	s8 data;                // 系统描述区的Flag信息
 	// ---------- 输入参数条件检测---------- //
@@ -1167,13 +1464,19 @@ u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
 	flagOffset = EE_START_SYS + EE_SYS_FLAG_OFFSET;
 	// (3). 读数据
 	data = eefs_base_readByte(flagOffset);
-	return data;}  /*
+	return data;
+}
+
+/*
  * Auth:张添程
  * Date: 2019-5-14
  * Desc:系统保留区标志位写入
  * @value:信息
  * @return : 1:成功
- */u8 eefs_sys_setFlag(u8 value) {	// ---------- 局部变量定义区---------- //
+ */
+
+u8 eefs_sys_setFlag(u8 value) {
+	// ---------- 局部变量定义区---------- //
 	u16 flagOffset;       // 系统描述区的Flag的位置
 	// ---------- 输入参数条件检测---------- //
 
@@ -1183,13 +1486,17 @@ u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
 	// (2). 找到FLAG的位置
 	flagOffset = EE_START_SYS + EE_SYS_FLAG_OFFSET;
 	// (3). 读数据
-	eefs_base_writeByte(flagOffset,&value);
-	return RET_SUCCESS;}  /*
+	eefs_base_writeByte(flagOffset, &value);
+	return RET_SUCCESS;
+}
+
+/*
  * Auth:张添程
  * Date: 2019-5-14
  * Desc:取得写入索引版本
  * @return u16 信息
- */u8 eefs_sys_getVersion() {
+ */
+u8 eefs_sys_getVersion() {
 	// ---------- 局部变量定义区---------- //
 	u16 flagOffset;       // 系统描述区的Version的位置
 	s8 data;                // 系统描述区的Version信息
@@ -1203,7 +1510,7 @@ u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
 	// (3). 读数据
 	data = eefs_base_readByte(flagOffset);
 	return data;
-} 
+}
 
 /*
  * Auth:张添程
@@ -1211,7 +1518,9 @@ u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
  * Desc:系统保留区版本号写入
  * @return : 1:成功
  */
-u8 eefs_sys_setVersion() {	// ---------- 局部变量定义区---------- //
+
+u8 eefs_sys_setVersion() {
+	// ---------- 局部变量定义区---------- //
 	u16 flagOffset;       // 系统描述区的Flag的位置
 	u8 lastVersion;
 	u8 nowVersion;
@@ -1227,8 +1536,9 @@ u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
 	// (4). 生成新版本号
 	nowVersion = lastVersion + 1;
 	// (3). 写入数据
-	eefs_base_writeByte(flagOffset,&nowVersion);
-	return RET_SUCCESS;}
+	eefs_base_writeByte(flagOffset, &nowVersion);
+	return RET_SUCCESS;
+}
 
 
 /*
@@ -1243,14 +1553,14 @@ u16 eefs_sys_getUsedCapacity() {
 	u16 data;                // 系统的已使用空间信息
 	u8 datas[USEDCAPACITY_SIZE];
 	// ---------- 输入参数条件检测---------- //
-	
+
 	// ---------- 业务处理---------- //
 	// (1). 找到系统描述区中找到已使用空间标识的位置
 	startIndex = EE_START_SYS + EE_SYS_USEDCAPACITY_OFFSET;
 	// (2).读取地址后的2字节
 	eefs_base_readBytes(startIndex, datas, USEDCAPACITY_SIZE);
 	data = 0;
-	data = *(u16*)datas; 
+	data = *(u16*)datas;
 	return data;
 }
 
@@ -1297,7 +1607,7 @@ u16 eefs_sys_getUnusedCapacity() {
 	// (2).读取地址后的2字节
 	eefs_base_readBytes(startIndex, datas, USEDCAPACITY_SIZE);
 	data = 0;
-	data = *(u16*)datas; 
+	data = *(u16*)datas;
 	return data;
 }
 
@@ -1323,9 +1633,3 @@ u8 eefs_sys_setUnusedCapacity(u16 size) {
 	eefs_base_writeBytes(startIndex, datas, UNUSEDCAPACITY_SIZE);
 	return RET_SUCCESS;
 }
-///////////////////////////////////////////////////////////////
-
-
-
-
-
