@@ -777,7 +777,6 @@ u16 eefs_data_getDescHeadAddress(u16 index) {
  */
 u16 eefs_data_getDesc(u16 index) {
 	// ---------- 局部变量定义区---------- //
-	int i;
 	u16 startIndex;         // 该索引的起始位置
 	u16 desc;                // 索引的name信息
 	u8 descs[DESC_SIZE];
@@ -1148,4 +1147,185 @@ u16 isEffectiveAddress(u16 address)
 
 u8 eefs_data_create(u16 addr, u16 size); //创建数据区，并初始化
 u8 eefs_data_update(u16 addr, u16 size); //更新数据区全部内容
+
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:系统保留区标志位读取
+ * @return u16 信息
+ */										
+u8 eefs_sys_getFlag() {	// ---------- 局部变量定义区---------- //
+	u16 flagOffset;       // 系统描述区的Flag的位置
+	s8 data;                // 系统描述区的Flag信息
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到SYS起始位置
+
+	// (2). 找到FLAG的位置
+	flagOffset = EE_START_SYS + EE_SYS_FLAG_OFFSET;
+	// (3). 读数据
+	data = eefs_base_readByte(flagOffset);
+	return data;}  /*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:系统保留区标志位写入
+ * @value:信息
+ * @return : 1:成功
+ */u8 eefs_sys_setFlag(u8 value) {	// ---------- 局部变量定义区---------- //
+	u16 flagOffset;       // 系统描述区的Flag的位置
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到SYS起始位置
+
+	// (2). 找到FLAG的位置
+	flagOffset = EE_START_SYS + EE_SYS_FLAG_OFFSET;
+	// (3). 读数据
+	eefs_base_writeByte(flagOffset,&value);
+	return RET_SUCCESS;}  /*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:取得写入索引版本
+ * @return u16 信息
+ */u8 eefs_sys_getVersion() {
+	// ---------- 局部变量定义区---------- //
+	u16 flagOffset;       // 系统描述区的Version的位置
+	s8 data;                // 系统描述区的Version信息
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到SYS起始位置
+
+	// (2). 找到Version的位置
+	flagOffset = EE_START_SYS + EE_SYS_VERSION_OFFSET;
+	// (3). 读数据
+	data = eefs_base_readByte(flagOffset);
+	return data;
+} 
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:系统保留区版本号写入
+ * @return : 1:成功
+ */
+u8 eefs_sys_setVersion() {	// ---------- 局部变量定义区---------- //
+	u16 flagOffset;       // 系统描述区的Flag的位置
+	u8 lastVersion;
+	u8 nowVersion;
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到SYS起始位置
+
+	// (2). 找到FLAG的位置
+	flagOffset = EE_START_SYS + EE_SYS_VERSION_OFFSET;
+	// (3). 获取上个版本
+	lastVersion = eefs_sys_getVersion();
+	// (4). 生成新版本号
+	nowVersion = lastVersion + 1;
+	// (3). 写入数据
+	eefs_base_writeByte(flagOffset,&nowVersion);
+	return RET_SUCCESS;}
+
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取系统描述区已使用空间信息
+ * @return u16 信息
+ */
+u16 eefs_sys_getUsedCapacity() {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该标识的起始位置
+	u16 data;                // 系统的已使用空间信息
+	u8 datas[USEDCAPACITY_SIZE];
+	// ---------- 输入参数条件检测---------- //
+	
+	// ---------- 业务处理---------- //
+	// (1). 找到系统描述区中找到已使用空间标识的位置
+	startIndex = EE_START_SYS + EE_SYS_USEDCAPACITY_OFFSET;
+	// (2).读取地址后的2字节
+	eefs_base_readBytes(startIndex, datas, USEDCAPACITY_SIZE);
+	data = 0;
+	data = *(u16*)datas; 
+	return data;
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置系统描述区已使用空间信息
+ * @size:信息
+ * @return : 1:成功
+ */
+u8 eefs_sys_setUsedCapacity(u16 size) {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 datas[USEDCAPACITY_SIZE];			//临时datas
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到系统描述区中找到已使用空间标识的位置
+	startIndex = EE_START_SYS + EE_SYS_USEDCAPACITY_OFFSET;
+	// (2).读取地址后的2字节
+	memcpy(datas, (u8*)& size, USEDCAPACITY_SIZE);
+	// (3).写入数据
+	eefs_base_writeBytes(startIndex, datas, USEDCAPACITY_SIZE);
+	return RET_SUCCESS;
+}
+
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:获取系统描述区未使用空间信息
+ * @return u16 信息
+ */
+u16 eefs_sys_getUnusedCapacity() {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该标识的起始位置
+	u16 data;                // 系统的未使用空间信息
+	u8 datas[USEDCAPACITY_SIZE];
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到系统描述区中找到未使用空间标识的位置
+	startIndex = EE_START_SYS + EE_SYS_USEDCAPACITY_OFFSET;
+	// (2).读取地址后的2字节
+	eefs_base_readBytes(startIndex, datas, USEDCAPACITY_SIZE);
+	data = 0;
+	data = *(u16*)datas; 
+	return data;
+}
+
+/*
+ * Auth:张添程
+ * Date: 2019-5-14
+ * Desc:设置系统描述区未使用空间信息
+ * @size:信息
+ * @return : 1:成功
+ */
+u8 eefs_sys_setUnusedCapacity(u16 size) {
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u8 datas[UNUSEDCAPACITY_SIZE];			//临时datas
+	// ---------- 输入参数条件检测---------- //
+
+	// ---------- 业务处理---------- //
+	// (1). 找到系统描述区中找到已使用空间标识的位置
+	startIndex = EE_START_SYS + EE_SYS_UNUSEDCAPACITY_OFFSET;
+	// (2).读取地址后的2字节
+	memcpy(datas, (u8*)& size, UNUSEDCAPACITY_SIZE);
+	// (3).写入数据
+	eefs_base_writeBytes(startIndex, datas, UNUSEDCAPACITY_SIZE);
+	return RET_SUCCESS;
+}
+
+
+
+
+
 

@@ -18,8 +18,10 @@ void testEefs_mbr_getName(void);
 void testEefs_mbr_getAddress(void);
 void testEefs_data_getDesc(void);
 void testEefs_mbr_create1(void);
+void testEefs_data_getSys(void);
 
 int main(int argc, const char *argv[]) {
+	testEefs_data_getSys();
     testEefs_mbr_create();
 	testEefs_mbr_create1();			   
     testEefs_mbr_getDataStatus();
@@ -210,4 +212,31 @@ void testEefs_data_getDesc(void)
 	printf("desc=%d\n", data);
 }
 
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-14
+ * Desc:测试获取和修改系统区的相关信息
+ * @paramName:无
+ * @return : 无
+ */
+void testEefs_data_getSys(void)
+{
+	u16 used;
+	u8 unused;
+	u8 flag;
+	u8 version;
+	eefs_sys_setFlag(66);
+	flag = eefs_sys_getFlag();
+	printf("flag=%d\n", flag);
+	eefs_sys_setVersion();
+	version = eefs_sys_getVersion();
+	printf("ver=%d\n", version);
+	eefs_sys_setUsedCapacity(88);
+	used = eefs_sys_getUsedCapacity();
+	printf("used=%d\n", used);
+	eefs_sys_setUnusedCapacity(77);
+	unused = eefs_sys_getUnusedCapacity();
+	printf("unused=%d\n", unused);
+}
 
