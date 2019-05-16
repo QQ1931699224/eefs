@@ -10,13 +10,6 @@
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
-u16 isEffectiveAddress(u16 address); // 判断地址合法性
-// 接收数据的结构体
-typedef struct dataStruct {
-	u16 index;
-	u16 address;
-}DATAStRUCT;
-
 //在eeprom的指定位置读取1个字节
 u8 eefs_base_readByte(u16 address) {
 	unsigned char value = *(G_LIST + address);
@@ -53,7 +46,6 @@ u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
 s8 eefs_mbr_getStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
-    u16 startIndex;         // 该索引的起始位置
     u16 statusOffset;       // status的位置
     s8 data;                // 索引的status信息
     // ---------- 输入参数条件检测---------- //
@@ -61,12 +53,9 @@ s8 eefs_mbr_getStatus(u16 index)
         return RET_ERROR;
     }
     // ---------- 业务处理---------- //
-    // (1). 找到索引起始位置
-    startIndex = EE_START_INDEX + index * INDEX_SIZE;
-    // (2). 找到status的位置
-    statusOffset = startIndex + STATUS_OFFSET;
-    // (3). 读数据
-    //data = readByte(statusOffset);
+    // (1). 找到status的位置
+    statusOffset = eefs_mbr_getIndexStatusHeadAddress(index);
+    // (2). 读数据
 	data = eefs_base_readByte(statusOffset);
     return data;
 }
@@ -103,7 +92,6 @@ u8 eefs_mbr_load(void)
  * @userNode:用户输入的结构体
  * @return : 1:成功 0：失败
  */
-
 u8 eefs_mbr_create(u16 index, USERNODE userNode)
 {
     // ---------- 局部变量定义区---------- //
@@ -133,8 +121,9 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
     node.name = userNode.name;
     node.address = address;
     node.size = userNode.size;
-    node.status = 0x50;
+    node.status = STATUS_INITVALUE;
     //(4)写入数据到索引区, 返回成功
+    G_STATUS_LISI[index] = node.status;
     return writeDataToIndex(indexAddress, node);
 }
 
@@ -213,7 +202,6 @@ u16 getIndexAddress(u16 index)
  * @node:写入的结构体
  * @return : 1:成功 0：失败
  */
-
 u8 writeDataToIndex(u16 myAddress, NODE node)
 {
     u8 data[INDEX_SIZE]; // 索引区中的单个索引
@@ -296,7 +284,6 @@ u8 eefs_mbr_setDataStatus(u16 index ,u8 val)
  * @val:输入的数据
  * @return : 1:成功 0：失败
  */
-
 u8 eefs_mbr_setStatus(u16 index ,u8 val)
 {
     // ---------- 局部变量定义区---------- //
@@ -526,11 +513,14 @@ u8 eefs_mbr_update(u16 index, u32 name, u8 status)
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
-    //(1)更新名字
-    eefs_mbr_setName(index, name);
-    //(2)更新状态
-    eefs_mbr_setStatus(index, status);
-    return RET_SUCCESS;
+    //(1)更新名字和状态
+    if (eefs_mbr_setName(index, name) == RET_SUCCESS && eefs_mbr_setStatus(index, status) == RET_SUCCESS) {
+        return RET_SUCCESS;
+    }
+    else
+    {
+        return RET_FAILD;
+    }
 }
 
 /*
@@ -589,10 +579,7 @@ u8 eefs_mbr_reset(u16 index)
     
     //(2)循环赋0
     for (i = 0; i < INDEX_SIZE; i++) {
-        if (G_LIST[startAddress + i] != 0x00) {
-            //writeByte(startAddress + i, &data, 1);
-			eefs_base_writeByte(startAddress + i,&data);
-        }
+        eefs_base_writeByte(startAddress + i,&data);
     }
     return RET_SUCCESS;
 }
@@ -604,7 +591,6 @@ u8 eefs_mbr_reset(u16 index)
  * @index:索引
  * @return u32 名字
  */
-
 u32 eefs_mbr_getName(u16 index) {
 	// ---------- 局部变量定义区---------- //
 	u16 startIndex;         // 该索引的起始位置
@@ -988,7 +974,7 @@ u16 eefs_data_getUsedCapacity(void)
 
 	// ---------- 业务处理---------- //
 	//(1)遍历索引区, 取出size相加
-	for (i = 0; i < 128; i++) {
+	for (i = 0; i < MAX_INDEX; i++) {
 		capacity += eefs_mbr_getSize(i);
 	}
 	return capacity;
@@ -1058,11 +1044,11 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	// ---------- 局部变量定义区---------- //
 	int i;
 	int n;
-	n = 0;
 	int j;
-
+    int ii, jj;
+    DATAStRUCT temp;
 	DATAStRUCT data;
-    u16 effectiveAddress = EE_START_DATA;   // 有效地址
+    u16 effectiveAddress;   // 有效地址
 	u16 nextAddress;        // 下一个有效地址
 	DATAStRUCT dataList[MAX_INDEX];    // 结构体数组
 	// ---------- 输入参数条件检测---------- //
@@ -1072,6 +1058,8 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	// ---------- 业务处理---------- //
 	//(1)遍历索引, 获取所有address有效的首地址
     printf("%s", G_LIST);
+    n = 0;
+    effectiveAddress = EE_START_DATA;
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (isEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
 			data.address = eefs_data_getHeadAddr(i);
@@ -1088,9 +1076,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
         }
 	}
 	//(2)将数组从小到大排序
-	int ii, jj;
 	jj = 0;
-	DATAStRUCT temp;
 	for (ii = 0; ii < MAX_INDEX - 1; ii++) {
 
 		for (jj = ii + 1; jj < MAX_INDEX; jj++) {

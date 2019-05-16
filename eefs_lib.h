@@ -64,6 +64,7 @@ typedef signed char  s8;
 #define SIZE_OFFSET 6                       // 大小单个偏移量
 #define STATUS_OFFSET 8                     // status单个偏移量
 #define DATA_DESCRIBE 2                     // 数据区描述
+#define STATUS_INITVALUE 0x50                     // 状态位初始值:01010000
 
 #define NAME_SIZE sizeof(u32)		        //name大小
 #define ADDR_SIZE sizeof(u16)               //address大小
@@ -97,7 +98,13 @@ typedef struct userNode{
 extern u8 G_LIST[EE_MAX_CAPACITY];                         // 模拟的整个缓存区
 extern u8 G_STATUS_LISI[MAX_INDEX];                        // 索引区数组
 
+// 接收数据的结构体
+typedef struct dataStruct {
+    u16 index;
+    u16 address;
+}DATAStRUCT;
 
+u16 isEffectiveAddress(u16 address); // 判断地址合法性
 u8 eefs_base_writeByte(u16 address,u8* data); //在eeprom的指定位置写入1个字节
 u8 eefs_base_readByte(u16 address); //在eeprom的指定位置读取1个字节
 u8 eefs_base_writeBytes(u16 address, u8* data, u16 dataLen); //在eeprom的指定位置写入dataLen个字节
