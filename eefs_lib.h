@@ -26,60 +26,59 @@ typedef int  s32;
 typedef short s16;
 typedef signed char  s8;
 
-#define EE_SYS_FLAG_OFFSET 0; //系统保留区标志位偏移量
-#define EE_SYS_VERSION_OFFSET 1; //系统保留区版本号偏移量
-#define EE_SYS_USEDCAPACITY_OFFSET 3; //系统保留区已使用空间标志偏移量
-#define EE_SYS_UNUSEDCAPACITY_OFFSET 5; //系统保留区未使用空间标志偏移量
+#define EE_SYS_FLAG_OFFSET 0;                                      //系统保留区标志位偏移量
+#define EE_SYS_VERSION_OFFSET 1;                                   //系统保留区版本号偏移量
+#define EE_SYS_USEDCAPACITY_OFFSET 3;                              //系统保留区已使用空间标志偏移量
+#define EE_SYS_UNUSEDCAPACITY_OFFSET 5;                            //系统保留区未使用空间标志偏移量
 
 
-#define BIT_DATA_MASK 0xC0                  // (11000000)数据状态位掩码
-#define BIT_DATA_UNMASK 0x63                // (00111111)数据状态位掩码
-#define BIT_NET_UNMASK 0xF3                 // (11110011)网络状态位掩码
-#define BIT_NET_MASK 0x0C                   // (00001100)网络状态位掩码
-#define BIT_INDEX_MASK 0x30                 // (00110000)索引状态位掩码
-#define BIT_INDEX_UNMASK 0xCF               // (11001111)索引状态位掩码
-#define BIT_GENFLAG_MASK 0x03               // (00000011)通用状态位掩码
-#define BIT_GENFLAG_UNMASK 0xFC             // (11111100)通用状态位掩码
+#define BIT_DATA_MASK 0xC0                                         // (11000000)数据状态位掩码
+#define BIT_DATA_UNMASK 0x63                                       // (00111111)数据状态位掩码
+#define BIT_NET_UNMASK 0xF3                                        // (11110011)网络状态位掩码
+#define BIT_NET_MASK 0x0C                                          // (00001100)网络状态位掩码
+#define BIT_INDEX_MASK 0x30                                        // (00110000)索引状态位掩码
+#define BIT_INDEX_UNMASK 0xCF                                      // (11001111)索引状态位掩码
+#define BIT_GENFLAG_MASK 0x03                                      // (00000011)通用状态位掩码
+#define BIT_GENFLAG_UNMASK 0xFC                                    // (11111100)通用状态位掩码
 
 
-// 地址
-#define TEMP_ADDRESS 2048                   // 模拟的数据区首地址
-#define EE_START_DATA 2048                  // 数据区起始地址
-#define EE_START_INDEX 64                   // 索引起始地址
-// 空间
-#define MAX_INDEX 128                       // 最大索引
-#define EE_MAX_CAPACITY 256 * 64            // 最大容量
-#define EE_SYS_CAPACITY 64                  // 系统预留容量
-#define EE_START_SYS 0						// 系统保留的描述区域起始位置
+                                                                   // 地址
+#define TEMP_ADDRESS 2048                                          // 模拟的数据区首地址
+#define EE_START_DATA 2048                                         // 数据区起始地址
+#define EE_START_INDEX 64                                          // 索引起始地址
+                                                                   // 空间
+#define MAX_INDEX 128                                              // 最大索引
+#define EE_MAX_CAPACITY 256 * 64                                   // 最大容量
+#define EE_SYS_CAPACITY 64                                         // 系统预留容量
+#define EE_START_SYS 0						                       // 系统保留的描述区域起始位置
 
-                                            // error返回值
-#define RET_SUCCESS 1                       // 成功返回值
-#define RET_FAILD   0                       // u8错误返回值
-#define RET_ERROR   -1                      // s8错误返回值
-#define ERR_INVALIDPARAM 10                 // 无效的参数
+                                                                   // error返回值
+#define RET_SUCCESS 1                                              // 成功返回值
+#define RET_FAILD   0                                              // u8错误返回值
+#define RET_ERROR   -1                                             // s8错误返回值
+#define ERR_INVALIDPARAM 10                                        // 无效的参数
 
-#define INDEX_SIZE 9                        // 每个索引节点空间
-#define NAME_OFFSET 0                       // name单个偏移量
-#define ADDR_OFFSET 4                       // 地址单个偏移量
-#define SIZE_OFFSET 6                       // 大小单个偏移量
-#define STATUS_OFFSET 8                     // status单个偏移量
-#define DATA_DESCRIBE 2                     // 数据区描述
 
-#define NAME_SIZE sizeof(u32)		        //name大小
-#define ADDR_SIZE sizeof(u16)               //address大小
-#define SIZE_SIZE sizeof(u16)               //size大小
-#define STATUS_SIZE sizeof(u8)              //status大小
+#define NAME_SIZE sizeof(u32)		                               //name大小
+#define ADDR_SIZE sizeof(u16)                                      //address大小
+#define SIZE_SIZE sizeof(u16)                                      //size大小
+#define STATUS_SIZE sizeof(u8)                                     //status大小
+#define NAME_OFFSET 0                                              // name单个偏移量
+#define ADDR_OFFSET (NAME_OFFSET+NAME_SIZE)			               // 地址单个偏移量
+#define SIZE_OFFSET (ADDR_OFFSET+ADDR_SIZE)                        // 大小单个偏移量
+#define STATUS_OFFSET (SIZE_OFFSET+SIZE_SIZE)                      // status单个偏移量
 
-#define DESC_SIZE sizeof(u16)              //desc大小
+#define INDEX_SIZE 9                                               // 每个索引节点空间
 
-#define UNUSEDCAPACITY_SIZE sizeof(u16)    //UnusedCapacity标识大小
-#define USEDCAPACITY_SIZE sizeof(u16)    //UsedCapacity标识大小
-#define EE_SYS_FLAG_SIZE sizeof(u8); //系统保留区标志位大小
-#define EE_SYS_VERSION_SIZE sizeof(u8); //系统保留区版本号大小
+#define DATA_DESCRIBE 2					                           // 数据区描述
+#define DESC_SIZE sizeof(u16)                                      //desc大小
+#define DESC_HIGH_SIZE 0					                       //desc高位大小
+#define DESC_LOW_SIZE 1						                       //desc低位大小
 
-#define DESC_HIGH_SIZE 0              //desc高位大小
-#define DESC_LOW_SIZE 1              //desc低位大小
-
+#define UNUSEDCAPACITY_SIZE sizeof(u16)                            //UnusedCapacity标识大小
+#define USEDCAPACITY_SIZE sizeof(u16)                              //UsedCapacity标识大小
+#define EE_SYS_FLAG_SIZE sizeof(u8);                               //系统保留区标志位大小
+#define EE_SYS_VERSION_SIZE sizeof(u8);                            //系统保留区版本号大小
 
 
 
