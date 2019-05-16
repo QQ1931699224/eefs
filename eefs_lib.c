@@ -21,19 +21,19 @@ typedef struct dataStruct {
 u8 eefs_base_readByte(u16 address) {
 	unsigned char value = *(G_LIST + address);
 	return value;
-}
+} 
 //在eeprom的指定位置读取1个字节
-u8 eefs_base_writeByte(u16 address, u8 * data) {
-	memcpy(G_LIST + address, data, 1);
+u8 eefs_base_writeByte(u16 address,u8 *data) {
+	memcpy(G_LIST + address, data,1);
 	return RET_SUCCESS;
 }
 //在eeprom的指定位置写入dataLen个字节
-u8 eefs_base_writeBytes(u16 address, u8 * data, u16 dataLen) {
+u8 eefs_base_writeBytes(u16 address, u8* data, u16 dataLen) {
 	memcpy(G_LIST + address, data, dataLen);
 	return RET_SUCCESS;
 }
 //从eeprom的指定位置读取retLen个字节
-u8 eefs_base_readBytes(u16 address, u8 * retData, u16 retLen) {
+u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
 	u16 i;
 	for (i = 0; i < retLen; i++)
 	{
@@ -52,23 +52,23 @@ u8 eefs_base_readBytes(u16 address, u8 * retData, u16 retLen) {
 
 s8 eefs_mbr_getStatus(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-	u16 startIndex;         // 该索引的起始位置
-	u16 statusOffset;       // status的位置
-	s8 data;                // 索引的status信息
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
-	}
-	// ---------- 业务处理---------- //
-	// (1). 找到索引起始位置
-	startIndex = EE_START_INDEX + index * INDEX_SIZE;
-	// (2). 找到status的位置
-	statusOffset = startIndex + STATUS_OFFSET;
-	// (3). 读数据
-	//data = readByte(statusOffset);
+    // ---------- 局部变量定义区---------- //
+    u16 startIndex;         // 该索引的起始位置
+    u16 statusOffset;       // status的位置
+    s8 data;                // 索引的status信息
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    // ---------- 业务处理---------- //
+    // (1). 找到索引起始位置
+    startIndex = EE_START_INDEX + index * INDEX_SIZE;
+    // (2). 找到status的位置
+    statusOffset = startIndex + STATUS_OFFSET;
+    // (3). 读数据
+    //data = readByte(statusOffset);
 	data = eefs_base_readByte(statusOffset);
-	return data;
+    return data;
 }
 
 /*
@@ -81,18 +81,18 @@ s8 eefs_mbr_getStatus(u16 index)
 
 u8 eefs_mbr_load(void)
 {
-	// ---------- 局部变量定义区---------- //
-	int i;
-	s8 data = '\0';     //索引区对应的status
-	// ---------- 输入参数条件检测---------- //
-
-	// ---------- 业务处理---------- //
-	//(1)循环取出数据
-	for (i = 0; i < MAX_INDEX; i++) {
-		data = eefs_mbr_getStatus(i);
-		G_STATUS_LISI[i] = data;
-	}
-	return RET_SUCCESS;
+    // ---------- 局部变量定义区---------- //
+    int i;
+    s8 data = '\0';     //索引区对应的status
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)循环取出数据
+    for (i = 0; i < MAX_INDEX; i++) {
+        data = eefs_mbr_getStatus(i);
+        G_STATUS_LISI[i] = data;
+    }
+    return RET_SUCCESS;
 }
 
 /*
@@ -106,36 +106,36 @@ u8 eefs_mbr_load(void)
 
 u8 eefs_mbr_create(u16 index, USERNODE userNode)
 {
-	// ---------- 局部变量定义区---------- //
-	u16 address;            // 数据存放的地址
-	u16 indexAddress;       // 索引在内存中的位置
-	NODE node;              // 索引结构体
-	// ---------- 输入参数条件检测---------- //
-	// (1)判断index是否合法
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	// (2)判断node size
-	// TODO:该处判断应该用剩余空间容量函数的返回值进行判断
-	if (userNode.size > EE_MAX_CAPACITY - EE_SYS_CAPACITY) {
-		return ERR_INVALIDPARAM;
-	}
-
-	// ---------- 业务处理---------- //
-	//(1)获取数据存放地址
-	address = getAddress(userNode.size);
-	if (eefs_mbr_CheckAddress(address) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	//(2)获取索引的位置
-	indexAddress = getIndexAddress(index);
-	//(3)给node结构体赋值
-	node.name = userNode.name;
-	node.address = address;
-	node.size = userNode.size;
-	node.status = 0x50;
-	//(4)写入数据到索引区, 返回成功
-	return writeDataToIndex(indexAddress, node);
+    // ---------- 局部变量定义区---------- //
+    u16 address;            // 数据存放的地址
+    u16 indexAddress;       // 索引在内存中的位置
+    NODE node;              // 索引结构体
+    // ---------- 输入参数条件检测---------- //
+    // (1)判断index是否合法
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    // (2)判断node size
+    // TODO:该处判断应该用剩余空间容量函数的返回值进行判断
+    if (userNode.size > EE_MAX_CAPACITY - EE_SYS_CAPACITY) {
+        return ERR_INVALIDPARAM;
+    }
+    
+    // ---------- 业务处理---------- //
+    //(1)获取数据存放地址
+    address = getAddress(userNode.size);
+    if (eefs_mbr_CheckAddress(address) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    //(2)获取索引的位置
+    indexAddress = getIndexAddress(index);
+    //(3)给node结构体赋值
+    node.name = userNode.name;
+    node.address = address;
+    node.size = userNode.size;
+    node.status = 0x50;
+    //(4)写入数据到索引区, 返回成功
+    return writeDataToIndex(indexAddress, node);
 }
 
 /*
@@ -148,14 +148,14 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
 
 u8 eefs_mbr_CheckIndex(u16 index)
 {
-	// index在0-128之间
-	if (index >= 0 && index < MAX_INDEX) {
-		return RET_SUCCESS;
-	}
-	else
-	{
-		return RET_FAILD;
-	}
+    // index在0-128之间
+    if (index >= 0 && index < MAX_INDEX) {
+        return RET_SUCCESS;
+    }
+    else
+    {
+        return RET_FAILD;
+    }
 }
 
 /*
@@ -168,7 +168,7 @@ u8 eefs_mbr_CheckIndex(u16 index)
 
 u16 getAddress(u16 size)
 {
-	return eefs_data_findUnusedAddr(size);
+    return eefs_data_findUnusedAddr(size);
 }
 
 /*
@@ -181,15 +181,15 @@ u16 getAddress(u16 size)
 
 u8 eefs_mbr_CheckAddress(u16 address)
 {
-	// TODO:后期根据业务完善
-	// 地址在系统预留空间与最大容量之间
-	if (address >= EE_SYS_CAPACITY && address < EE_MAX_CAPACITY) {
-		return RET_SUCCESS;
-	}
-	else
-	{
-		return RET_FAILD;
-	}
+    // TODO:后期根据业务完善
+    // 地址在系统预留空间与最大容量之间
+    if (address >= EE_SYS_CAPACITY && address < EE_MAX_CAPACITY) {
+        return RET_SUCCESS;
+    }
+    else
+    {
+        return RET_FAILD;
+    }
 }
 
 /*
@@ -202,7 +202,7 @@ u8 eefs_mbr_CheckAddress(u16 address)
 
 u16 getIndexAddress(u16 index)
 {
-	return EE_START_INDEX + index * INDEX_SIZE;
+    return EE_START_INDEX + index * INDEX_SIZE;
 }
 
 /*
@@ -216,10 +216,10 @@ u16 getIndexAddress(u16 index)
 
 u8 writeDataToIndex(u16 myAddress, NODE node)
 {
-	u8 data[INDEX_SIZE]; // 索引区中的单个索引
-	memcpy(data, (u8*)& node, INDEX_SIZE);
+    u8 data[INDEX_SIZE]; // 索引区中的单个索引
+    memcpy(data, (u8 *)&node, INDEX_SIZE);
 	eefs_base_writeBytes(myAddress, data, INDEX_SIZE);
-	return RET_SUCCESS;
+    return RET_SUCCESS;
 }
 
 /*
@@ -232,22 +232,22 @@ u8 writeDataToIndex(u16 myAddress, NODE node)
 
 s8 eefs_mbr_getDataStatus(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-	s8 statusData;  // 对应索引的status
-	u8 data;        // 7,8位的数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
-	}
-	// ---------- 业务处理---------- //
-	//(1)找到对应索引的status 11001100
-	statusData = eefs_mbr_getStatus(index);
-	//(2)取7, 8位数据状态: 11001100 & 11000000 = 11000000
-	data = statusData & BIT_DATA_MASK;
-	//(3)右移: 00000011
-	data = data >> 6;
-
-	return data;
+    // ---------- 局部变量定义区---------- //
+    s8 statusData;  // 对应索引的status
+    u8 data;        // 7,8位的数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    // ---------- 业务处理---------- //
+    //(1)找到对应索引的status 11001100
+    statusData = eefs_mbr_getStatus(index);
+    //(2)取7, 8位数据状态: 11001100 & 11000000 = 11000000
+    data = statusData & BIT_DATA_MASK;
+    //(3)右移: 00000011
+    data = data >> 6;
+    
+    return data;
 }
 
 /*
@@ -259,33 +259,33 @@ s8 eefs_mbr_getDataStatus(u16 index)
  * @return : 1:成功 0：失败
  */
 
-u8 eefs_mbr_setDataStatus(u16 index, u8 val)
+u8 eefs_mbr_setDataStatus(u16 index ,u8 val)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // 对应索引的status
-	u8 data;            // 设置的数据状态
-	u8 newData;         // 置零后的数据
-	u8 newVal;          // 移位后的数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
-	}
-	if (val > 3 || val < 0) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)找到对应索引的status 11001100
-	statusData = eefs_mbr_getStatus(index);
-	//(2)&运算, 7,8位清零: 11001100 & 00111111 = 00001100
-	newData = statusData & BIT_DATA_UNMASK;
-	//(3)传入的数据左移6位, 对准位置:00000011 << 6 = 11000000
-	newVal = val << 6;
-	//(4)数据状态: 00001100 | 11000000 = 11001100
-	data = newData | newVal;
-	//(5)给索引区的状态赋值
-	eefs_mbr_setStatus(index, data);
-	return RET_SUCCESS;
-
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // 对应索引的status
+    u8 data;            // 设置的数据状态
+    u8 newData;         // 置零后的数据
+    u8 newVal;          // 移位后的数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    if (val > 3 || val < 0) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)找到对应索引的status 11001100
+    statusData = eefs_mbr_getStatus(index);
+    //(2)&运算, 7,8位清零: 11001100 & 00111111 = 00001100
+    newData = statusData & BIT_DATA_UNMASK;
+    //(3)传入的数据左移6位, 对准位置:00000011 << 6 = 11000000
+    newVal = val << 6;
+    //(4)数据状态: 00001100 | 11000000 = 11001100
+    data = newData | newVal;
+    //(5)给索引区的状态赋值
+    eefs_mbr_setStatus(index, data);
+    return RET_SUCCESS;
+    
 }
 
 /*
@@ -297,22 +297,22 @@ u8 eefs_mbr_setDataStatus(u16 index, u8 val)
  * @return : 1:成功 0：失败
  */
 
-u8 eefs_mbr_setStatus(u16 index, u8 val)
+u8 eefs_mbr_setStatus(u16 index ,u8 val)
 {
-	// ---------- 局部变量定义区---------- //
-	u16 startIndex;     // 索引的起始位置
-	u16 startStatus;    // 索引状态的起始位置
-	// ---------- 输入参数条件检测---------- //
-
-	// ---------- 业务处理---------- //
-	//(1)找到索引状态的起始位置
-	startIndex = getIndexAddress(index);
-	startStatus = startIndex + STATUS_OFFSET;
-	//(2)设置索引状态
-	//writeByte(startStatus, &val, 1);
+    // ---------- 局部变量定义区---------- //
+    u16 startIndex;     // 索引的起始位置
+    u16 startStatus;    // 索引状态的起始位置
+    // ---------- 输入参数条件检测---------- //
+    
+    // ---------- 业务处理---------- //
+    //(1)找到索引状态的起始位置
+    startIndex = getIndexAddress(index);
+    startStatus = startIndex + STATUS_OFFSET;
+    //(2)设置索引状态
+    //writeByte(startStatus, &val, 1);
 	eefs_base_writeByte(startStatus, &val);
-	G_STATUS_LISI[index] = val;
-	return RET_SUCCESS;
+    G_STATUS_LISI[index] = val;
+    return RET_SUCCESS;
 }
 
 /*
@@ -325,21 +325,21 @@ u8 eefs_mbr_setStatus(u16 index, u8 val)
 
 s8 eefs_mbr_getIndexStatus(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // status数据
-	u8 newData;         // 5,6位的状态数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
-	}
-	// ---------- 业务处理---------- //
-	//(1)获取状态位数据 11111100
-	statusData = eefs_mbr_getStatus(index);
-	//(2)获取五六位状态: 11111100 & 00110000 = 00110000
-	newData = statusData & BIT_INDEX_MASK;
-	//(3)将得到的数据右移4位:00000011
-	newData >>= 4;
-	return newData;
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // status数据
+    u8 newData;         // 5,6位的状态数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取状态位数据 11111100
+    statusData = eefs_mbr_getStatus(index);
+    //(2)获取五六位状态: 11111100 & 00110000 = 00110000
+    newData = statusData & BIT_INDEX_MASK;
+    //(3)将得到的数据右移4位:00000011
+    newData >>= 4;
+    return newData;
 }
 
 /*
@@ -350,33 +350,33 @@ s8 eefs_mbr_getIndexStatus(u16 index)
  * @return : 1:成功 0：失败
  */
 
-u8 eefs_mbr_setIndexStatus(u16 index, u8 val)
+u8 eefs_mbr_setIndexStatus(u16 index , u8 val)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // 对应索引的status
-	u8 data;            // 数据状态
-	u8 newData;         // 5,6位清零后的数据
-	u8 newVal;          // 移位后的数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	if (val > 3) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)找到对应索引的status 11110000
-	statusData = eefs_mbr_getStatus(index);
-	//(2)&运算, 把五六位清零: 11110000 & 11001111 = 11000000
-	newData = statusData & BIT_INDEX_UNMASK;
-	//(3)传入的数据左移4位, 对准位置:00000011 << 4 = 00110000
-	newVal = val << 4;
-	//(4)设置数据状态: 11000000 | 00110000 = 11110000
-	data = newData | newVal;
-	//(5)写入数据状态
-	eefs_mbr_setStatus(index, data);
-	return RET_SUCCESS;
-
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // 对应索引的status
+    u8 data;            // 数据状态
+    u8 newData;         // 5,6位清零后的数据
+    u8 newVal;          // 移位后的数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (val > 3) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)找到对应索引的status 11110000
+    statusData = eefs_mbr_getStatus(index);
+    //(2)&运算, 把五六位清零: 11110000 & 11001111 = 11000000
+    newData = statusData & BIT_INDEX_UNMASK;
+    //(3)传入的数据左移4位, 对准位置:00000011 << 4 = 00110000
+    newVal = val << 4;
+    //(4)设置数据状态: 11000000 | 00110000 = 11110000
+    data = newData | newVal;
+    //(5)写入数据状态
+    eefs_mbr_setStatus(index, data);
+    return RET_SUCCESS;
+    
 }
 
 /*
@@ -389,22 +389,22 @@ u8 eefs_mbr_setIndexStatus(u16 index, u8 val)
 
 s8 eefs_mbr_getNetStatus(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // 状态位数据
-	u8 newData;         // 3,4位的数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
-	}
-	// ---------- 业务处理---------- //
-	//(1)获取状态位  11001100
-	statusData = eefs_mbr_getStatus(index);
-	//(2)&运算, 把除了3,4位的其他位清零:11001100 & 00001100 = 00001100
-	newData = statusData & BIT_NET_MASK;
-	//(3)右移两位 00001100 >> 2 = 00000011
-	newData >>= 2;
-
-	return newData;
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // 状态位数据
+    u8 newData;         // 3,4位的数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取状态位  11001100
+    statusData = eefs_mbr_getStatus(index);
+    //(2)&运算, 把除了3,4位的其他位清零:11001100 & 00001100 = 00001100
+    newData = statusData & BIT_NET_MASK;
+    //(3)右移两位 00001100 >> 2 = 00000011
+    newData >>= 2;
+    
+    return newData;
 }
 
 /*
@@ -416,31 +416,31 @@ s8 eefs_mbr_getNetStatus(u16 index)
  * @return : 1:成功 0：失败
  */
 
-u8 eefs_mbr_setNetStatus(u16 index, u8 val)
+u8 eefs_mbr_setNetStatus(u16 index ,u8 val)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // 状态位数据
-	u8 newData;         // 清零后的数据
-	u8 newVal;          // 移位后的数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	if (val > 3) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)获取状态位 : 11001100
-	statusData = eefs_mbr_getStatus(index);
-	//(2)将3,4位置清零: 11001100 & 11110011 = 11000000
-	newData = statusData & BIT_NET_UNMASK;
-	//(3)将val左移两位: 00000011 << 2 = 00001100
-	newVal = val << 2;
-	//(3)进行或运算赋值: 11000000 | 00001100 = 11001100
-	newData |= newVal;
-	//(4)写入
-	eefs_mbr_setStatus(index, newData);
-	return RET_SUCCESS;
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // 状态位数据
+    u8 newData;         // 清零后的数据
+    u8 newVal;          // 移位后的数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (val > 3) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取状态位 : 11001100
+    statusData = eefs_mbr_getStatus(index);
+    //(2)将3,4位置清零: 11001100 & 11110011 = 11000000
+    newData = statusData & BIT_NET_UNMASK;
+    //(3)将val左移两位: 00000011 << 2 = 00001100
+    newVal = val << 2;
+    //(3)进行或运算赋值: 11000000 | 00001100 = 11001100
+    newData |= newVal;
+    //(4)写入
+    eefs_mbr_setStatus(index, newData);
+    return RET_SUCCESS;
 }
 
 /*
@@ -453,19 +453,19 @@ u8 eefs_mbr_setNetStatus(u16 index, u8 val)
 
 s8 eefs_mbr_getGenFlag(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // 状态位数据
-	u8 newData;         // 1,2位数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
-	}
-	// ---------- 业务处理---------- //
-	//(1)获取状态位 11000011
-	statusData = eefs_mbr_getStatus(index);
-	//(2)进行与运算, 将除了1,2位的其他位清零: 11000011 & 00000011 = 00000011
-	newData = statusData & BIT_GENFLAG_MASK;
-	return newData;
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // 状态位数据
+    u8 newData;         // 1,2位数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_ERROR;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取状态位 11000011
+    statusData = eefs_mbr_getStatus(index);
+    //(2)进行与运算, 将除了1,2位的其他位清零: 11000011 & 00000011 = 00000011
+    newData = statusData & BIT_GENFLAG_MASK;
+    return newData;
 }
 
 /*
@@ -477,28 +477,28 @@ s8 eefs_mbr_getGenFlag(u16 index)
  * @return : 1:成功 0：失败
  */
 
-u8 eefs_mbr_setGenFlag(u16 index, u8 val)
+u8 eefs_mbr_setGenFlag(u16 index , u8 val)
 {
-	// ---------- 局部变量定义区---------- //
-	u8 statusData;      // 状态位数据
-	u8 newData;         // 1,2位清零后的数据
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	if (val > 3) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)获取状态位 11000011
-	statusData = eefs_mbr_getStatus(index);
-	//(2)将1,2位清零:11000011 & 11111100 = 11000000
-	newData = statusData & BIT_GENFLAG_UNMASK;
-	//(3)进行或运算赋值: 11000000 | 00000011 = 11000011
-	newData |= val;
-	//(4)写入数据
-	eefs_mbr_setStatus(index, newData);
-	return RET_SUCCESS;
+    // ---------- 局部变量定义区---------- //
+    u8 statusData;      // 状态位数据
+    u8 newData;         // 1,2位清零后的数据
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (val > 3) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)获取状态位 11000011
+    statusData = eefs_mbr_getStatus(index);
+    //(2)将1,2位清零:11000011 & 11111100 = 11000000
+    newData = statusData & BIT_GENFLAG_UNMASK;
+    //(3)进行或运算赋值: 11000000 | 00000011 = 11000011
+    newData |= val;
+    //(4)写入数据
+    eefs_mbr_setStatus(index, newData);
+    return RET_SUCCESS;
 }
 
 /*
@@ -512,24 +512,24 @@ u8 eefs_mbr_setGenFlag(u16 index, u8 val)
  */
 u8 eefs_mbr_update(u16 index, u32 name, u8 status)
 {
-	// ---------- 局部变量定义区---------- //
-
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	if (eefs_mbr_getIndexStatus(index) == 0x00) {
-		eefs_mbr_setIndexStatus(index, 2);
-	}
-	if (eefs_mbr_getIndexStatus(index) == 0x02) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)更新名字
-	eefs_mbr_setName(index, name);
-	//(2)更新状态
-	eefs_mbr_setStatus(index, status);
-	return RET_SUCCESS;
+    // ---------- 局部变量定义区---------- //
+    
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x00) {
+        eefs_mbr_setIndexStatus(index, 2);
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)更新名字
+    eefs_mbr_setName(index, name);
+    //(2)更新状态
+    eefs_mbr_setStatus(index, status);
+    return RET_SUCCESS;
 }
 
 /*
@@ -541,22 +541,22 @@ u8 eefs_mbr_update(u16 index, u32 name, u8 status)
  */
 u8 eefs_mbr_delete(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	if (eefs_mbr_getIndexStatus(index) == 0x00) {
-		eefs_mbr_setIndexStatus(index, 2);
-	}
-	if (eefs_mbr_getIndexStatus(index) == 0x02) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)将indexStatus变为2
-	eefs_mbr_setIndexStatus(index, 2);
-	return RET_SUCCESS;
+    // ---------- 局部变量定义区---------- //
+    
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x00) {
+        eefs_mbr_setIndexStatus(index, 2);
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)将indexStatus变为2
+    eefs_mbr_setIndexStatus(index, 2);
+    return RET_SUCCESS;
 }
 
 /*
@@ -568,32 +568,32 @@ u8 eefs_mbr_delete(u16 index)
  */
 u8 eefs_mbr_reset(u16 index)
 {
-	// ---------- 局部变量定义区---------- //
-	u16 startAddress; // 起始索引位置
-	int i;
-	u8 data = 0x00;
-	// ---------- 输入参数条件检测---------- //
-	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_FAILD;
-	}
-	if (eefs_mbr_getIndexStatus(index) == 0x00) {
-		eefs_mbr_setIndexStatus(index, 2);
-	}
-	if (eefs_mbr_getIndexStatus(index) == 0x02) {
-		return RET_FAILD;
-	}
-	// ---------- 业务处理---------- //
-	//(1)找到起始索引位置
-	startAddress = getIndexAddress(index);
-
-	//(2)循环赋0
-	for (i = 0; i < INDEX_SIZE; i++) {
-		if (G_LIST[startAddress + i] != 0x00) {
-			//writeByte(startAddress + i, &data, 1);
-			eefs_base_writeByte(startAddress + i, &data);
-		}
-	}
-	return RET_SUCCESS;
+    // ---------- 局部变量定义区---------- //
+    u16 startAddress; // 起始索引位置
+    int i;
+    u8 data = 0x00;
+    // ---------- 输入参数条件检测---------- //
+    if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+        return RET_FAILD;
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x00) {
+        eefs_mbr_setIndexStatus(index, 2);
+    }
+    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+        return RET_FAILD;
+    }
+    // ---------- 业务处理---------- //
+    //(1)找到起始索引位置
+    startAddress = getIndexAddress(index);
+    
+    //(2)循环赋0
+    for (i = 0; i < INDEX_SIZE; i++) {
+        if (G_LIST[startAddress + i] != 0x00) {
+            //writeByte(startAddress + i, &data, 1);
+			eefs_base_writeByte(startAddress + i,&data);
+        }
+    }
+    return RET_SUCCESS;
 }
 
 /*
@@ -622,7 +622,7 @@ u32 eefs_mbr_getName(u16 index) {
 	name = 0;
 	name = *(u32*)names; //赋值name
 	return name;
-}
+}   
 
 /*
  * Auth:张添程
@@ -644,11 +644,11 @@ u8 eefs_mbr_setName(u16 index, u32 name) {
 	// (1). 找到索引起始位置 找到name的位置
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
 	// (2).读取名字的四字节
-	memcpy(names, (u8*)& name, NAME_SIZE);
+	memcpy(names, (u8*)&name, NAME_SIZE);
 	//writeByte(startIndex, names, NAME_SIZE);
 	eefs_base_writeBytes(startIndex, names, NAME_SIZE);
 	return RET_SUCCESS;
-}
+}           
 
 
 /*
@@ -725,7 +725,7 @@ u16 eefs_mbr_getIndexHeadAddress(u16 index) {
  */
 u16 eefs_mbr_getIndexNameHeadAddress(u16 index) {
 	return eefs_mbr_getIndexAddressHeadAddress(index);
-}
+}   
 /*
  * Auth:张添程
  * Date: 2019-5-14
@@ -735,7 +735,7 @@ u16 eefs_mbr_getIndexNameHeadAddress(u16 index) {
  */
 u16 eefs_mbr_getIndexAddressHeadAddress(u16 index) {
 	return eefs_mbr_getIndexHeadAddress(index) + ADDR_OFFSET;
-}
+}  
 /*
  * Auth:张添程
  * Date: 2019-5-14
@@ -745,7 +745,7 @@ u16 eefs_mbr_getIndexAddressHeadAddress(u16 index) {
  */
 u16 eefs_mbr_getIndexSizeHeadAddress(u16 index) {
 	return eefs_mbr_getIndexHeadAddress(index) + SIZE_OFFSET;
-}
+}   
 /*
  * Auth:张添程
  * Date: 2019-5-14
@@ -765,7 +765,7 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index) {
  * @return : u16 地址
  */
 u16 eefs_data_getDescHeadAddress(u16 index) {
-	return eefs_mbr_getAddress(index) + eefs_mbr_getSize(index);
+   return eefs_mbr_getAddress(index) + eefs_mbr_getSize(index);
 }
 
 /*
@@ -794,7 +794,7 @@ u16 eefs_data_getDesc(u16 index) {
 	desc = 0;
 	desc = *(u16*)descs; //赋值desc
 	return desc;
-}
+} 
 /*
  * Auth:张添程
  * Date: 2019-5-14
@@ -820,7 +820,7 @@ u8 eefs_data_setDesc(u16 index, u16 desc) {
 	//eefs_base_writeBytes(startIndex, descs, DESC_SIZE);
 	return RET_SUCCESS;
 }
-
+  
 /*
  * Auth:张添程
  * Date: 2019-5-14
@@ -886,7 +886,7 @@ u8 eefs_data_getDescLow(u16 index) {
 
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到描述低位的位置
-	startIndex = eefs_data_getDescHeadAddress(index) + 1;
+	startIndex = eefs_data_getDescHeadAddress(index)+1;
 	// (2).读取描述低位的1字节
 	descLow = eefs_base_readByte(startIndex);
 	return descLow;
@@ -909,7 +909,7 @@ u8 eefs_data_setDescLow(u16 index, u8 value) {
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到desc低位的位置
-	startIndex = eefs_data_getDescHeadAddress(index) + 1;
+	startIndex = eefs_data_getDescHeadAddress(index)+1;
 	// (2).写入描述的低位
 	//writeByte(startIndex, &value, 1);
 	eefs_base_writeByte(startIndex, &value);
@@ -1061,7 +1061,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	int j;
 
 	DATAStRUCT data;
-	u16 effectiveAddress = EE_START_DATA;   // 有效地址
+    u16 effectiveAddress = EE_START_DATA;   // 有效地址
 	u16 nextAddress;        // 下一个有效地址
 	DATAStRUCT dataList[MAX_INDEX];    // 结构体数组
 	// ---------- 输入参数条件检测---------- //
@@ -1070,7 +1070,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	}
 	// ---------- 业务处理---------- //
 	//(1)遍历索引, 获取所有address有效的首地址
-	printf("%s", G_LIST);
+    printf("%s", G_LIST);
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (isEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
 			data.address = eefs_data_getHeadAddr(i);
@@ -1078,13 +1078,13 @@ u16 eefs_data_findUnusedAddr(u16 size)
 			dataList[n] = data;
 			n++;
 		}
-		else
-		{
-			data.address = 0x00;
-			data.index = i;
-			dataList[n] = data;
-			n++;
-		}
+        else
+        {
+            data.address = 0x00;
+            data.index = i;
+            dataList[n] = data;
+            n++;
+        }
 	}
 	//(2)将数组从小到大排序
 	int ii, jj;
@@ -1108,24 +1108,24 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	//(3)遍历地址数组
 	for (j = 0; j < MAX_INDEX; j++) {
 		if (dataList[j].address < effectiveAddress) {    // 第一个如果为0, 则跳出循环
-			continue;      // 返回起始位置
+            continue;      // 返回起始位置
 		}
 		else
 		{
-			nextAddress = dataList[j].address;
-			if (nextAddress - effectiveAddress >= size) { // 空间够
-				return effectiveAddress;
-			}
-			else
-			{
-				effectiveAddress = eefs_data_getTailAddr(dataList[j].index);
-			}
+            nextAddress = dataList[j].address;
+            if (nextAddress - effectiveAddress >= size) { // 空间够
+                return effectiveAddress;
+            }
+            else
+            {
+                effectiveAddress = eefs_data_getTailAddr(dataList[j].index);
+            }
 		}
 	}
-	if (effectiveAddress + size < EE_MAX_CAPACITY) {
-		return effectiveAddress;
-	}
-	return RET_FAILD;
+    if (effectiveAddress + size < EE_MAX_CAPACITY) {
+        return effectiveAddress;
+    }
+    return RET_FAILD;
 }
 
 /*
