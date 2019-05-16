@@ -77,6 +77,11 @@ typedef signed char  s8;
 #define EE_SYS_FLAG_SIZE sizeof(u8); //系统保留区标志位大小
 #define EE_SYS_VERSION_SIZE sizeof(u8); //系统保留区版本号大小
 
+#define DESC_HIGH_SIZE 0              //desc高位大小
+#define DESC_LOW_SIZE 1              //desc低位大小
+
+
+
 
 // 索引区结构体
 typedef struct node{

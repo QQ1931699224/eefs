@@ -17,22 +17,61 @@ typedef struct dataStruct {
 	u16 address;
 }DATAStRUCT;
 
-//在eeprom的指定位置读取1个字节
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc://在eeprom的指定位置读取1个字节
+ * @index:地址
+ * @return : u8
+ */
 u8 eefs_base_readByte(u16 address) {
-	unsigned char value = *(G_LIST + address);
+	u8 value = *(G_LIST + address);
 	return value;
 } 
-//在eeprom的指定位置读取1个字节
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc:在eeprom的指定位置写入1个字节
+ * @index:地址
+ * @return : u8
+ */
 u8 eefs_base_writeByte(u16 address,u8 *data) {
+	//
+	u8 lastData;
+	lastData = eefs_base_readByte(address);
+	if (lastData == *data)
+	{
+		return RET_SUCCESS;
+	}
 	memcpy(G_LIST + address, data,1);
 	return RET_SUCCESS;
 }
-//在eeprom的指定位置写入dataLen个字节
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc://在eeprom的指定位置写入dataLen个字节
+ * @address:地址
+ * @data u8
+ * @datalen 长度
+ * @return : 0,1
+ */
 u8 eefs_base_writeBytes(u16 address, u8* data, u16 dataLen) {
 	memcpy(G_LIST + address, data, dataLen);
 	return RET_SUCCESS;
 }
-//从eeprom的指定位置读取retLen个字节
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc://从eeprom的指定位置读取retLen个字节
+ * @address:地址
+ * @data u8
+ * @datalen 长度
+ * @return : 0,1
+ */
 u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen) {
 	u16 i;
 	for (i = 0; i < retLen; i++)
@@ -839,7 +878,7 @@ u8 eefs_data_setDescHigh(u16 index, u8 value) {
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到desc高位的位置
-	startIndex = eefs_data_getDescHeadAddress(index);
+	startIndex = eefs_data_getDescHeadAddress(index)+ DESC_HIGH_SIZE;
 	// (2).写入描述的高位
 	//writeByte(startIndex, &value, 1);
 	eefs_base_writeByte(startIndex, &value);
@@ -864,7 +903,7 @@ u8 eefs_data_getDescHigh(u16 index) {
 
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到描述高位的位置
-	startIndex = eefs_data_getDescHeadAddress(index);
+	startIndex = eefs_data_getDescHeadAddress(index)+ DESC_HIGH_SIZE;
 	// (2).读取描述高位的1字节
 	descHigh = eefs_base_readByte(startIndex);
 	return descHigh;
@@ -887,7 +926,7 @@ u8 eefs_data_getDescLow(u16 index) {
 
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到描述低位的位置
-	startIndex = eefs_data_getDescHeadAddress(index)+1;
+	startIndex = eefs_data_getDescHeadAddress(index)+ DESC_LOW_SIZE;
 	// (2).读取描述低位的1字节
 	descLow = eefs_base_readByte(startIndex);
 	return descLow;
@@ -910,7 +949,7 @@ u8 eefs_data_setDescLow(u16 index, u8 value) {
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到desc低位的位置
-	startIndex = eefs_data_getDescHeadAddress(index)+1;
+	startIndex = eefs_data_getDescHeadAddress(index)+ DESC_LOW_SIZE;
 	// (2).写入描述的低位
 	//writeByte(startIndex, &value, 1);
 	eefs_base_writeByte(startIndex, &value);

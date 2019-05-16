@@ -16,7 +16,7 @@ void testEefs_mbr_getIndexStatus(void);
 void testEefs_mbr_getNetStatus(void);
 void testEefs_mbr_getGenFlagStatus(void);
 void testEefs_mbr_getName(void);
-void testEefs_mbr_getAddress(void);  
+void testEefs_mbr_getAddress(void);
 void testEefs_data_getDesc(void);
 void testEefs_mbr_create1(void);
 
@@ -27,18 +27,18 @@ void testEefs_allCreate(void);
 void testEefs_setValueWithOffset(void);
 
 
-int main(int argc, const char *argv[]) {
-	
+int main(int argc, const char* argv[]) {
+
 	testEefs_data_getSys();
-    testEefs_mbr_create();
-    testEefs_mbr_create1();
-//    testEefs_create();
-//    testEefs_allCreate();
-    testEefs_setValueWithOffset();
-    testEefs_mbr_getDataStatus();
-    testEefs_mbr_getIndexStatus();
-    testEefs_mbr_getNetStatus();
-    testEefs_mbr_getGenFlagStatus();
+	testEefs_mbr_create();
+	testEefs_mbr_create1();
+	//    testEefs_create();
+	//    testEefs_allCreate();
+	testEefs_setValueWithOffset();
+	testEefs_mbr_getDataStatus();
+	testEefs_mbr_getIndexStatus();
+	testEefs_mbr_getNetStatus();
+	testEefs_mbr_getGenFlagStatus();
 	testEefs_mbr_getName();
 	testEefs_mbr_getAddress();
 	//printf("%s", G_STATUS_LISI);
@@ -46,11 +46,11 @@ int main(int argc, const char *argv[]) {
 	eefs_mbr_update(100, 256, 3);
 	testEefs_data_getDesc();
 
-	printf("%s",G_LIST);
+	printf("%s", G_LIST);
 
 	printf("总= %s", G_LIST);
 
-    return 0;
+	return 0;
 }
 
 /////////////////
@@ -64,46 +64,46 @@ int main(int argc, const char *argv[]) {
  */
 void testEefs_mbr_create(void)
 {
-    USERNODE userNode;
-    userNode.name = 2048;
-    userNode.size = 100;
-    // index在0 - 128之间
-    eefs_mbr_create(0, userNode);
-    NODE *myNode;
-    u8 data[9];
-    int i;
-    for (i = 0; i < 9; i++) {
-        data[i] = eefs_base_readByte(164 + i);
-    }
-    myNode = (void *)malloc(9);
-    memcpy((u8 *)myNode, data, 9);
-    eefs_mbr_load();
-    
+	USERNODE userNode;
+	userNode.name = 2048;
+	userNode.size = 100;
+	// index在0 - 128之间
+	eefs_mbr_create(0, userNode);
+	NODE* myNode;
+	u8 data[9];
+	int i;
+	for (i = 0; i < 9; i++) {
+		data[i] = eefs_base_readByte(164 + i);
+	}
+	myNode = (void*)malloc(9);
+	memcpy((u8*)myNode, data, 9);
+	eefs_mbr_load();
+
 }
 
 
 void testEefs_mbr_create1(void)
 {
-    //printf("%s", G_LIST);
-    USERNODE userNode;
-    userNode.name = 300;
-    userNode.size = 100;
-    // index在0 - 128之间
-    eefs_mbr_create(1, userNode);
-    NODE *myNode;
-    u8 data[9];
-    int i;
-    for (i = 0; i < 9; i++) {
-									  
-        data[i] = eefs_base_readByte(164 + i);
-    }
-    myNode = malloc(9);
-    memcpy((u8 *)myNode, data, 9);
-    //printf("%s", G_LIST);
-    
-    eefs_mbr_load();
-    //printf("%s", G_STATUS_LISI);
-    
+	//printf("%s", G_LIST);
+	USERNODE userNode;
+	userNode.name = 300;
+	userNode.size = 100;
+	// index在0 - 128之间
+	eefs_mbr_create(1, userNode);
+	NODE* myNode;
+	u8 data[9];
+	int i;
+	for (i = 0; i < 9; i++) {
+
+		data[i] = eefs_base_readByte(164 + i);
+	}
+	myNode = malloc(9);
+	memcpy((u8*)myNode, data, 9);
+	//printf("%s", G_LIST);
+
+	eefs_mbr_load();
+	//printf("%s", G_STATUS_LISI);
+
 }
 
 /*
@@ -115,9 +115,9 @@ void testEefs_mbr_create1(void)
  */
 void testEefs_mbr_getDataStatus(void)
 {
-    u8 data;
-    eefs_mbr_setDataStatus(100, 3);
-    data = eefs_mbr_getDataStatus(100);
+	u8 data;
+	eefs_mbr_setDataStatus(100, 3);
+	data = eefs_mbr_getDataStatus(100);
 	printf("data= %d\n", data);
 }
 
@@ -130,10 +130,10 @@ void testEefs_mbr_getDataStatus(void)
  */
 void testEefs_mbr_getIndexStatus(void)
 {
-    u8 data;
-    // 0 <= index <= 128, 0 <= val <= 3
-    eefs_mbr_setIndexStatus(100, 1);
-    data = eefs_mbr_getIndexStatus(100);
+	u8 data;
+	// 0 <= index <= 128, 0 <= val <= 3
+	eefs_mbr_setIndexStatus(100, 1);
+	data = eefs_mbr_getIndexStatus(100);
 	printf("index=%d\n", data);
 }
 
@@ -146,10 +146,10 @@ void testEefs_mbr_getIndexStatus(void)
  */
 void testEefs_mbr_getNetStatus(void)
 {
-    u8 data;
-    // 0 <= index <= 128, 0 <= val <= 3
-    eefs_mbr_setNetStatus(100, 3);
-    data = eefs_mbr_getNetStatus(100);
+	u8 data;
+	// 0 <= index <= 128, 0 <= val <= 3
+	eefs_mbr_setNetStatus(100, 3);
+	data = eefs_mbr_getNetStatus(100);
 	printf("net=%d\n", data);
 }
 
@@ -162,10 +162,10 @@ void testEefs_mbr_getNetStatus(void)
  */
 void testEefs_mbr_getGenFlagStatus(void)
 {
-    u8 data;
-    // 0 <= index <= 128, 0 <= val <= 3
-    eefs_mbr_setGenFlag(100, 2);
-    data = eefs_mbr_getGenFlag(100);
+	u8 data;
+	// 0 <= index <= 128, 0 <= val <= 3
+	eefs_mbr_setGenFlag(100, 2);
+	data = eefs_mbr_getGenFlag(100);
 	printf("genflag=%d\n", data);
 }
 
@@ -206,7 +206,7 @@ void testEefs_mbr_getAddress(void)
  * @paramName:无
  * @return : 无
  */
-void testEefs_data_getDesc(void) 
+void testEefs_data_getDesc(void)
 {
 	u16 data;
 	u8 high;
@@ -260,14 +260,14 @@ void testEefs_data_getSys(void)
  */
 void testEefs_create()
 {
-    USERNODE userNode;
-    userNode.name = 20;
-    userNode.size = 100;
-    eefs_create(2, userNode);
-    printf("%s", G_LIST);
-    
-    eefs_delete(2);
-    printf("%s", G_LIST);
+	USERNODE userNode;
+	userNode.name = 20;
+	userNode.size = 100;
+	eefs_create(2, userNode);
+	printf("%s", G_LIST);
+
+	eefs_delete(2);
+	printf("%s", G_LIST);
 }
 
 /*
@@ -279,16 +279,16 @@ void testEefs_create()
  */
 void testEefs_allCreate()
 {
-    USERNODE list[10];
-    int i;
-    for (i = 0; i < 10; i++) {
-        list[i].name = 200+i;
-        list[i].size = 100;
-    }
-    eefs_createAll(list, 10);
-    printf("%s", G_LIST);
-    eefs_deleteAll();
-    printf("%s", G_LIST);
+	USERNODE list[10];
+	int i;
+	for (i = 0; i < 10; i++) {
+		list[i].name = 200 + i;
+		list[i].size = 100;
+	}
+	eefs_createAll(list, 10);
+	printf("%s", G_LIST);
+	eefs_deleteAll();
+	printf("%s", G_LIST);
 }
 
 /*
@@ -300,10 +300,10 @@ void testEefs_allCreate()
  */
 void testEefs_setValueWithOffset()
 {
-    u8 data;
-    data = 1;
-    u8 ret_data;
-    eefs_setValueWithOffset(2048, 50, &data, 1);
-    eefs_getValueWithOffset(2048, 50, &ret_data, 1);
-    printf("%s", G_LIST);
+	u8 data;
+	data = 1;
+	u8 ret_data;
+	eefs_setValueWithOffset(2048, 50, &data, 1);
+	eefs_getValueWithOffset(2048, 50, &ret_data, 1);
+	printf("%s", G_LIST);
 }
