@@ -1069,7 +1069,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	}
 	// ---------- 业务处理---------- //
 	//(1)遍历索引, 获取所有address有效的首地址
-    printf("%s", G_LIST);
+    
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (isEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
 			data.address = eefs_data_getHeadAddr(i);

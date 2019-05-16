@@ -30,11 +30,11 @@ int main(int argc, const char *argv[]) {
     testEefs_mbr_getGenFlagStatus();
 	testEefs_mbr_getName();
 	testEefs_mbr_getAddress();
-	printf("%s", G_STATUS_LISI);
+	//printf("%s", G_STATUS_LISI);
 	// 更新索引
-	//eefs_mbr_update(100, 256, 3);
+	eefs_mbr_update(100, 256, 3);
 	testEefs_data_getDesc();
-	printf("总= %d", G_LIST);
+	//printf("%s",G_LIST);
     return 0;
 }
 
@@ -47,7 +47,6 @@ int main(int argc, const char *argv[]) {
  * @paramName:无
  * @return : 无
  */
-#pragma mark - 测试创建索引函数
 void testEefs_mbr_create(void)
 {
     USERNODE userNode;
@@ -63,17 +62,14 @@ void testEefs_mbr_create(void)
     }
     myNode = malloc(9);
     memcpy((u8 *)myNode, data, 9);
-    printf("%s", G_LIST);
-    
     eefs_mbr_load();
-    printf("%s", G_STATUS_LISI);
     
 }
 
-#pragma mark - 测试创建索引函数
+
 void testEefs_mbr_create1(void)
 {
-    printf("%s", G_LIST);
+    //printf("%s", G_LIST);
     USERNODE userNode;
     userNode.name = 300;
     userNode.size = 100;
@@ -88,10 +84,10 @@ void testEefs_mbr_create1(void)
     }
     myNode = malloc(9);
     memcpy((u8 *)myNode, data, 9);
-    printf("%s", G_LIST);
+    //printf("%s", G_LIST);
     
     eefs_mbr_load();
-    printf("%s", G_STATUS_LISI);
+    //printf("%s", G_STATUS_LISI);
     
 }
 
@@ -105,10 +101,9 @@ void testEefs_mbr_create1(void)
 void testEefs_mbr_getDataStatus(void)
 {
     u8 data;
-    // 0 <= index <= 128, 0 <= val <= 3
     eefs_mbr_setDataStatus(100, 3);
     data = eefs_mbr_getDataStatus(100);
-	printf("data=%d\n", data);
+	printf("data= %d\n", data);
 }
 
 /*
@@ -223,7 +218,7 @@ void testEefs_data_getDesc(void)
 void testEefs_data_getSys(void)
 {
 	u16 used;
-	u8 unused;
+	u16 unused;
 	u8 flag;
 	u8 version;
 	eefs_sys_setFlag(66);
