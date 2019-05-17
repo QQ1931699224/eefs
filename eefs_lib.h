@@ -176,18 +176,18 @@ u8 eefs_reset(u16 index);                                                       
 u8 eefs_resetAll(void);
 u8 eefs_init(void);                                                              //初始化全部空间
 u8 eefs_setValue(u32 name, u8* data, u16 len);                                   // 设置数据区全部内容
-u8 eefs_getValue(u32 name, u8* ret_data, u16* len);                              // 获取数据区全部内容
+u8 eefs_getValue(u32 name, u8* ret_data, u16 len);                              // 获取数据区全部内容
 u8 eefs_setValueWithOffset(u32 name, u16 offset, u8* data, u16 len);             // 设置数据区全部内容
 u8 eefs_getValueWithOffset(u32 name, u16 offset, u8* ret_data, u16 len);         // 获取数据区全部内容
 
 
-u8 eefs_sys_getFlag();                                                           //系统保留区标志位读取
+u8 eefs_sys_getFlag(void);                                                           //系统保留区标志位读取
 u8 eefs_sys_setFlag(u8 value);                                                   //系统保留区标志位写入
 u8 eefs_sys_getVersion(void);                                                    //取得写入索引版本
-u8 eefs_sys_setVersion();                                                        //写入索引版本
-u16 eefs_sys_getUsedCapacity();                                                  //获取已使用空间容量
+u8 eefs_sys_setVersion(void);                                                        //写入索引版本
+u16 eefs_sys_getUsedCapacity(void);                                                  //获取已使用空间容量
 u8 eefs_sys_setUsedCapacity(u16 size);                                           //设置已使用空间容量
-u16 eefs_sys_getUnusedCapacity();                                                //获取未使用空间容量
+u16 eefs_sys_getUnusedCapacity(void);                                                //获取未使用空间容量
 u8 eefs_sys_setUnusedCapacity(u16 size);                                         //设置未使用空间容量
 
 
