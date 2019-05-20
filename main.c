@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "eefs_lib.h"
+#include "meter_base.h"
 
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
@@ -25,31 +26,29 @@ void testEefs_data_getSys(void);
 void testEefs_create(void);
 void testEefs_allCreate(void);
 void testEefs_setValueWithOffset(void);
+void testEefs_WRdata(void);
 
 
 int main(int argc, const char* argv[]) {
-
-	testEefs_data_getSys();
-	testEefs_mbr_create();
-	testEefs_mbr_create1();
-	//    testEefs_create();
-	//    testEefs_allCreate();
-	testEefs_setValueWithOffset();
-	testEefs_mbr_getDataStatus();
-	testEefs_mbr_getIndexStatus();
-	testEefs_mbr_getNetStatus();
-	testEefs_mbr_getGenFlagStatus();
-	testEefs_mbr_getName();
-	testEefs_mbr_getAddress();
+	testEefs_WRdata();
+	
+	//testEefs_data_getSys();
+	//testEefs_mbr_create();
+	//testEefs_mbr_create1();
+	//testEefs_create();
+	//testEefs_allCreate();
+	//testEefs_setValueWithOffset();
+	//testEefs_mbr_getDataStatus();
+	//testEefs_mbr_getIndexStatus();
+	//testEefs_mbr_getNetStatus();
+	//testEefs_mbr_getGenFlagStatus();
+	//testEefs_mbr_getName();
+	//testEefs_mbr_getAddress();
 	//printf("%s", G_STATUS_LISI);
-	// 更新索引
-	eefs_mbr_update(100, 256, 3);
-	testEefs_data_getDesc();
-
-	printf("%s", G_LIST);
-
+	//eefs_mbr_update(100, 256, 3);
+	//testEefs_data_getDesc();
+	printf("%d", eefs_mbr_getSize(0));
 	printf("总= %s", G_LIST);
-
 	return 0;
 }
 
@@ -306,4 +305,23 @@ void testEefs_setValueWithOffset()
 	eefs_setValueWithOffset(2048, 50, &data, 1);
 	eefs_getValueWithOffset(2048, 50, &ret_data, 1);
 	printf("%s", G_LIST);
+}
+
+
+void testEefs_WRdata() {
+	int i;
+	u8 data[4] = { 0 };
+	MEATERVAR meaterVer;
+	meaterVer.name = 1024;
+	meaterVer.size = 4;
+	meaterVer.type = TYPE_WRITE_1;
+	meaterVer.crc = 1;
+	meaterVer.net = 1;
+	meter_register(0, meaterVer);
+	for (i = 0; i < 17; i++)
+	{
+		meter_circle_write(0, 2048+i, 2);
+	}
+	meter_circle_read(0,data);
+	meter_circle_read(0, data);
 }

@@ -806,7 +806,6 @@ u16 eefs_data_getDescHeadAddress(u16 index) {
  */
 u16 eefs_data_getDesc(u16 index) {
 	// ---------- 局部变量定义区---------- //
-	int i;
 	u16 startIndex;         // 该索引的起始位置
 	u16 desc;                // 索引的name信息
 	u8 descs[DESC_SIZE];
@@ -1043,10 +1042,12 @@ u16 eefs_mbr_getSize(u16 index)
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到size的位置
 	startIndex = eefs_mbr_getIndexSizeHeadAddress(index);
+	printf("%d\n",startIndex);
 	// (2).读取size的两字节
 	eefs_base_readBytes(startIndex, sizes, SIZE_SIZE);
 	size = 0;
-	size = *(u16*)sizes + DATA_DESCRIBE; //赋值name
+	//size = *(u16*)sizes + DATA_DESCRIBE; //张添程 19.05.20
+	size = *(u16*)sizes; //张添程 19.05.20
 	return size;
 }
 
