@@ -141,7 +141,7 @@ u8 service_tpm_setCheckMeter(u8* data, u16 len) {
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_create_breakeNetCapacity(void)
+u8 service_tpm_create_breakeNetCapacity(void)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -176,7 +176,7 @@ u8 meter_create_breakeNetCapacity(void)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
+u8 service_tpm_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 {
 	// ---------- 局部变量定义区---------- //
 //    u8 status;
@@ -194,15 +194,15 @@ u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 	newAddress = 0;
 
 	//(1)循环找出数据区的首地址
-	address = meter_getBreakeNetDataAddress(0);
+	address = service_tpm_getBreakeNetDataAddress(0);
 	//(2)根据小索引算出真正的地址
-	newAddress = meter_getBreakeNetDataAddress(index);
+	newAddress = service_tpm_getBreakeNetDataAddress(index);
 	if (index == 0) {
-		lastAddress = meter_getBreakeNetDataAddress(SMALLINDEX_DATACOUNT - 1);
+		lastAddress = service_tpm_getBreakeNetDataAddress(SMALLINDEX_DATACOUNT - 1);
 	}
 	else
 	{
-		lastAddress = meter_getBreakeNetDataAddress(index) - SMALLINDEX_CAPACITY - SMALLINDEX_STATUSCAPACITY - SMALLINDEX_CRCCAPACITY;
+		lastAddress = service_tpm_getBreakeNetDataAddress(index) - SMALLINDEX_CAPACITY - SMALLINDEX_STATUSCAPACITY - SMALLINDEX_CRCCAPACITY;
 	}
 
 	//(3)在newAddress处存数据
@@ -210,16 +210,16 @@ u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 
 	//(4)写入状态位(7,8位=1为当前数据, 0为以前数据, 1234位控制年月日时分, 5,6位控制发送状态,2为默认状态, 1为发送状态)
 	// 写入当前状态
-	meter_setSmallIndexCurrentStatus(index, SMALLINDEX_CURRENTSTATUS);
+	service_tpm_setSmallIndexCurrentStatus(index, SMALLINDEX_CURRENTSTATUS);
 	// 写入默认发送状态
-	meter_setSmallIndexSendStatus(index, SMALLINDEX_NOSENDSTATUS);
+	service_tpm_setSmallIndexSendStatus(index, SMALLINDEX_NOSENDSTATUS);
 	// 给上一个index更新状态
 	if (index == 0) {
-		meter_setSmallIndexCurrentStatus(SMALLINDEX_DATACOUNT - 1, SMALLINDEX_DEFAULTSTATUS);
+		service_tpm_setSmallIndexCurrentStatus(SMALLINDEX_DATACOUNT - 1, SMALLINDEX_DEFAULTSTATUS);
 	}
 	else
 	{
-		meter_setSmallIndexCurrentStatus(index - 1, SMALLINDEX_DEFAULTSTATUS);
+		service_tpm_setSmallIndexCurrentStatus(index - 1, SMALLINDEX_DEFAULTSTATUS);
 	}
 	// 时间状态
 
@@ -233,7 +233,7 @@ u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_saveBreakeNetData(SMALLINDEXNODE node)
+u8 service_tpm_saveBreakeNetData(SMALLINDEXNODE node)
 {
 	// ---------- 局部变量定义区---------- //
 	int j;
@@ -242,19 +242,19 @@ u8 meter_saveBreakeNetData(SMALLINDEXNODE node)
 	// ---------- 业务处理---------- //
 	//(1)遍历小索引区, 找到status的7,8位为1的小索引
 	for (j = 0; j < SMALLINDEX_DATACOUNT; j++) {
-		if (meter_getSmallIndexCurrentStatus(j) == SMALLINDEX_CURRENTSTATUS) {  // 是当前发送状态
+		if (service_tpm_getSmallIndexCurrentStatus(j) == SMALLINDEX_CURRENTSTATUS) {  // 是当前发送状态
 			if (j == SMALLINDEX_DATACOUNT - 1) {// 如果是最后一个, 保存到0
-				meter_saveOnceBreakeNetData(0, node);
+				service_tpm_saveOnceBreakeNetData(0, node);
 				return RET_SUCCESS;
 			}
 			else // 否则保存到下一个
 			{
-				meter_saveOnceBreakeNetData(j + 1, node);
+				service_tpm_saveOnceBreakeNetData(j + 1, node);
 				return RET_SUCCESS;
 			}
 		}
 	}
-	meter_saveOnceBreakeNetData(0, node);
+	service_tpm_saveOnceBreakeNetData(0, node);
 	return RET_SUCCESS;
 
 }
@@ -266,7 +266,7 @@ u8 meter_saveBreakeNetData(SMALLINDEXNODE node)
  * @index:索引
  * @return : u8 status
  */
-u8 meter_getSmallIndexCurrentStatus(u16 index)
+u8 service_tpm_getSmallIndexCurrentStatus(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -279,7 +279,7 @@ u8 meter_getSmallIndexCurrentStatus(u16 index)
 	// ---------- 业务处理---------- //
 	//(1)根据名字找到索引的address
 	//(2)找到status的7,8位
-	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(3)将除了7,8位的其他位清零
 	newStatus = status & BIT_DATA_MASK;
@@ -294,7 +294,7 @@ u8 meter_getSmallIndexCurrentStatus(u16 index)
  * @index:索引
  * @return : u8 status
  */
-u8 meter_getSmallIndexSendStatus(u16 index)
+u8 service_tpm_getSmallIndexSendStatus(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -307,7 +307,7 @@ u8 meter_getSmallIndexSendStatus(u16 index)
 	// ---------- 业务处理---------- //
 	//(1)根据名字找到索引的address
 	//(2)找到status的5,6位
-	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(3)将除了5,6位的其他位清零
 	newStatus = status & BIT_INDEX_MASK;
@@ -322,7 +322,7 @@ u8 meter_getSmallIndexSendStatus(u16 index)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_getSmallIndexTimeStatus(u16 index)
+u8 service_tpm_getSmallIndexTimeStatus(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -335,7 +335,7 @@ u8 meter_getSmallIndexTimeStatus(u16 index)
 	// ---------- 业务处理---------- //
 	//(1)根据名字找到索引的address
 	//(2)找到status的5,6位
-	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(3)将除了1234位的其他位清零
 	newStatus = status & BIT_TIME_MASK;
@@ -349,7 +349,7 @@ u8 meter_getSmallIndexTimeStatus(u16 index)
  * @index:索引
  * @return : u16 地址
  */
-u16 meter_getBreakeNetDataAddress(u16 index)
+u16 service_tpm_getBreakeNetDataAddress(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -376,7 +376,7 @@ u16 meter_getBreakeNetDataAddress(u16 index)
  * @paramName:xxxxx
  * @return : u16 断网数据
  */
-u8 meter_disconnect_getData(u8 * retData)
+u8 service_tpm_disconnect_getData(u8 * retData)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -386,9 +386,9 @@ u8 meter_disconnect_getData(u8 * retData)
 	// ---------- 业务处理---------- //
 	//(1)循环获取小索引数据状态
 	for (i = 0; i < SMALLINDEX_DATACOUNT; i++) {
-		status = meter_getSmallIndexCurrentStatus(i);
+		status = service_tpm_getSmallIndexCurrentStatus(i);
 		if (status == SMALLINDEX_CURRENTSTATUS) { // 最新数据
-			meter_disconnect_getDataWithIndex(i, retData);
+			service_tpm_disconnect_getDataWithIndex(i, retData);
 		}
 	}
 	return RET_SUCCESS;
@@ -401,7 +401,7 @@ u8 meter_disconnect_getData(u8 * retData)
  * @index:索引
  * @return : u16 断网数据
  */
-u8 meter_disconnect_getDataWithIndex(u16 index, u8 * retData)
+u8 service_tpm_disconnect_getDataWithIndex(u16 index, u8 * retData)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 address;
@@ -411,7 +411,7 @@ u8 meter_disconnect_getDataWithIndex(u16 index, u8 * retData)
 	}
 	// ---------- 业务处理---------- //
 	//(1)获取输入值对应的数据区位置
-	address = meter_getBreakeNetDataAddress(index);
+	address = service_tpm_getBreakeNetDataAddress(index);
 	eefs_base_readBytes(address, retData, SMALLINDEX_CAPACITY);
 	return RET_SUCCESS;
 }
@@ -423,7 +423,7 @@ u8 meter_disconnect_getDataWithIndex(u16 index, u8 * retData)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_setSmallIndexSendStatus(u16 index, u8 val)
+u8 service_tpm_setSmallIndexSendStatus(u16 index, u8 val)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -440,7 +440,7 @@ u8 meter_setSmallIndexSendStatus(u16 index, u8 val)
 	}
 	// ---------- 业务处理---------- //
 	//(1)获取数据首地址
-	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(2)&运算, 把五六位清零: 11110000 & 11001111 = 11000000
 	newStatus = status & BIT_INDEX_UNMASK;
@@ -462,7 +462,7 @@ u8 meter_setSmallIndexSendStatus(u16 index, u8 val)
  * @val:状态
  * @return : 1:成功 0：失败
  */
-u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val)
+u8 service_tpm_setSmallIndexCurrentStatus(u16 index, u8 val)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -479,7 +479,7 @@ u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val)
 	}
 	// ---------- 业务处理---------- //
 	//(1)获取数据首地址
-	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(2)&运算, 把七八位清零: 11110000 & 00111111 = 00110000
 	newStatus = status & BIT_DATA_UNMASK;
@@ -501,7 +501,7 @@ u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val)
  * @val:输入的状态值
  * @return : 1:成功 0：失败
  */
-u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val)
+u8 service_tpm_setSmallIndexCTimeStatus(u16 index, u8 val)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -517,7 +517,7 @@ u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val)
 	}
 	// ---------- 业务处理---------- //
 	//(1)获取数据首地址
-	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(2)&运算, 把1234位清零: 00001111 & 11110000 = 00000000
 	newStatus = status & BIT_TIME_UNMASK;
@@ -535,7 +535,7 @@ u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_disconnect_getDataAndChangeStatus(u8 * retData)
+u8 service_tpm_disconnect_getDataAndChangeStatus(u8 * retData)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -543,11 +543,11 @@ u8 meter_disconnect_getDataAndChangeStatus(u8 * retData)
 	// ---------- 业务处理---------- //
 	//(1)循环获取断网数据
 	for (i = 0; i < SMALLINDEX_DATACOUNT; i++) {
-		if (meter_getSmallIndexSendStatus(i) == SMALLINDEX_NOSENDSTATUS) {// 为默认状态2, 证明有数据
-			meter_disconnect_getDataWithIndex(i, retData);
+		if (service_tpm_getSmallIndexSendStatus(i) == SMALLINDEX_NOSENDSTATUS) {// 为默认状态2, 证明有数据
+			service_tpm_disconnect_getDataWithIndex(i, retData);
 			//(2)设置角标状态
-			meter_setSmallIndexSendStatus(i, SMALLINDEX_SENDTATUS);
-			meter_setSmallIndexCurrentStatus(i, SMALLINDEX_DEFAULTSTATUS);
+			service_tpm_setSmallIndexSendStatus(i, SMALLINDEX_SENDTATUS);
+			service_tpm_setSmallIndexCurrentStatus(i, SMALLINDEX_DEFAULTSTATUS);
 			return RET_SUCCESS;
 		}
 	}
@@ -561,7 +561,7 @@ u8 meter_disconnect_getDataAndChangeStatus(u8 * retData)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_create_monthCapacity(void)
+u8 service_tpm_create_monthCapacity(void)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -598,7 +598,7 @@ u8 meter_create_monthCapacity(void)
  * @data:要保存的数据
  * @return : 1:成功 0：失败
  */
-u8 meter_saveMonthData(u8 month, u8 * data)
+u8 service_tpm_saveMonthData(u8 month, u8 * data)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -632,7 +632,7 @@ u8 meter_saveMonthData(u8 month, u8 * data)
  * @data:要保存的数据
  * @return : 1:成功 0：失败
  */
-u8 meter_getMonthData(u8 month, u8 * ret_data)
+u8 service_tpm_getMonthData(u8 month, u8 * ret_data)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -662,7 +662,7 @@ u8 meter_getMonthData(u8 month, u8 * ret_data)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_create_lostVoltCapacity(void)
+u8 service_tpm_create_lostVoltCapacity(void)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -697,7 +697,7 @@ u8 meter_create_lostVoltCapacity(void)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_saveLostVoltData(u8 * data)
+u8 service_tpm_saveLostVoltData(u8 * data)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 address;
@@ -715,20 +715,20 @@ u8 meter_saveLostVoltData(u8 * data)
 	}
 	//(2)循环遍历描述位, 1为当前状态, 0为以前状态
 	for (j = 0; j < LOSTVOLT_COUNT; j++) {
-		if (meter_getLostVoltCurrentStatus(j) == 1) {
+		if (service_tpm_getLostVoltCurrentStatus(j) == 1) {
 			if (j == LOSTVOLT_COUNT - 1) {// 如果是最后一个, 保存到0
-				meter_saveOnceLostVoltData(0, data);
+				service_tpm_saveOnceLostVoltData(0, data);
 				return RET_SUCCESS;
 			}
 			else // 否则保存到下一个
 			{
-				meter_saveOnceLostVoltData(j + 1, data);
+				service_tpm_saveOnceLostVoltData(j + 1, data);
 				return RET_SUCCESS;
 			}
 		}
 	}
 
-	meter_saveOnceLostVoltData(0, data);
+	service_tpm_saveOnceLostVoltData(0, data);
 	return RET_SUCCESS;
 
 }
@@ -740,7 +740,7 @@ u8 meter_saveLostVoltData(u8 * data)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_saveOnceLostVoltData(u16 index, u8 * data)
+u8 service_tpm_saveOnceLostVoltData(u16 index, u8 * data)
 {
 	// ---------- 局部变量定义区---------- //
 	//    u8 status;
@@ -753,27 +753,27 @@ u8 meter_saveOnceLostVoltData(u16 index, u8 * data)
 	lastAddress = 0;
 
 	//(1)根据小索引算出真正的地址
-	address = meter_getLostVoltDataAddress(index);
+	address = service_tpm_getLostVoltDataAddress(index);
 	if (index == 0) {
-		lastAddress = meter_getLostVoltDataAddress(LOSTVOLT_COUNT - 1);
+		lastAddress = service_tpm_getLostVoltDataAddress(LOSTVOLT_COUNT - 1);
 	}
 	else
 	{
-		lastAddress = meter_getLostVoltDataAddress(index) - LOSTVOLT_CAPACITY - LOSTVOLT_DESCRIBE;
+		lastAddress = service_tpm_getLostVoltDataAddress(index) - LOSTVOLT_CAPACITY - LOSTVOLT_DESCRIBE;
 	}
 
 	//(3)在newAddress处存数据
 	eefs_base_writeBytes(address, data, LOSTVOLT_CAPACITY);
 
 	//(4)写入状态位, 1,2为为当前状态, 1为当前, 0为以前
-	meter_setLostVoltCurrentStatus(index, LOSTVOLT_CURRENTSTATUS);
+	service_tpm_setLostVoltCurrentStatus(index, LOSTVOLT_CURRENTSTATUS);
 	// 给上一个index更新状态
 	if (index == 0) {
-		meter_setLostVoltCurrentStatus(LOSTVOLT_COUNT - 1, LOSTVOLT_DEFAULTSTATUS);
+		service_tpm_setLostVoltCurrentStatus(LOSTVOLT_COUNT - 1, LOSTVOLT_DEFAULTSTATUS);
 	}
 	else
 	{
-		meter_setLostVoltCurrentStatus(index - 1, LOSTVOLT_DEFAULTSTATUS);
+		service_tpm_setLostVoltCurrentStatus(index - 1, LOSTVOLT_DEFAULTSTATUS);
 	}
 	// 时间状态
 
@@ -787,7 +787,7 @@ u8 meter_saveOnceLostVoltData(u16 index, u8 * data)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u16 meter_getLostVoltDataAddress(u16 index)
+u16 service_tpm_getLostVoltDataAddress(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	int i;
@@ -813,7 +813,7 @@ u16 meter_getLostVoltDataAddress(u16 index)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_getLostVoltCurrentStatus(u16 index)
+u8 service_tpm_getLostVoltCurrentStatus(u16 index)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -826,7 +826,7 @@ u8 meter_getLostVoltCurrentStatus(u16 index)
 	// ---------- 业务处理---------- //
 	//(1)根据名字找到索引的address
 	//(2)找到status的1,2位
-	statusAddress = meter_getLostVoltDataAddress(index) + LOSTVOLT_CAPACITY;
+	statusAddress = service_tpm_getLostVoltDataAddress(index) + LOSTVOLT_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(3)将除了12位的其他位清零
 	newStatus = status & BIT_GENFLAG_MASK;
@@ -841,7 +841,7 @@ u8 meter_getLostVoltCurrentStatus(u16 index)
  * @val:输入的状态
  * @return : 1:成功 0：失败
  */
-u8 meter_setLostVoltCurrentStatus(u16 index, u8 val)
+u8 service_tpm_setLostVoltCurrentStatus(u16 index, u8 val)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 statusAddress;      // status在数据区的位置
@@ -857,7 +857,7 @@ u8 meter_setLostVoltCurrentStatus(u16 index, u8 val)
 	}
 	// ---------- 业务处理---------- //
 	//(1)获取数据首地址
-	statusAddress = meter_getLostVoltDataAddress(index) + SMALLINDEX_CAPACITY;
+	statusAddress = service_tpm_getLostVoltDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
 	//(2)&运算, 把1,2位清零: 00001111 & 11111100 = 00001100
 	newStatus = status & BIT_GENFLAG_UNMASK;
@@ -875,7 +875,7 @@ u8 meter_setLostVoltCurrentStatus(u16 index, u8 val)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 meter_getLostVoltData(u16 index, u8 * retData)
+u8 service_tpm_getLostVoltData(u16 index, u8 * retData)
 {
 	// ---------- 局部变量定义区---------- //
 	u16 address;
@@ -885,7 +885,7 @@ u8 meter_getLostVoltData(u16 index, u8 * retData)
 	}
 	// ---------- 业务处理---------- //
 	//(1)获取输入值对应的数据区位置
-	address = meter_getLostVoltDataAddress(index);
+	address = service_tpm_getLostVoltDataAddress(index);
 	eefs_base_readBytes(address, retData, LOSTVOLT_CAPACITY);
 	return RET_SUCCESS;
 }

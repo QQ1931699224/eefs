@@ -7,6 +7,7 @@
 //
 
 #include "eefs_lib.h"
+
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
@@ -548,10 +549,10 @@ u8 eefs_mbr_update(u16 index, u32 name, u8 status)
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
         return RET_FAILD;
     }
-    if (eefs_mbr_getIndexStatus(index) == 0x00) {
-        eefs_mbr_setIndexStatus(index, 2);
+    if (eefs_mbr_getIndexStatus(index) == ZERO_INDEXSTATUS) {
+        eefs_mbr_setIndexStatus(index, DEFAULT_INDEXSTATUS);
     }
-    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+    if (eefs_mbr_getIndexStatus(index) == DEFAULT_INDEXSTATUS) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
@@ -580,10 +581,10 @@ u8 eefs_mbr_delete(u16 index)
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
         return RET_FAILD;
     }
-    if (eefs_mbr_getIndexStatus(index) == 0x00) {
-        eefs_mbr_setIndexStatus(index, 2);
+    if (eefs_mbr_getIndexStatus(index) == ZERO_INDEXSTATUS) {
+        eefs_mbr_setIndexStatus(index, DEFAULT_INDEXSTATUS);
     }
-    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+    if (eefs_mbr_getIndexStatus(index) == DEFAULT_INDEXSTATUS) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
@@ -609,10 +610,10 @@ u8 eefs_mbr_reset(u16 index)
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
         return RET_FAILD;
     }
-    if (eefs_mbr_getIndexStatus(index) == 0x00) {
-        eefs_mbr_setIndexStatus(index, 2);
+    if (eefs_mbr_getIndexStatus(index) == ZERO_INDEXSTATUS) {
+        eefs_mbr_setIndexStatus(index, DEFAULT_INDEXSTATUS);
     }
-    if (eefs_mbr_getIndexStatus(index) == 0x02) {
+    if (eefs_mbr_getIndexStatus(index) == DEFAULT_INDEXSTATUS) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
@@ -1222,10 +1223,10 @@ u8 eefs_createAll(USERNODE list[], u8 len)
     // ---------- 业务处理---------- //
     //(1)循环遍历数组取出结构体
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getIndexStatus(i) == 0x00) {
-            eefs_mbr_setIndexStatus(i, 2);
+        if (eefs_mbr_getIndexStatus(i) == ZERO_INDEXSTATUS) {
+            eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
         }
-        if (eefs_mbr_getIndexStatus(i) == 2) { // 如果索引状态为2, 可以使用
+        if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) { // 如果索引状态为2, 可以使用
             USERNODE node = list[j];
             eefs_create(i, node);
             if (j == len - 1) {
@@ -1654,7 +1655,6 @@ u16 eefs_sys_getUnusedCapacity() {
 	u16 data;                // 系统的未使用空间信息
 	u8 datas[USEDCAPACITY_SIZE];
 	// ---------- 输入参数条件检测---------- //
-
 	// ---------- 业务处理---------- //
 	// (1). 找到系统描述区中找到未使用空间标识的位置
 	startIndex = EE_START_SYS + EE_SYS_USEDCAPACITY_OFFSET;
@@ -1687,3 +1687,4 @@ u8 eefs_sys_setUnusedCapacity(u16 size) {
 	eefs_base_writeBytes(startIndex, datas, UNUSEDCAPACITY_SIZE);
 	return RET_SUCCESS;
 }
+

@@ -37,7 +37,7 @@ u8 meter_circle_write(u16 index, u8* data, u16 len);                            
 u8 meter_circle_read(u16 index, u8* retData);                                        //数据读取
 
 TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE);                                     //判断写入类型获取数据状态
-u8 meter_get_write_type(u16 index);                                                  //根据索引获取写入类型
+s8 meter_get_write_type(u16 index);                                                  //根据索引获取写入类型
 u16 meter_get_data_status_address(u16 index);                                        //获取最新可读数据区的状态位地址
 u16 meter_get_write_address(u16 index);                                              //获取当前可写入数据区首地址
 
