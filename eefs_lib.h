@@ -32,26 +32,51 @@ typedef signed char  s8;
 
 
 #define BIT_DATA_MASK 0xC0                                                       // (11000000)数据状态位掩码
-#define BIT_DATA_UNMASK 0x63                                                     // (00111111)数据状态位掩码
+#define BIT_DATA_UNMASK 0x3F                                                     // (00111111)数据状态位掩码
 #define BIT_NET_UNMASK 0xF3                                                      // (11110011)网络状态位掩码
 #define BIT_NET_MASK 0x0C                                                        // (00001100)网络状态位掩码
 #define BIT_INDEX_MASK 0x30                                                      // (00110000)索引状态位掩码
 #define BIT_INDEX_UNMASK 0xCF                                                    // (11001111)索引状态位掩码
 #define BIT_GENFLAG_MASK 0x03                                                    // (00000011)通用状态位掩码
 #define BIT_GENFLAG_UNMASK 0xFC                                                  // (11111100)通用状态位掩码
+#define BIT_TIME_UNMASK 0xF0                                                  // (11110000)通用状态位掩码
+#define BIT_TIME_MASK 0xF                                                  // (00001111)通用状态位掩码
 
 
-                                                                                 // 地址
+// 地址
 #define TEMP_ADDRESS 2048                                                        // 模拟的数据区首地址
 #define EE_START_DATA 2048                                                       // 数据区起始地址
 #define EE_START_INDEX 64                                                        // 索引起始地址
-                                                                                 // 空间
+
+// 空间
 #define MAX_INDEX 128                                                            // 最大索引
 #define EE_MAX_CAPACITY 256 * 64                                                 // 最大容量
 #define EE_SYS_CAPACITY 64                                                       // 系统预留容量
 #define EE_START_SYS 0						                                     // 系统保留的描述区域起始位置
+#define SMALLINDEX_CAPACITY 24              // 小索引24个字节
+#define SMALLINDEX_STATUSCAPACITY 1         // 小索引状态位1字节
+#define SMALLINDEX_CRCCAPACITY 2            // 小索引CRM验证2字节
+#define SMALLINDEX_DATACOUNT 100            // 小索引数据个数
+#define SMALLINDEX_CURRENTSTATUS 1       // 小索引当前status
+#define SMALLINDEX_DEFAULTSTATUS 0       // 小索引不是当前status
 
-                                                                                 // error返回值
+#define SMALLINDEX_NAME 1000                 // 小索引在索引区的名字
+#define SMALLINDEX_SENDTATUS 1               // 小索引已发送status
+#define SMALLINDEX_NOSENDSTATUS 2            // 小索引未发送status
+
+#define MONTHDATA_NAME 1001                  // 月份数据空间的名字
+#define MONTHDATA_COUNT 12                   // 月份数据空间的个数
+#define MONTHDATA_CAPACITY 4                 // 月份数据空间的个数
+
+#define LOSTVOLT_NAME 1002                   // 失压数据的名字
+#define LOSTVOLT_COUNT 20                    // 失压数据空间的个数
+#define LOSTVOLT_CAPACITY 9                  // 失压数据单个空间容量
+#define LOSTVOLT_DESCRIBE 1                  // 失压数据空间描述位容量
+#define LOSTVOLT_CURRENTSTATUS 1             // 失压数据小索引当前status
+#define LOSTVOLT_DEFAULTSTATUS 0             // 失压数据小索引不是当前status
+
+
+// error返回值
 #define RET_SUCCESS 1                                                            // 成功返回值
 #define RET_FAILD   0                                                            // u8错误返回值
 #define RET_ERROR   -1                                                           // s8错误返回值
@@ -71,6 +96,11 @@ typedef signed char  s8;
 
 #define DATA_DESCRIBE 2					                                         // 数据区描述
 #define STATUS_INITVALUE 0x50										             // 状态位初始值:01010000
+
+#define ZERO_INDEXSTATUS 0x00       // 索引状态为0
+#define DEFAULT_INDEXSTATUS 0x02    // 索引状态为2
+
+
 #define DESC_SIZE sizeof(u16)                                                    //desc大小
 #define DESC_HIGH_SIZE 0					                                     //desc高位大小
 #define DESC_LOW_SIZE 1						                                     //desc低位大小
@@ -94,6 +124,15 @@ typedef struct userNode{
     u32 name;
     u16 size;
 }USERNODE;
+
+typedef struct SmallIndexNode{
+    u32 electric1;
+    u32 electric2;
+    u32 electric3;
+    u32 electric4;
+    u32 electric5;
+    u32 electric6;
+}SMALLINDEXNODE;
 
                                                                                  // 全局变量G_变量名(全大写)
                                                                                  // 局部变量小写(驼峰)
@@ -176,19 +215,42 @@ u8 eefs_reset(u16 index);                                                       
 u8 eefs_resetAll(void);
 u8 eefs_init(void);                                                              //初始化全部空间
 u8 eefs_setValue(u32 name, u8* data, u16 len);                                   // 设置数据区全部内容
-u8 eefs_getValue(u32 name, u8* ret_data, u16* len);                              // 获取数据区全部内容
+u8 eefs_getValue(u32 name, u8* ret_data, u16 len);                              // 获取数据区全部内容
 u8 eefs_setValueWithOffset(u32 name, u16 offset, u8* data, u16 len);             // 设置数据区全部内容
 u8 eefs_getValueWithOffset(u32 name, u16 offset, u8* ret_data, u16 len);         // 获取数据区全部内容
 
-
-u8 eefs_sys_getFlag();                                                           //系统保留区标志位读取
+u8 eefs_sys_getFlag(void);                                                           //系统保留区标志位读取
 u8 eefs_sys_setFlag(u8 value);                                                   //系统保留区标志位写入
 u8 eefs_sys_getVersion(void);                                                    //取得写入索引版本
-u8 eefs_sys_setVersion();                                                        //写入索引版本
-u16 eefs_sys_getUsedCapacity();                                                  //获取已使用空间容量
+u8 eefs_sys_setVersion(void);                                                        //写入索引版本
+u16 eefs_sys_getUsedCapacity(void);                                                  //获取已使用空间容量
 u8 eefs_sys_setUsedCapacity(u16 size);                                           //设置已使用空间容量
-u16 eefs_sys_getUnusedCapacity();                                                //获取未使用空间容量
+u16 eefs_sys_getUnusedCapacity(void);                                                //获取未使用空间容量
 u8 eefs_sys_setUnusedCapacity(u16 size);                                         //设置未使用空间容量
 
+u8 meter_create_breakeNetCapacity(void);      // 创建断网数据空间
+u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode); // 存一次断网数据
+u8 meter_saveBreakeNetData(SMALLINDEXNODE node);  // 保存断网数据
+u16 meter_getBreakeNetDataAddress(u16 index);         //获得断网数据在数据区的首地址
+u8 meter_disconnect_getData(u8 *retData);  //返回最新的断网数据
+u8 meter_disconnect_getDataWithIndex(u16 index, u8 *retData); // 根据下标返回断网数据
+u8 meter_getSmallIndexCurrentStatus(u16 index); // 获取小索引7,8位的当前状态
+u8 meter_getSmallIndexSendStatus(u16 index);   // 获取小索引5,6位的发送状态
+u8 meter_getSmallIndexTimeStatus(u16 index);   // 获取小索引1234位的时间状态
+u8 meter_setSmallIndexSendStatus(u16 index, u8 val);         // 根据角标设置5,6位的发送状态
+u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val);       // 根据角标设置7,8位的当前状态
+u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val);       // 根据角标设置1,2,3,4位的时间状态
+u8 meter_disconnect_getDataAndChangeStatus(u8 *retData);  //获取角标对应的断网数据, 并改变状态
 
+u8 meter_create_monthCapacity(void);      // 创建月数据空间
+u8 meter_saveMonthData(u8 month, u8 *data);  // 保存月数据
+u8 meter_getMonthData(u8 month, u8 *ret_data);  // 获取月数据
+
+u8 meter_create_lostVoltCapacity(void);      // 创建失压数据空间
+u8 meter_saveLostVoltData(u8 *data);             // 保存失压数据
+u8 meter_saveOnceLostVoltData(u16 index, u8 *data);             // 保存失压数据
+u8 meter_getLostVoltData(u16 index, u8 *retData);         // 根据角标取失压数据
+u16 meter_getLostVoltDataAddress(u16 index);    // 获得失压小索引在数据区对应的地址
+u8 meter_getLostVoltCurrentStatus(u16 index);   // 获取失压1,2位的当前状态
+u8 meter_setLostVoltCurrentStatus(u16 index, u8 val); // 设置失压1,2位的当前状态
 #endif /* WriteOrReadByte_h */
