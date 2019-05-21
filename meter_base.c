@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "eefs_lib.h"
 #include "meter_base.h"
@@ -72,6 +73,7 @@ TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE) {
 	{
 		return tpye_write_16;
 	}
+	return tpye_write_1;
 }
 
 /*
