@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "eefs_lib.h"
+#include "meter_base.h"
+#include "three_phases_meter.h"
 
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
@@ -25,35 +27,40 @@ void testEefs_data_getSys(void);
 void testEefs_create(void);
 void testEefs_allCreate(void);
 void testEefs_setValueWithOffset(void);
+void testEefs_WRdata(void);
+void testEefs_three(void);
+////////////////////////////////////////
 void testSmallIndex(void);
 void testMonthData(void);
 void testLostVoltData(void);
 
+
 int main(int argc, const char* argv[]) {
 
-    testLostVoltData();
-    testMonthData();
-    testSmallIndex();
-	testEefs_data_getSys();
-	testEefs_mbr_create();
-	testEefs_mbr_create1();
-	//    testEefs_create();
-	//    testEefs_allCreate();
-	testEefs_setValueWithOffset();
-	testEefs_mbr_getDataStatus();
-	testEefs_mbr_getIndexStatus();
-	testEefs_mbr_getNetStatus();
-	testEefs_mbr_getGenFlagStatus();
-	testEefs_mbr_getName();
-	testEefs_mbr_getAddress();
+	testLostVoltData();
+	testMonthData();
+	testSmallIndex();
+
+	//testEefs_WRdata();
+	//testEefs_three();
+
+	//testEefs_data_getSys();
+	//testEefs_mbr_create();
+	//testEefs_mbr_create1();
+	//testEefs_create();
+	//testEefs_allCreate();
+	//testEefs_setValueWithOffset();
+	//testEefs_mbr_getDataStatus();
+	//testEefs_mbr_getIndexStatus();
+	//testEefs_mbr_getNetStatus();
+	//testEefs_mbr_getGenFlagStatus();
+	//testEefs_mbr_getName();
+	//testEefs_mbr_getAddress();
 	//printf("%s", G_STATUS_LISI);
-	// 更新索引
-	eefs_mbr_update(100, 256, 3);
-	testEefs_data_getDesc();
-	printf("%s", G_LIST);
-
+	//eefs_mbr_update(100, 256, 3);
+	//testEefs_data_getDesc();
+	printf("%d", eefs_mbr_getSize(0));
 	printf("总= %s", G_LIST);
-
 	return 0;
 }
 
@@ -82,12 +89,13 @@ void testEefs_mbr_create(void)
 	myNode = (void*)malloc(9);
 	memcpy((u8*)myNode, data, 9);
 	eefs_mbr_load();
+
 }
 
 
 void testEefs_mbr_create1(void)
 {
-	//printf("%s", G_LIST);
+	//printf("%s", G_LIST); 
 	USERNODE userNode;
 	userNode.name = 300;
 	userNode.size = 100;
@@ -311,6 +319,113 @@ void testEefs_setValueWithOffset()
 	printf("%s", G_LIST);
 }
 
+
+void testEefs_WRdata() {
+	int i;
+	u8 data[4] = { 0 };
+	MEATERVAR meaterVer;
+	meaterVer.name = 1024;
+	meaterVer.size = 4;
+	meaterVer.type = TYPE_WRITE_1;
+	meaterVer.crc = 1;
+	meaterVer.net = 1;
+	meter_register(0, meaterVer);
+	for (i = 0; i < 17; i++)
+	{
+		meter_circle_write(0, 2048+i, 2);
+	}
+	meter_circle_read(0,data);
+}
+
+void testEefs_three() {
+	MEATERVAR meaterVer;
+	MEATERVAR meaterVer1;
+	MEATERVAR meaterVer2;
+	MEATERVAR meaterVer3;
+	MEATERVAR meaterVer4;
+	MEATERVAR meaterVer5;
+	u8 falg[] = {1,2,3,4,5};
+	u8 send[] = { 1,2,3,4,5,6,7 };
+	u8 up[] = { 1,2,3,4,5,6,7,9,9,9 };
+	u8 fj[] = { 1,2,3,4 };
+	u8 en[] = { 1,2,3,4,5,6,7,9,9,9,6,6,6 };
+	u8 jb[] = { 1,2,3,4,5,6,7,9,9,9,7,7,7,7 };
+
+	u8 data[5] = { 0 };
+	u8 data1[24] = { 0 };
+	u8 data2[415] = { 0 };
+	u8 data3[4] = { 0 };
+	u8 data4[160] = { 0 };
+	u8 data5[78] = { 0 };
+
+	//掉电标志
+	meaterVer.name = 1024;
+	meaterVer.size = 5;
+	meaterVer.type = TYPE_WRITE_1;
+	meaterVer.crc = 2;
+	meaterVer.net = 1;
+	meter_register(0, meaterVer);
+	
+	service_tpm_setNoPowerFalg(falg,5);
+	service_tpm_setNoPowerFalg(falg, 5);
+	service_tpm_getNoPowerFlag(data);
+
+	//发送参数
+	meaterVer1.name = 1025;
+	meaterVer1.size = 24;
+	meaterVer1.type = TYPE_WRITE_1;
+	meaterVer1.crc = 2;
+	meaterVer1.net = 1;
+	meter_register(1, meaterVer1);
+
+	service_tpm_setSendParameter(send,7);
+	service_tpm_getSendParameter(data1);
+	//升级参数
+	meaterVer2.name = 1026;
+	meaterVer2.size = 415;
+	meaterVer2.type = TYPE_WRITE_1;
+	meaterVer2.crc = 2;
+	meaterVer2.net = 1;
+	meter_register(2, meaterVer2);
+
+	service_tpm_setUpgrade(up,10);
+	service_tpm_getUpgrade(data2);
+	////首次判断
+	meaterVer3.name = 1027;
+	meaterVer3.size = 4;
+	meaterVer3.type = TYPE_WRITE_1;
+	meaterVer3.crc = 2;
+	meaterVer3.net = 1;
+	meter_register(3, meaterVer3);
+
+	service_tpm_setFirstJudge(fj, 4);
+	service_tpm_getFirstJudge(data3);
+	////电能
+	meaterVer4.name = 1028;
+	meaterVer4.size = 160;
+	meaterVer4.type = TYPE_WRITE_4;
+	meaterVer4.crc = 1;
+	meaterVer4.net = 1;
+	meter_register(4, meaterVer4);
+
+	service_tpm_setEnergy(en, 13);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_getEnergy(data4);
+
+	//校表
+	meaterVer5.name = 1029;
+	meaterVer5.size = 78;
+	meaterVer5.type = TYPE_WRITE_1;
+	meaterVer5.crc = 2;
+	meaterVer5.net = 1;
+	meter_register(5, meaterVer5);
+
+	service_tpm_setCheckMeter(jb, 14);
+	service_tpm_getCheckMeter(data5);
+}
+
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
@@ -320,58 +435,58 @@ void testEefs_setValueWithOffset()
  */
 void testSmallIndex(void)
 {
-    SMALLINDEXNODE node;
-    SMALLINDEXNODE node100;
-    int i;
-    u8 retData[SMALLINDEX_CAPACITY];
-    u8 currentStatus;
-    u8 sendStatus;
-    u8 timeStatus;
-    node.electric1 = 1;
-    node.electric2 = 2;
-    node.electric3 = 3;
-    node.electric4 = 4;
-    node.electric5 = 5;
-    node.electric6 = 6;
-    node100.electric1 = 1;
-    node100.electric2 = 2;
-    node100.electric3 = 3;
-    node100.electric4 = 1;
-    node100.electric5 = 2;
-    node100.electric6 = 3;
-    
-    meter_create_breakeNetCapacity();
-    for (i = 0; i < 101; i++) {
-        if (i == 100) {
-            meter_saveBreakeNetData(node100);
-        }
-        else
-        {
-            meter_saveBreakeNetData(node);
-        }
-    }
-    
-    // 测试根据角标获取断网数据
-    meter_disconnect_getDataWithIndex(0, retData);
-    
-    // 测试时间状态
-    meter_setSmallIndexCTimeStatus(0, 2);
-    timeStatus = meter_getSmallIndexTimeStatus(0);
-    
-    // 测试当前状态
-    meter_setSmallIndexCurrentStatus(0, 2);
-    currentStatus = meter_getSmallIndexCurrentStatus(0);
-    
-    // 测试发送状态
-    meter_setSmallIndexSendStatus(0, 2);
-    sendStatus = meter_getSmallIndexSendStatus(0);
-    
-    // 测试获取断网数据并且改变状态
-    meter_disconnect_getDataAndChangeStatus(retData);
-    sendStatus = meter_getSmallIndexSendStatus(0);
-    printf("%s", G_LIST);
-}
+	SMALLINDEXNODE node;
+	SMALLINDEXNODE node100;
+	int i;
+	u8 retData[SMALLINDEX_CAPACITY];
+	u8 currentStatus;
+	u8 sendStatus;
+	u8 timeStatus;
+	node.electric1 = 1;
+	node.electric2 = 2;
+	node.electric3 = 3;
+	node.electric4 = 4;
+	node.electric5 = 5;
+	node.electric6 = 6;
+	node100.electric1 = 1;
+	node100.electric2 = 2;
+	node100.electric3 = 3;
+	node100.electric4 = 1;
+	node100.electric5 = 2;
+	node100.electric6 = 3;
 
+	meter_create_breakeNetCapacity();
+	for (i = 0; i < 101; i++) {
+		if (i == 100) {
+			meter_saveBreakeNetData(node100);
+		}
+		else
+		{
+			meter_saveBreakeNetData(node);
+		}
+	}
+
+	// 测试根据角标获取断网数据
+	meter_disconnect_getDataWithIndex(0, retData);
+
+	// 测试时间状态
+	meter_setSmallIndexCTimeStatus(0, 2);
+	timeStatus = meter_getSmallIndexTimeStatus(0);
+
+	// 测试当前状态
+	meter_setSmallIndexCurrentStatus(0, 2);
+	currentStatus = meter_getSmallIndexCurrentStatus(0);
+
+	// 测试发送状态
+	meter_setSmallIndexSendStatus(0, 2);
+	sendStatus = meter_getSmallIndexSendStatus(0);
+
+	// 测试获取断网数据并且改变状态
+	meter_disconnect_getDataAndChangeStatus(retData);
+	sendStatus = meter_getSmallIndexSendStatus(0);
+	printf("%s", G_LIST);
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
@@ -381,17 +496,17 @@ void testSmallIndex(void)
  */
 void testMonthData(void)
 {
-    u8 retData[MONTHDATA_CAPACITY];
-    u8 data[MONTHDATA_CAPACITY];
-    // 创建月数据空间
-    data[0] = 1;
-    data[1] = 2;
-    data[2] = 3;
-    data[3] = 4;
-    meter_create_monthCapacity();
-    meter_saveMonthData(2, data);
-    meter_getMonthData(2, retData);
-    printf("%s", G_LIST);
+	u8 retData[MONTHDATA_CAPACITY];
+	u8 data[MONTHDATA_CAPACITY];
+	// 创建月数据空间
+	data[0] = 1;
+	data[1] = 2;
+	data[2] = 3;
+	data[3] = 4;
+	meter_create_monthCapacity();
+	meter_saveMonthData(2, data);
+	meter_getMonthData(2, retData);
+	printf("%s", G_LIST);
 }
 
 /*
@@ -403,43 +518,43 @@ void testMonthData(void)
  */
 void testLostVoltData(void)
 {
-    u8 retData[LOSTVOLT_CAPACITY];
-    u8 data[LOSTVOLT_CAPACITY];
-    u8 data2[LOSTVOLT_CAPACITY];
-    int i;
-    // 创建失压数据空间
-    data[0] = 1;
-    data[1] = 1;
-    data[2] = 2;
-    data[3] = 2;
-    data[4] = 3;
-    data[5] = 3;
-    data[6] = 4;
-    data[7] = 4;
-    data[8] = 5;
-    
-    data2[0] = 4;
-    data2[1] = 3;
-    data2[2] = 2;
-    data2[3] = 1;
-    data2[4] = 5;
-    data2[5] = 4;
-    data2[6] = 3;
-    data2[7] = 2;
-    data2[8] = 1;
-    
-    // 创建失压空间
-    meter_create_lostVoltCapacity();
-    for (i = 0; i < 21; i++) {
-        if (i == 20) {
-            meter_saveLostVoltData(data2);
-        }
-        else
-        {
-            meter_saveLostVoltData(data);
-        }
-    }
-    // 测试根据角标获取失压数据
-    meter_getLostVoltData(0, retData);
-    printf("%s", G_LIST);
+	u8 retData[LOSTVOLT_CAPACITY];
+	u8 data[LOSTVOLT_CAPACITY];
+	u8 data2[LOSTVOLT_CAPACITY];
+	int i;
+	// 创建失压数据空间
+	data[0] = 1;
+	data[1] = 1;
+	data[2] = 2;
+	data[3] = 2;
+	data[4] = 3;
+	data[5] = 3;
+	data[6] = 4;
+	data[7] = 4;
+	data[8] = 5;
+
+	data2[0] = 4;
+	data2[1] = 3;
+	data2[2] = 2;
+	data2[3] = 1;
+	data2[4] = 5;
+	data2[5] = 4;
+	data2[6] = 3;
+	data2[7] = 2;
+	data2[8] = 1;
+
+	// 创建失压空间
+	meter_create_lostVoltCapacity();
+	for (i = 0; i < 21; i++) {
+		if (i == 20) {
+			meter_saveLostVoltData(data2);
+		}
+		else
+		{
+			meter_saveLostVoltData(data);
+		}
+	}
+	// 测试根据角标获取失压数据
+	meter_getLostVoltData(0, retData);
+	printf("%s", G_LIST);
 }

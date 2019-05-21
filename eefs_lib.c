@@ -92,7 +92,7 @@ s8 eefs_mbr_getStatus(u16 index)
     s8 data;                // 索引的status信息
     // ---------- 输入参数条件检测---------- //
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-        return RET_ERROR;
+        return RET_FAILD;
     }
     // ---------- 业务处理---------- //
     // (1). 找到status的位置
@@ -298,7 +298,7 @@ u8 eefs_mbr_setDataStatus(u16 index ,u8 val)
     u8 newVal;          // 移位后的数据
     // ---------- 输入参数条件检测---------- //
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-        return RET_ERROR;
+        return RET_FAILD;
     }
     if (val > 3 || val < 0) {
         return RET_FAILD;
@@ -640,9 +640,8 @@ u32 eefs_mbr_getName(u16 index) {
 	u8 names[NAME_SIZE];
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
-
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到name的位置
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
@@ -666,7 +665,7 @@ u8 eefs_mbr_setName(u16 index, u32 name) {
 	u8 names[NAME_SIZE];			//临时names
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 
 	// ---------- 业务处理---------- //
@@ -694,7 +693,7 @@ u16 eefs_mbr_getAddress(u16 index) {
 	u8 addrs[ADDR_SIZE];
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 
 	// ---------- 业务处理---------- //
@@ -720,7 +719,7 @@ u8 eefs_mbr_setAddress(u16 index, u16 address) {
 	u8 addrs[ADDR_SIZE];			//临时addrs
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 
 	// ---------- 业务处理---------- //
@@ -811,7 +810,7 @@ u16 eefs_data_getDesc(u16 index) {
 	u8 descs[DESC_SIZE];
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 
 	// ---------- 业务处理---------- //
@@ -837,7 +836,7 @@ u8 eefs_data_setDesc(u16 index, u16 desc) {
 	u8 descs[DESC_SIZE];			//临时names
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到desc的位置
@@ -845,7 +844,7 @@ u8 eefs_data_setDesc(u16 index, u16 desc) {
 	// (2).读取描述的2字节
 	memcpy(descs, (u8*)& desc, DESC_SIZE);
 	//writeByte(startIndex, descs, DESC_SIZE);
-	//eefs_base_writeBytes(startIndex, descs, DESC_SIZE);
+	eefs_base_writeBytes(startIndex, descs, DESC_SIZE);
 	return RET_SUCCESS;
 }
   
@@ -862,7 +861,7 @@ u8 eefs_data_setDescHigh(u16 index, u8 value) {
 	u16 startIndex;         // 该数据的起始位置
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到desc高位的位置
@@ -886,7 +885,7 @@ u8 eefs_data_getDescHigh(u16 index) {
 	u8 descHigh;                // 索引的name信息
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 
 	// ---------- 业务处理---------- //
@@ -909,7 +908,7 @@ u8 eefs_data_getDescLow(u16 index) {
 	u8 descLow;                // 索引的name信息
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 
 	// ---------- 业务处理---------- //
@@ -933,7 +932,7 @@ u8 eefs_data_setDescLow(u16 index, u8 value) {
 	u16 startIndex;         // 该数据的起始位置
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-		return RET_ERROR;
+		return RET_FAILD;
 	}
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到desc低位的位置
@@ -1045,7 +1044,35 @@ u16 eefs_mbr_getSize(u16 index)
 	// (2).读取size的两字节
 	eefs_base_readBytes(startIndex, sizes, SIZE_SIZE);
 	size = 0;
-	size = *(u16*)sizes + DATA_DESCRIBE; //赋值name
+	size = *(u16*)sizes + DATA_DESCRIBE; 
+	return size;
+}
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc:获取索引对应的数据区大小(不包含数据描述位)
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_mbr_getDataSize(u16 index)
+{
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u16 size;                // 索引的name信息
+	u8 sizes[SIZE_SIZE];
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_FAILD;
+	}
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到size的位置
+	startIndex = eefs_mbr_getIndexSizeHeadAddress(index);
+	// (2).读取size的两字节
+	eefs_base_readBytes(startIndex, sizes, SIZE_SIZE);
+	size = 0;
+	//size = *(u16*)sizes + DATA_DESCRIBE; //张添程 19.05.20
+	size = *(u16*)sizes; //张添程 19.05.20
 	return size;
 }
 
@@ -1289,7 +1316,7 @@ u8 eefs_mbr_setSize(u16 index, u16 size)
     u8 sizes[SIZE_SIZE];            //临时sizes
     // ---------- 输入参数条件检测---------- //
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-        return RET_ERROR;
+        return RET_FAILD;
     }
     
     // ---------- 业务处理---------- //
