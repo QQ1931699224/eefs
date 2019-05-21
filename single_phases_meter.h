@@ -1,5 +1,5 @@
 /*
- * µ¥Ïà±í²ÎÊı´æÈ¡
+ * å•ç›¸è¡¨å‚æ•°å­˜å–
  */
 #ifndef single_phases_meter_h
 #define single_phases_meter_h
@@ -7,24 +7,24 @@
 #include "meter_base.h"
 #include "eefs_lib.h"
 
-#define NOPOWERFLAG_INDEX 0                                                             //µôµç±êÖ¾Ë÷Òı
-#define SENDPARAMETER_INDEX  1                                                          //·¢ËÍ²ÎÊıË÷Òı
-#define UPGRADE_INDEX 2                                                                 //Éı¼¶²ÎÊıË÷Òı
-#define FIRSTJUDGE_INDEX 3                                                              //Í¨Ê×´ÎÅĞ¶ÏË÷Òı
-#define ENERGY_INDEX 4                                                                  //µçÄÜË÷Òı
-#define CHECKMETER_INDEX 5														        //Ğ£±í²ÎÊıË÷Òı
+#define NOPOWERFLAG_INDEX 0                                                             //æ‰ç”µæ ‡å¿—ç´¢å¼•
+#define SENDPARAMETER_INDEX  1                                                          //å‘é€å‚æ•°ç´¢å¼•
+#define UPGRADE_INDEX 2                                                                 //å‡çº§å‚æ•°ç´¢å¼•
+#define FIRSTJUDGE_INDEX 3                                                              //é€šé¦–æ¬¡åˆ¤æ–­ç´¢å¼•
+#define ENERGY_INDEX 4                                                                  //ç”µèƒ½ç´¢å¼•
+#define CHECKMETER_INDEX 5														        //æ ¡è¡¨å‚æ•°ç´¢å¼•
 
-u8 service_spm_getNoPowerFlag(u8* data);	                                                    //µôµç±êÖ¾,5×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_spm_getNoPowerFlag(u8* data);	                                                    //æ‰ç”µæ ‡å¿—,5å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_spm_setNoPowerFalg(u8* data, u16 len);
-u8 service_spm_getSendParameter(u8* data);                                                    //·¢ËÍ²ÎÊı£¬24×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_spm_getSendParameter(u8* data);                                                    //å‘é€å‚æ•°ï¼Œ24å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_spm_setSendParameter(u8* data, u16 len);
-u8 service_spm_getUpgrade(u8* data);                                                          //Éı¼¶²ÎÊı£¬415×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_spm_getUpgrade(u8* data);                                                          //å‡çº§å‚æ•°ï¼Œ415å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_spm_setUpgrade(u8* data, u16 len);
-u8 service_spm_getFirstJudge(u8* data);                                                       //Ê×´ÎÅĞ¶Ï£¬4×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_spm_getFirstJudge(u8* data);                                                       //é¦–æ¬¡åˆ¤æ–­ï¼Œ4å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_spm_setFirstJudge(u8* data, u16 len);
-u8 service_spm_getEnergy(u8* data);                                                           //µçÄÜ£¬160×Ö½Ú´øcrc£¬´æ4·İ get set
+u8 service_spm_getEnergy(u8* data);                                                           //ç”µèƒ½ï¼Œ160å­—èŠ‚å¸¦crcï¼Œå­˜4ä»½ get set
 u8 service_spm_setEnergy(u8* data, u16 len);
-u8 service_spm_getCheckMeter(u8* data);                                                       //Ğ£±í²ÎÊı 78×Ö½Ú 1·İ ²»´øcrc get set
+u8 service_spm_getCheckMeter(u8* data);                                                       //æ ¡è¡¨å‚æ•° 78å­—èŠ‚ 1ä»½ ä¸å¸¦crc get set
 u8 service_spm_setCheckMeter(u8* data, u16 len);
 
 #endif
