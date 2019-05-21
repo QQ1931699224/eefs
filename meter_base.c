@@ -1,9 +1,7 @@
 #include <stdio.h>
-#include <string.h>
 #include "eefs_lib.h"
 #include "meter_base.h"
-
-
+#include "malloc/_malloc.h"
 /*
  * Auth: ÎâêÏË§
  * Date: 2019-5-10
