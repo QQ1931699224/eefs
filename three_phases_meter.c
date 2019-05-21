@@ -12,7 +12,8 @@
  * @return : 0,1
  */
 u8 service_tpm_getNoPowerFlag(u8* data) {
-	meter_circle_read(NOPOWERFLAG_INDEX, data);
+	
+ return meter_circle_read(NOPOWERFLAG_INDEX, data);
 }	
 /*
  * Auth: 张添程
@@ -23,7 +24,7 @@ u8 service_tpm_getNoPowerFlag(u8* data) {
  * @return : 0,1
  */
 u8 service_tpm_setNoPowerFalg(u8* data, u16 len) {
-	meter_circle_write(NOPOWERFLAG_INDEX, data, len);
+	return meter_circle_write(NOPOWERFLAG_INDEX, data, len);
 }
 /*
  * Auth: 张添程
@@ -33,7 +34,7 @@ u8 service_tpm_setNoPowerFalg(u8* data, u16 len) {
  * @return : 0,1
  */
 u8 service_tpm_getSendParameter(u8* data) {
-	meter_circle_read(SENDPARAMETER_INDEX, data);
+	return meter_circle_read(SENDPARAMETER_INDEX, data);
 } 
 /*
  * Auth: 张添程
