@@ -66,30 +66,30 @@ u8 service_tpm_setCheckMeter(u8* data, u16 len);
 ///////////////////////////////////////////////////////////////////////////////////////
 
 
-u8 meter_create_breakeNetCapacity(void);      // 创建断网数据空间
-u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode); // 存一次断网数据
-u8 meter_saveBreakeNetData(SMALLINDEXNODE node);  // 保存断网数据
-u16 meter_getBreakeNetDataAddress(u16 index);         //获得断网数据在数据区的首地址
-u8 meter_disconnect_getData(u8* retData);  //返回最新的断网数据
-u8 meter_disconnect_getDataWithIndex(u16 index, u8* retData); // 根据下标返回断网数据
-u8 meter_getSmallIndexCurrentStatus(u16 index); // 获取小索引7,8位的当前状态
-u8 meter_getSmallIndexSendStatus(u16 index);   // 获取小索引5,6位的发送状态
-u8 meter_getSmallIndexTimeStatus(u16 index);   // 获取小索引1234位的时间状态
-u8 meter_setSmallIndexSendStatus(u16 index, u8 val);         // 根据角标设置5,6位的发送状态
-u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val);       // 根据角标设置7,8位的当前状态
-u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val);       // 根据角标设置1,2,3,4位的时间状态
-u8 meter_disconnect_getDataAndChangeStatus(u8* retData);  //获取角标对应的断网数据, 并改变状态
+u8 service_tpm_create_breakeNetCapacity(void);      // 创建断网数据空间
+u8 service_tpm_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode); // 存一次断网数据
+u8 service_tpm_saveBreakeNetData(SMALLINDEXNODE node);  // 保存断网数据
+u16 service_tpm_getBreakeNetDataAddress(u16 index);         //获得断网数据在数据区的首地址
+u8 service_tpm_disconnect_getData(u8* retData);  //返回最新的断网数据
+u8 service_tpm_disconnect_getDataWithIndex(u16 index, u8* retData); // 根据下标返回断网数据
+u8 service_tpm_getSmallIndexCurrentStatus(u16 index); // 获取小索引7,8位的当前状态
+u8 service_tpm_getSmallIndexSendStatus(u16 index);   // 获取小索引5,6位的发送状态
+u8 service_tpm_getSmallIndexTimeStatus(u16 index);   // 获取小索引1234位的时间状态
+u8 service_tpm_setSmallIndexSendStatus(u16 index, u8 val);         // 根据角标设置5,6位的发送状态
+u8 service_tpm_setSmallIndexCurrentStatus(u16 index, u8 val);       // 根据角标设置7,8位的当前状态
+u8 service_tpm_setSmallIndexCTimeStatus(u16 index, u8 val);       // 根据角标设置1,2,3,4位的时间状态
+u8 service_tpm_disconnect_getDataAndChangeStatus(u8* retData);  //获取角标对应的断网数据, 并改变状态
 
-u8 meter_create_monthCapacity(void);      // 创建月数据空间
-u8 meter_saveMonthData(u8 month, u8* data);  // 保存月数据
-u8 meter_getMonthData(u8 month, u8* ret_data);  // 获取月数据
+u8 service_tpm_create_monthCapacity(void);      // 创建月数据空间
+u8 service_tpm_saveMonthData(u8 month, u8* data);  // 保存月数据
+u8 service_tpm_getMonthData(u8 month, u8* ret_data);  // 获取月数据
 
-u8 meter_create_lostVoltCapacity(void);      // 创建失压数据空间
-u8 meter_saveLostVoltData(u8* data);             // 保存失压数据
-u8 meter_saveOnceLostVoltData(u16 index, u8* data);             // 保存失压数据
-u8 meter_getLostVoltData(u16 index, u8* retData);         // 根据角标取失压数据
-u16 meter_getLostVoltDataAddress(u16 index);    // 获得失压小索引在数据区对应的地址
-u8 meter_getLostVoltCurrentStatus(u16 index);   // 获取失压1,2位的当前状态
-u8 meter_setLostVoltCurrentStatus(u16 index, u8 val); // 设置失压1,2位的当前状态
+u8 service_tpm_create_lostVoltCapacity(void);      // 创建失压数据空间
+u8 service_tpm_saveLostVoltData(u8* data);             // 保存失压数据
+u8 service_tpm_saveOnceLostVoltData(u16 index, u8* data);             // 保存失压数据
+u8 service_tpm_getLostVoltData(u16 index, u8* retData);         // 根据角标取失压数据
+u16 service_tpm_getLostVoltDataAddress(u16 index);    // 获得失压小索引在数据区对应的地址
+u8 service_tpm_getLostVoltCurrentStatus(u16 index);   // 获取失压1,2位的当前状态
+u8 service_tpm_setLostVoltCurrentStatus(u16 index, u8 val); // 设置失压1,2位的当前状态
 
 #endif

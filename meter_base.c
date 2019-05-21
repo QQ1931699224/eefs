@@ -16,8 +16,6 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 	u8 dataStatus;
 	u8 netStatus;
 	u8 genFlag;
-	u8 netStaus;
-	u8 offset;
 	u8 crcSize;
 	// ---------- 输入参数条件检测---------- //
 	// (1)判断index是否合法
@@ -70,6 +68,8 @@ TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE) {
 	{
 		return tpye_write_16;
 	}
+    return tpye_write_1;
+    
 }
 
 /*
@@ -120,7 +120,7 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 	u8 *datas;                             //临时数组
 	int i;
 	int zero;	                           //写入用0
-	u8 indexStatusFlag;                    //通用标记位/CRC
+	s8 indexStatusFlag;                    //通用标记位/CRC
 	u8 crcOffset;                          //crc偏移量
 	u16 oldStatusAddr;                     //上一个数据状态位地址
 	u8 ns;                                 //新状态
@@ -209,7 +209,7 @@ u8 meter_circle_read(u16 index, u8* retData) {
 	// ---------- 局部变量定义区---------- //
 	u16 writeAddr;
 	u16 dataSize;
-	u8 indexStatusFlag;
+	s8 indexStatusFlag;
 	u8 crcOffset;
 	s8 writeType;
 	// ---------- 输入参数条件检测---------- //
@@ -264,7 +264,7 @@ u8 meter_circle_read(u16 index, u8* retData) {
 u16 meter_get_write_address(u16 index) {
 	// ---------- 局部变量定义区---------- //
 	int i;
-	u8 indexStatusFlag;
+	s8 indexStatusFlag;
 	s8 writeType;
 	u16 dataHeadAddr;
 	u16 writeDataStatus;
@@ -329,7 +329,7 @@ u16 meter_get_write_address(u16 index) {
 u16 meter_get_data_status_address(u16 index) {
 	// ---------- 局部变量定义区---------- //
 	int i;
-	u8 indexStatusFlag;
+	s8 indexStatusFlag;
 	s8 writeType;
 	u16 dataHeadAddr;
 	u16 dataSize;

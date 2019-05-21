@@ -37,12 +37,12 @@ void testLostVoltData(void);
 
 int main(int argc, const char* argv[]) {
 
-	testLostVoltData();
-	testMonthData();
-	testSmallIndex();
+    testLostVoltData();
+//    testMonthData();
+//    testSmallIndex();
 
 	//testEefs_WRdata();
-	//testEefs_three();
+//    testEefs_three();
 
 	//testEefs_data_getSys();
 	//testEefs_mbr_create();
@@ -455,35 +455,35 @@ void testSmallIndex(void)
 	node100.electric5 = 2;
 	node100.electric6 = 3;
 
-	meter_create_breakeNetCapacity();
+	service_tpm_create_breakeNetCapacity();
 	for (i = 0; i < 101; i++) {
 		if (i == 100) {
-			meter_saveBreakeNetData(node100);
+			service_tpm_saveBreakeNetData(node100);
 		}
 		else
 		{
-			meter_saveBreakeNetData(node);
+			service_tpm_saveBreakeNetData(node);
 		}
 	}
 
 	// 测试根据角标获取断网数据
-	meter_disconnect_getDataWithIndex(0, retData);
+	service_tpm_disconnect_getDataWithIndex(0, retData);
 
 	// 测试时间状态
-	meter_setSmallIndexCTimeStatus(0, 2);
-	timeStatus = meter_getSmallIndexTimeStatus(0);
+	service_tpm_setSmallIndexCTimeStatus(0, 2);
+	timeStatus = service_tpm_getSmallIndexTimeStatus(0);
 
 	// 测试当前状态
-	meter_setSmallIndexCurrentStatus(0, 2);
-	currentStatus = meter_getSmallIndexCurrentStatus(0);
+	service_tpm_setSmallIndexCurrentStatus(0, 2);
+	currentStatus = service_tpm_getSmallIndexCurrentStatus(0);
 
 	// 测试发送状态
-	meter_setSmallIndexSendStatus(0, 2);
-	sendStatus = meter_getSmallIndexSendStatus(0);
+	service_tpm_setSmallIndexSendStatus(0, 2);
+	sendStatus = service_tpm_getSmallIndexSendStatus(0);
 
 	// 测试获取断网数据并且改变状态
-	meter_disconnect_getDataAndChangeStatus(retData);
-	sendStatus = meter_getSmallIndexSendStatus(0);
+	service_tpm_disconnect_getDataAndChangeStatus(retData);
+	sendStatus = service_tpm_getSmallIndexSendStatus(0);
 	printf("%s", G_LIST);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -503,9 +503,9 @@ void testMonthData(void)
 	data[1] = 2;
 	data[2] = 3;
 	data[3] = 4;
-	meter_create_monthCapacity();
-	meter_saveMonthData(2, data);
-	meter_getMonthData(2, retData);
+	service_tpm_create_monthCapacity();
+	service_tpm_saveMonthData(2, data);
+	service_tpm_getMonthData(2, retData);
 	printf("%s", G_LIST);
 }
 
@@ -544,17 +544,17 @@ void testLostVoltData(void)
 	data2[8] = 1;
 
 	// 创建失压空间
-	meter_create_lostVoltCapacity();
+	service_tpm_create_lostVoltCapacity();
 	for (i = 0; i < 21; i++) {
 		if (i == 20) {
-			meter_saveLostVoltData(data2);
+			service_tpm_saveLostVoltData(data2);
 		}
 		else
 		{
-			meter_saveLostVoltData(data);
+			service_tpm_saveLostVoltData(data);
 		}
 	}
 	// 测试根据角标获取失压数据
-	meter_getLostVoltData(0, retData);
+	service_tpm_getLostVoltData(0, retData);
 	printf("%s", G_LIST);
 }
