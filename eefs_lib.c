@@ -806,7 +806,6 @@ u16 eefs_data_getDescHeadAddress(u16 index) {
  */
 u16 eefs_data_getDesc(u16 index) {
 	// ---------- 局部变量定义区---------- //
-	int i;
 	u16 startIndex;         // 该索引的起始位置
 	u16 desc;                // 索引的name信息
 	u8 descs[DESC_SIZE];
@@ -1046,7 +1045,35 @@ u16 eefs_mbr_getSize(u16 index)
 	// (2).读取size的两字节
 	eefs_base_readBytes(startIndex, sizes, SIZE_SIZE);
 	size = 0;
-	size = *(u16*)sizes + DATA_DESCRIBE; //赋值name
+	size = *(u16*)sizes + DATA_DESCRIBE; 
+	return size;
+}
+
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc:获取索引对应的数据区大小(不包含数据描述位)
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u16 eefs_mbr_getDataSize(u16 index)
+{
+	// ---------- 局部变量定义区---------- //
+	u16 startIndex;         // 该索引的起始位置
+	u16 size;                // 索引的name信息
+	u8 sizes[SIZE_SIZE];
+	// ---------- 输入参数条件检测---------- //
+	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
+		return RET_FAILD;
+	}
+	// ---------- 业务处理---------- //
+	// (1). 找到索引起始位置 找到size的位置
+	startIndex = eefs_mbr_getIndexSizeHeadAddress(index);
+	// (2).读取size的两字节
+	eefs_base_readBytes(startIndex, sizes, SIZE_SIZE);
+	size = 0;
+	//size = *(u16*)sizes + DATA_DESCRIBE; //张添程 19.05.20
+	size = *(u16*)sizes; //张添程 19.05.20
 	return size;
 }
 

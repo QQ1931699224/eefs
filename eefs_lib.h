@@ -25,14 +25,14 @@ typedef int  s32;
 typedef short s16;
 typedef signed char  s8;
 
-#define EE_SYS_FLAG_OFFSET 0;                                                    //系统保留区标志位偏移量
-#define EE_SYS_VERSION_OFFSET 1;                                                 //系统保留区版本号偏移量
-#define EE_SYS_USEDCAPACITY_OFFSET 3;                                            //系统保留区已使用空间标志偏移量
-#define EE_SYS_UNUSEDCAPACITY_OFFSET 5;                                          //系统保留区未使用空间标志偏移量
+#define EE_SYS_FLAG_OFFSET 0                                                   //系统保留区标志位偏移量
+#define EE_SYS_VERSION_OFFSET 1                                               //系统保留区版本号偏移量
+#define EE_SYS_USEDCAPACITY_OFFSET 3                                        //系统保留区已使用空间标志偏移量
+#define EE_SYS_UNUSEDCAPACITY_OFFSET 5                                     //系统保留区未使用空间标志偏移量
 
 
 #define BIT_DATA_MASK 0xC0                                                       // (11000000)数据状态位掩码
-#define BIT_DATA_UNMASK 0x63                                                     // (00111111)数据状态位掩码
+#define BIT_DATA_UNMASK 0x3F                                                     // (00111111)数据状态位掩码
 #define BIT_NET_UNMASK 0xF3                                                      // (11110011)网络状态位掩码
 #define BIT_NET_MASK 0x0C                                                        // (00001100)网络状态位掩码
 #define BIT_INDEX_MASK 0x30                                                      // (00110000)索引状态位掩码
@@ -138,6 +138,7 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index);                              
 
 u16 eefs_mbr_getSize(u16 index);                                                 // 获取索引对应的数据区大小
 u8 eefs_mbr_setSize(u16 index,u16 size);                                         // 设置索引对应的数据区大小
+u16 eefs_mbr_getDataSize(u16 index);                                             // 获取索引对应的数据区大小(不包含数据描述位)
 u8 eefs_mbr_check(u16 index);                                                    // 检查索引值是否合法，合法则返回索引首地址
 s8 eefs_mbr_getStatus(u16 index);                                                // 获取状态
 u8 eefs_mbr_setStatus(u16 index ,u8 val);                                        // 设置状态
