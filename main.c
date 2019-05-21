@@ -357,8 +357,8 @@ void testEefs_three() {
 	meaterVer.net = 1;
 	meter_register(0, meaterVer);
 	
-	meter_setNoPowerFalg(falg,5);
-	meter_getNoPowerFlag(data);
+	service_tpm_setNoPowerFalg(falg,5);
+	service_tpm_getNoPowerFlag(data);
 
 	//发送参数
 	meaterVer1.name = 1025;
@@ -368,8 +368,8 @@ void testEefs_three() {
 	meaterVer1.net = 1;
 	meter_register(1, meaterVer1);
 
-	meter_setSendParameter(send,7);
-	meter_getSendParameter(data1);
+	service_tpm_setSendParameter(send,7);
+	service_tpm_getSendParameter(data1);
 	//升级参数
 	meaterVer2.name = 1026;
 	meaterVer2.size = 415;
@@ -378,8 +378,8 @@ void testEefs_three() {
 	meaterVer2.net = 1;
 	meter_register(2, meaterVer2);
 
-	meter_setUpgrade(up,10);
-	meter_getUpgrade(data2);
+	service_tpm_setUpgrade(up,10);
+	service_tpm_getUpgrade(data2);
 	////首次判断
 	meaterVer3.name = 1027;
 	meaterVer3.size = 4;
@@ -388,8 +388,8 @@ void testEefs_three() {
 	meaterVer3.net = 1;
 	meter_register(3, meaterVer3);
 
-	meter_setFirstJudge(fj, 4);
-	meter_getFirstJudge(data3);
+	service_tpm_setFirstJudge(fj, 4);
+	service_tpm_getFirstJudge(data3);
 	////电能
 	meaterVer4.name = 1028;
 	meaterVer4.size = 160;
@@ -398,11 +398,11 @@ void testEefs_three() {
 	meaterVer4.net = 1;
 	meter_register(4, meaterVer4);
 
-	meter_setEnergy(en, 13);
-	meter_setEnergy(en, 13);
-	meter_setEnergy(en, 13);
-	meter_setEnergy(en, 13);
-	meter_getEnergy(data4);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_setEnergy(en, 13);
+	service_tpm_getEnergy(data4);
 
 	//校表
 	meaterVer5.name = 1029;
@@ -412,6 +412,6 @@ void testEefs_three() {
 	meaterVer5.net = 1;
 	meter_register(5, meaterVer5);
 
-	meter_setCheckMeter(jb, 14);
-	meter_getCheckMeter(data5);
+	service_tpm_setCheckMeter(jb, 14);
+	service_tpm_getCheckMeter(data5);
 }
