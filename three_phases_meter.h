@@ -1,5 +1,5 @@
 /*
- * ÈıÏà±í²ÎÊı´æÈ¡
+ * ä¸‰ç›¸è¡¨å‚æ•°å­˜å–
  */
 #ifndef three_phases_meter_h
 #define three_phases_meter_h
@@ -7,37 +7,37 @@
 #include "meter_base.h"
 #include "eefs_lib.h" 
 
-#define NOPOWERFLAG_INDEX 0                                                             //µôµç±êÖ¾Ë÷Òı
-#define SENDPARAMETER_INDEX  1                                                          //·¢ËÍ²ÎÊıË÷Òı
-#define UPGRADE_INDEX 2                                                                 //Éı¼¶²ÎÊıË÷Òı
-#define FIRSTJUDGE_INDEX 3                                                              //Í¨Ê×´ÎÅĞ¶ÏË÷Òı
-#define ENERGY_INDEX 4                                                                  //µçÄÜË÷Òı
-#define CHECKMETER_INDEX 5														        //Ğ£±í²ÎÊıË÷Òı
+#define NOPOWERFLAG_INDEX 0                                                             //æ‰ç”µæ ‡å¿—ç´¢å¼•
+#define SENDPARAMETER_INDEX  1                                                          //å‘é€å‚æ•°ç´¢å¼•
+#define UPGRADE_INDEX 2                                                                 //å‡çº§å‚æ•°ç´¢å¼•
+#define FIRSTJUDGE_INDEX 3                                                              //é€šé¦–æ¬¡åˆ¤æ–­ç´¢å¼•
+#define ENERGY_INDEX 4                                                                  //ç”µèƒ½ç´¢å¼•
+#define CHECKMETER_INDEX 5														        //æ ¡è¡¨å‚æ•°ç´¢å¼•
 ////////////////////////////////////////////////////////////////////////
 
-#define BIT_TIME_UNMASK 0xF0                                                  // Ê±¼ä×´Ì¬Î»ÑÚÂë
-#define BIT_TIME_MASK 0xF                                                  // Ê±¼ä×´Ì¬Î»ÑÚÂë
-#define SMALLINDEX_CAPACITY 24              // Ğ¡Ë÷Òı24¸ö×Ö½Ú
-#define SMALLINDEX_STATUSCAPACITY 1         // Ğ¡Ë÷Òı×´Ì¬Î»1×Ö½Ú
-#define SMALLINDEX_CRCCAPACITY 2            // Ğ¡Ë÷ÒıCRMÑéÖ¤2×Ö½Ú
-#define SMALLINDEX_DATACOUNT 100            // Ğ¡Ë÷ÒıÊı¾İ¸öÊı
-#define SMALLINDEX_CURRENTSTATUS 1       // Ğ¡Ë÷Òıµ±Ç°status
-#define SMALLINDEX_DEFAULTSTATUS 0       // Ğ¡Ë÷Òı²»ÊÇµ±Ç°status
+#define BIT_TIME_UNMASK 0xF0                                                  // æ—¶é—´çŠ¶æ€ä½æ©ç 
+#define BIT_TIME_MASK 0xF                                                  // æ—¶é—´çŠ¶æ€ä½æ©ç 
+#define SMALLINDEX_CAPACITY 24              // å°ç´¢å¼•24ä¸ªå­—èŠ‚
+#define SMALLINDEX_STATUSCAPACITY 1         // å°ç´¢å¼•çŠ¶æ€ä½1å­—èŠ‚
+#define SMALLINDEX_CRCCAPACITY 2            // å°ç´¢å¼•CRMéªŒè¯2å­—èŠ‚
+#define SMALLINDEX_DATACOUNT 100            // å°ç´¢å¼•æ•°æ®ä¸ªæ•°
+#define SMALLINDEX_CURRENTSTATUS 1       // å°ç´¢å¼•å½“å‰status
+#define SMALLINDEX_DEFAULTSTATUS 0       // å°ç´¢å¼•ä¸æ˜¯å½“å‰status
 
-#define SMALLINDEX_NAME 1000                 // Ğ¡Ë÷ÒıÔÚË÷ÒıÇøµÄÃû×Ö
-#define SMALLINDEX_SENDTATUS 1               // Ğ¡Ë÷ÒıÒÑ·¢ËÍstatus
-#define SMALLINDEX_NOSENDSTATUS 2            // Ğ¡Ë÷ÒıÎ´·¢ËÍstatus
+#define SMALLINDEX_NAME 1000                 // å°ç´¢å¼•åœ¨ç´¢å¼•åŒºçš„åå­—
+#define SMALLINDEX_SENDTATUS 1               // å°ç´¢å¼•å·²å‘é€status
+#define SMALLINDEX_NOSENDSTATUS 2            // å°ç´¢å¼•æœªå‘é€status
 
-#define MONTHDATA_NAME 1001                  // ÔÂ·İÊı¾İ¿Õ¼äµÄÃû×Ö
-#define MONTHDATA_COUNT 12                   // ÔÂ·İÊı¾İ¿Õ¼äµÄ¸öÊı
-#define MONTHDATA_CAPACITY 4                 // ÔÂ·İÊı¾İ¿Õ¼äµÄ¸öÊı
+#define MONTHDATA_NAME 1001                  // æœˆä»½æ•°æ®ç©ºé—´çš„åå­—
+#define MONTHDATA_COUNT 12                   // æœˆä»½æ•°æ®ç©ºé—´çš„ä¸ªæ•°
+#define MONTHDATA_CAPACITY 4                 // æœˆä»½æ•°æ®ç©ºé—´çš„ä¸ªæ•°
 
-#define LOSTVOLT_NAME 1002                   // Ê§Ñ¹Êı¾İµÄÃû×Ö
-#define LOSTVOLT_COUNT 20                    // Ê§Ñ¹Êı¾İ¿Õ¼äµÄ¸öÊı
-#define LOSTVOLT_CAPACITY 9                  // Ê§Ñ¹Êı¾İµ¥¸ö¿Õ¼äÈİÁ¿
-#define LOSTVOLT_DESCRIBE 1                  // Ê§Ñ¹Êı¾İ¿Õ¼äÃèÊöÎ»ÈİÁ¿
-#define LOSTVOLT_CURRENTSTATUS 1             // Ê§Ñ¹Êı¾İĞ¡Ë÷Òıµ±Ç°status
-#define LOSTVOLT_DEFAULTSTATUS 0             // Ê§Ñ¹Êı¾İĞ¡Ë÷Òı²»ÊÇµ±Ç°status
+#define LOSTVOLT_NAME 1002                   // å¤±å‹æ•°æ®çš„åå­—
+#define LOSTVOLT_COUNT 20                    // å¤±å‹æ•°æ®ç©ºé—´çš„ä¸ªæ•°
+#define LOSTVOLT_CAPACITY 9                  // å¤±å‹æ•°æ®å•ä¸ªç©ºé—´å®¹é‡
+#define LOSTVOLT_DESCRIBE 1                  // å¤±å‹æ•°æ®ç©ºé—´æè¿°ä½å®¹é‡
+#define LOSTVOLT_CURRENTSTATUS 1             // å¤±å‹æ•°æ®å°ç´¢å¼•å½“å‰status
+#define LOSTVOLT_DEFAULTSTATUS 0             // å¤±å‹æ•°æ®å°ç´¢å¼•ä¸æ˜¯å½“å‰status
 
 ///////////////////////////////////////////////////////////////////////////////////
 
@@ -50,46 +50,46 @@ typedef struct SmallIndexNode {
 	u32 electric6;
 }SMALLINDEXNODE;
 
-u8 service_tpm_getNoPowerFlag(u8* data);	                                                    //µôµç±êÖ¾,5×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_tpm_getNoPowerFlag(u8* data);	                                                    //æ‰ç”µæ ‡å¿—,5å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_tpm_setNoPowerFalg(u8* data,u16 len);
-u8 service_tpm_getSendParameter(u8* data);                                                    //·¢ËÍ²ÎÊı£¬24×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_tpm_getSendParameter(u8* data);                                                    //å‘é€å‚æ•°ï¼Œ24å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_tpm_setSendParameter(u8* data, u16 len);
-u8 service_tpm_getUpgrade(u8* data);                                                          //Éı¼¶²ÎÊı£¬415×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_tpm_getUpgrade(u8* data);                                                          //å‡çº§å‚æ•°ï¼Œ415å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_tpm_setUpgrade(u8* data, u16 len);
-u8 service_tpm_getFirstJudge(u8* data);                                                       //Ê×´ÎÅĞ¶Ï£¬4×Ö½Ú£¬²»´øcrc£¬´æ1·İ get set
+u8 service_tpm_getFirstJudge(u8* data);                                                       //é¦–æ¬¡åˆ¤æ–­ï¼Œ4å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½ get set
 u8 service_tpm_setFirstJudge(u8* data, u16 len);
-u8 service_tpm_getEnergy(u8* data);                                                           //µçÄÜ£¬160×Ö½Ú´øcrc£¬´æ4·İ get set
+u8 service_tpm_getEnergy(u8* data);                                                           //ç”µèƒ½ï¼Œ160å­—èŠ‚å¸¦crcï¼Œå­˜4ä»½ get set
 u8 service_tpm_setEnergy(u8* data, u16 len);
-u8 service_tpm_getCheckMeter(u8* data);                                                       //Ğ£±í²ÎÊı 78×Ö½Ú 1·İ ²»´øcrc get set
+u8 service_tpm_getCheckMeter(u8* data);                                                       //æ ¡è¡¨å‚æ•° 78å­—èŠ‚ 1ä»½ ä¸å¸¦crc get set
 u8 service_tpm_setCheckMeter(u8* data, u16 len);
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 
-u8 meter_create_breakeNetCapacity(void);      // ´´½¨¶ÏÍøÊı¾İ¿Õ¼ä
-u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode); // ´æÒ»´Î¶ÏÍøÊı¾İ
-u8 meter_saveBreakeNetData(SMALLINDEXNODE node);  // ±£´æ¶ÏÍøÊı¾İ
-u16 meter_getBreakeNetDataAddress(u16 index);         //»ñµÃ¶ÏÍøÊı¾İÔÚÊı¾İÇøµÄÊ×µØÖ·
-u8 meter_disconnect_getData(u8* retData);  //·µ»Ø×îĞÂµÄ¶ÏÍøÊı¾İ
-u8 meter_disconnect_getDataWithIndex(u16 index, u8* retData); // ¸ù¾İÏÂ±ê·µ»Ø¶ÏÍøÊı¾İ
-u8 meter_getSmallIndexCurrentStatus(u16 index); // »ñÈ¡Ğ¡Ë÷Òı7,8Î»µÄµ±Ç°×´Ì¬
-u8 meter_getSmallIndexSendStatus(u16 index);   // »ñÈ¡Ğ¡Ë÷Òı5,6Î»µÄ·¢ËÍ×´Ì¬
-u8 meter_getSmallIndexTimeStatus(u16 index);   // »ñÈ¡Ğ¡Ë÷Òı1234Î»µÄÊ±¼ä×´Ì¬
-u8 meter_setSmallIndexSendStatus(u16 index, u8 val);         // ¸ù¾İ½Ç±êÉèÖÃ5,6Î»µÄ·¢ËÍ×´Ì¬
-u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val);       // ¸ù¾İ½Ç±êÉèÖÃ7,8Î»µÄµ±Ç°×´Ì¬
-u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val);       // ¸ù¾İ½Ç±êÉèÖÃ1,2,3,4Î»µÄÊ±¼ä×´Ì¬
-u8 meter_disconnect_getDataAndChangeStatus(u8* retData);  //»ñÈ¡½Ç±ê¶ÔÓ¦µÄ¶ÏÍøÊı¾İ, ²¢¸Ä±ä×´Ì¬
+u8 meter_create_breakeNetCapacity(void);      // åˆ›å»ºæ–­ç½‘æ•°æ®ç©ºé—´
+u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode); // å­˜ä¸€æ¬¡æ–­ç½‘æ•°æ®
+u8 meter_saveBreakeNetData(SMALLINDEXNODE node);  // ä¿å­˜æ–­ç½‘æ•°æ®
+u16 meter_getBreakeNetDataAddress(u16 index);         //è·å¾—æ–­ç½‘æ•°æ®åœ¨æ•°æ®åŒºçš„é¦–åœ°å€
+u8 meter_disconnect_getData(u8* retData);  //è¿”å›æœ€æ–°çš„æ–­ç½‘æ•°æ®
+u8 meter_disconnect_getDataWithIndex(u16 index, u8* retData); // æ ¹æ®ä¸‹æ ‡è¿”å›æ–­ç½‘æ•°æ®
+u8 meter_getSmallIndexCurrentStatus(u16 index); // è·å–å°ç´¢å¼•7,8ä½çš„å½“å‰çŠ¶æ€
+u8 meter_getSmallIndexSendStatus(u16 index);   // è·å–å°ç´¢å¼•5,6ä½çš„å‘é€çŠ¶æ€
+u8 meter_getSmallIndexTimeStatus(u16 index);   // è·å–å°ç´¢å¼•1234ä½çš„æ—¶é—´çŠ¶æ€
+u8 meter_setSmallIndexSendStatus(u16 index, u8 val);         // æ ¹æ®è§’æ ‡è®¾ç½®5,6ä½çš„å‘é€çŠ¶æ€
+u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val);       // æ ¹æ®è§’æ ‡è®¾ç½®7,8ä½çš„å½“å‰çŠ¶æ€
+u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val);       // æ ¹æ®è§’æ ‡è®¾ç½®1,2,3,4ä½çš„æ—¶é—´çŠ¶æ€
+u8 meter_disconnect_getDataAndChangeStatus(u8* retData);  //è·å–è§’æ ‡å¯¹åº”çš„æ–­ç½‘æ•°æ®, å¹¶æ”¹å˜çŠ¶æ€
 
-u8 meter_create_monthCapacity(void);      // ´´½¨ÔÂÊı¾İ¿Õ¼ä
-u8 meter_saveMonthData(u8 month, u8* data);  // ±£´æÔÂÊı¾İ
-u8 meter_getMonthData(u8 month, u8* ret_data);  // »ñÈ¡ÔÂÊı¾İ
+u8 meter_create_monthCapacity(void);      // åˆ›å»ºæœˆæ•°æ®ç©ºé—´
+u8 meter_saveMonthData(u8 month, u8* data);  // ä¿å­˜æœˆæ•°æ®
+u8 meter_getMonthData(u8 month, u8* ret_data);  // è·å–æœˆæ•°æ®
 
-u8 meter_create_lostVoltCapacity(void);      // ´´½¨Ê§Ñ¹Êı¾İ¿Õ¼ä
-u8 meter_saveLostVoltData(u8* data);             // ±£´æÊ§Ñ¹Êı¾İ
-u8 meter_saveOnceLostVoltData(u16 index, u8* data);             // ±£´æÊ§Ñ¹Êı¾İ
-u8 meter_getLostVoltData(u16 index, u8* retData);         // ¸ù¾İ½Ç±êÈ¡Ê§Ñ¹Êı¾İ
-u16 meter_getLostVoltDataAddress(u16 index);    // »ñµÃÊ§Ñ¹Ğ¡Ë÷ÒıÔÚÊı¾İÇø¶ÔÓ¦µÄµØÖ·
-u8 meter_getLostVoltCurrentStatus(u16 index);   // »ñÈ¡Ê§Ñ¹1,2Î»µÄµ±Ç°×´Ì¬
-u8 meter_setLostVoltCurrentStatus(u16 index, u8 val); // ÉèÖÃÊ§Ñ¹1,2Î»µÄµ±Ç°×´Ì¬
+u8 meter_create_lostVoltCapacity(void);      // åˆ›å»ºå¤±å‹æ•°æ®ç©ºé—´
+u8 meter_saveLostVoltData(u8* data);             // ä¿å­˜å¤±å‹æ•°æ®
+u8 meter_saveOnceLostVoltData(u16 index, u8* data);             // ä¿å­˜å¤±å‹æ•°æ®
+u8 meter_getLostVoltData(u16 index, u8* retData);         // æ ¹æ®è§’æ ‡å–å¤±å‹æ•°æ®
+u16 meter_getLostVoltDataAddress(u16 index);    // è·å¾—å¤±å‹å°ç´¢å¼•åœ¨æ•°æ®åŒºå¯¹åº”çš„åœ°å€
+u8 meter_getLostVoltCurrentStatus(u16 index);   // è·å–å¤±å‹1,2ä½çš„å½“å‰çŠ¶æ€
+u8 meter_setLostVoltCurrentStatus(u16 index, u8 val); // è®¾ç½®å¤±å‹1,2ä½çš„å½“å‰çŠ¶æ€
 
 #endif

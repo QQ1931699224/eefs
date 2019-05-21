@@ -5,10 +5,10 @@
 #include "three_phases_meter.h"
 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ µôµç±êÖ¾,5×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ½ÓÊÕ
+ * Desc:è·å– æ‰ç”µæ ‡å¿—,5å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®æ¥æ”¶
  * @return : 0,1
  */
 u8 service_tpm_getNoPowerFlag(u8* data) {
@@ -16,116 +16,116 @@ u8 service_tpm_getNoPowerFlag(u8* data) {
  return meter_circle_read(NOPOWERFLAG_INDEX, data);
 }	
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë µôµç±êÖ¾,5×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ æ‰ç”µæ ‡å¿—,5å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_tpm_setNoPowerFalg(u8* data, u16 len) {
 	return meter_circle_write(NOPOWERFLAG_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ ·¢ËÍ²ÎÊı£¬24×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ½ÓÊÕ
+ * Desc:è·å– å‘é€å‚æ•°ï¼Œ24å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®æ¥æ”¶
  * @return : 0,1
  */
 u8 service_tpm_getSendParameter(u8* data) {
 	return meter_circle_read(SENDPARAMETER_INDEX, data);
 } 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë ·¢ËÍ²ÎÊı£¬24×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ å‘é€å‚æ•°ï¼Œ24å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_tpm_setSendParameter(u8* data, u16 len) {
 	return meter_circle_write(SENDPARAMETER_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ Éı¼¶²ÎÊı£¬415×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
+ * Desc:è·å– å‡çº§å‚æ•°ï¼Œ415å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_tpm_getUpgrade(u8* data) {
 	return meter_circle_read(UPGRADE_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë Éı¼¶²ÎÊı£¬415×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ å‡çº§å‚æ•°ï¼Œ415å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_tpm_setUpgrade(u8* data, u16 len) {
 	return meter_circle_write(UPGRADE_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ Ê×´ÎÅĞ¶Ï£¬4×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
+ * Desc:è·å– é¦–æ¬¡åˆ¤æ–­ï¼Œ4å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_tpm_getFirstJudge(u8* data) {
 	return meter_circle_read(FIRSTJUDGE_INDEX, data);
 } 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë Ê×´ÎÅĞ¶Ï£¬4×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ é¦–æ¬¡åˆ¤æ–­ï¼Œ4å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_tpm_setFirstJudge(u8* data, u16 len) {
 	return meter_circle_write(FIRSTJUDGE_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ µçÄÜ£¬160×Ö½Ú´øcrc£¬´æ4·İ
- * @data Êı¾İ
+ * Desc:è·å– ç”µèƒ½ï¼Œ160å­—èŠ‚å¸¦crcï¼Œå­˜4ä»½
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_tpm_getEnergy(u8* data) {
 	return meter_circle_read(ENERGY_INDEX, data);
 } 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë µçÄÜ£¬160×Ö½Ú´øcrc£¬´æ4·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ ç”µèƒ½ï¼Œ160å­—èŠ‚å¸¦crcï¼Œå­˜4ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_tpm_setEnergy(u8* data, u16 len) {
 	return meter_circle_write(ENERGY_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ Ğ£±í²ÎÊı 78×Ö½Ú 1·İ ²»´øcrc
- * @data Êı¾İ
+ * Desc:è·å– æ ¡è¡¨å‚æ•° 78å­—èŠ‚ 1ä»½ ä¸å¸¦crc
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_tpm_getCheckMeter(u8* data) {
 	return meter_circle_read(CHECKMETER_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë Ğ£±í²ÎÊı 78×Ö½Ú 1·İ ²»´øcrc
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ æ ¡è¡¨å‚æ•° 78å­—èŠ‚ 1ä»½ ä¸å¸¦crc
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_tpm_setCheckMeter(u8* data, u16 len) {
@@ -135,23 +135,23 @@ u8 service_tpm_setCheckMeter(u8* data, u16 len) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:´´½¨¶ÏÍøÊı¾İ¿Õ¼ä
+ * Desc:åˆ›å»ºæ–­ç½‘æ•°æ®ç©ºé—´
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_create_breakeNetCapacity(void)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	USERNODE usernode;
-	u16 index;              // ¼ÇÂ¼Ë÷ÒıÇøindex
+	u16 index;              // è®°å½•ç´¢å¼•åŒºindex
 
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)Ñ­»·±éÀúË÷ÒıÇø, ÕÒµ½Ò»¸öÃ»Ê¹ÓÃµÄË÷Òı
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)å¾ªç¯éå†ç´¢å¼•åŒº, æ‰¾åˆ°ä¸€ä¸ªæ²¡ä½¿ç”¨çš„ç´¢å¼•
 	usernode.name = SMALLINDEX_NAME;
 	index = 0;
 	usernode.size = (SMALLINDEX_CAPACITY + SMALLINDEX_STATUSCAPACITY + SMALLINDEX_CRCCAPACITY) * SMALLINDEX_DATACOUNT;
@@ -160,7 +160,7 @@ u8 meter_create_breakeNetCapacity(void)
 			eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
 		}
 		if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) {
-			eefs_create(i, usernode); // ´´½¨Ë÷ÒıÇø
+			eefs_create(i, usernode); // åˆ›å»ºç´¢å¼•åŒº
 			index = i;
 			i = MAX_INDEX;
 		}
@@ -170,32 +170,32 @@ u8 meter_create_breakeNetCapacity(void)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:´æÒ»´Î¶ÏÍøÊı¾İ
+ * Desc:å­˜ä¸€æ¬¡æ–­ç½‘æ•°æ®
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 //    u8 status;
 //    u8 lastStatus;
-	u16 address;     // Ê×µØÖ·
-	u16 lastAddress; // ÉÏÒ»¸öµØÖ·
-	u16 newAddress; // Ğ´ÈëµÄµØÖ·
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	u16 address;     // é¦–åœ°å€
+	u16 lastAddress; // ä¸Šä¸€ä¸ªåœ°å€
+	u16 newAddress; // å†™å…¥çš„åœ°å€
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
 	lastAddress = 0;
 	newAddress = 0;
 
-	//(1)Ñ­»·ÕÒ³öÊı¾İÇøµÄÊ×µØÖ·
+	//(1)å¾ªç¯æ‰¾å‡ºæ•°æ®åŒºçš„é¦–åœ°å€
 	address = meter_getBreakeNetDataAddress(0);
-	//(2)¸ù¾İĞ¡Ë÷ÒıËã³öÕæÕıµÄµØÖ·
+	//(2)æ ¹æ®å°ç´¢å¼•ç®—å‡ºçœŸæ­£çš„åœ°å€
 	newAddress = meter_getBreakeNetDataAddress(index);
 	if (index == 0) {
 		lastAddress = meter_getBreakeNetDataAddress(SMALLINDEX_DATACOUNT - 1);
@@ -205,15 +205,15 @@ u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 		lastAddress = meter_getBreakeNetDataAddress(index) - SMALLINDEX_CAPACITY - SMALLINDEX_STATUSCAPACITY - SMALLINDEX_CRCCAPACITY;
 	}
 
-	//(3)ÔÚnewAddress´¦´æÊı¾İ
+	//(3)åœ¨newAddresså¤„å­˜æ•°æ®
 	eefs_base_writeBytes(newAddress, (u8*)& smallNode, SMALLINDEX_CAPACITY);
 
-	//(4)Ğ´Èë×´Ì¬Î»(7,8Î»=1Îªµ±Ç°Êı¾İ, 0ÎªÒÔÇ°Êı¾İ, 1234Î»¿ØÖÆÄêÔÂÈÕÊ±·Ö, 5,6Î»¿ØÖÆ·¢ËÍ×´Ì¬,2ÎªÄ¬ÈÏ×´Ì¬, 1Îª·¢ËÍ×´Ì¬)
-	// Ğ´Èëµ±Ç°×´Ì¬
+	//(4)å†™å…¥çŠ¶æ€ä½(7,8ä½=1ä¸ºå½“å‰æ•°æ®, 0ä¸ºä»¥å‰æ•°æ®, 1234ä½æ§åˆ¶å¹´æœˆæ—¥æ—¶åˆ†, 5,6ä½æ§åˆ¶å‘é€çŠ¶æ€,2ä¸ºé»˜è®¤çŠ¶æ€, 1ä¸ºå‘é€çŠ¶æ€)
+	// å†™å…¥å½“å‰çŠ¶æ€
 	meter_setSmallIndexCurrentStatus(index, SMALLINDEX_CURRENTSTATUS);
-	// Ğ´ÈëÄ¬ÈÏ·¢ËÍ×´Ì¬
+	// å†™å…¥é»˜è®¤å‘é€çŠ¶æ€
 	meter_setSmallIndexSendStatus(index, SMALLINDEX_NOSENDSTATUS);
-	// ¸øÉÏÒ»¸öindex¸üĞÂ×´Ì¬
+	// ç»™ä¸Šä¸€ä¸ªindexæ›´æ–°çŠ¶æ€
 	if (index == 0) {
 		meter_setSmallIndexCurrentStatus(SMALLINDEX_DATACOUNT - 1, SMALLINDEX_DEFAULTSTATUS);
 	}
@@ -221,33 +221,33 @@ u8 meter_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 	{
 		meter_setSmallIndexCurrentStatus(index - 1, SMALLINDEX_DEFAULTSTATUS);
 	}
-	// Ê±¼ä×´Ì¬
+	// æ—¶é—´çŠ¶æ€
 
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:±£´æ¶ÏÍøÊı¾İ
+ * Desc:ä¿å­˜æ–­ç½‘æ•°æ®
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_saveBreakeNetData(SMALLINDEXNODE node)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int j;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)±éÀúĞ¡Ë÷ÒıÇø, ÕÒµ½statusµÄ7,8Î»Îª1µÄĞ¡Ë÷Òı
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)éå†å°ç´¢å¼•åŒº, æ‰¾åˆ°statusçš„7,8ä½ä¸º1çš„å°ç´¢å¼•
 	for (j = 0; j < SMALLINDEX_DATACOUNT; j++) {
-		if (meter_getSmallIndexCurrentStatus(j) == SMALLINDEX_CURRENTSTATUS) {  // ÊÇµ±Ç°·¢ËÍ×´Ì¬
-			if (j == SMALLINDEX_DATACOUNT - 1) {// Èç¹ûÊÇ×îºóÒ»¸ö, ±£´æµ½0
+		if (meter_getSmallIndexCurrentStatus(j) == SMALLINDEX_CURRENTSTATUS) {  // æ˜¯å½“å‰å‘é€çŠ¶æ€
+			if (j == SMALLINDEX_DATACOUNT - 1) {// å¦‚æœæ˜¯æœ€åä¸€ä¸ª, ä¿å­˜åˆ°0
 				meter_saveOnceBreakeNetData(0, node);
 				return RET_SUCCESS;
 			}
-			else // ·ñÔò±£´æµ½ÏÂÒ»¸ö
+			else // å¦åˆ™ä¿å­˜åˆ°ä¸‹ä¸€ä¸ª
 			{
 				meter_saveOnceBreakeNetData(j + 1, node);
 				return RET_SUCCESS;
@@ -260,105 +260,105 @@ u8 meter_saveBreakeNetData(SMALLINDEXNODE node)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡Ğ¡Ë÷Òıµ±Ç°×´Ì¬
- * @index:Ë÷Òı
+ * Desc:è·å–å°ç´¢å¼•å½“å‰çŠ¶æ€
+ * @index:ç´¢å¼•
  * @return : u8 status
  */
 u8 meter_getSmallIndexCurrentStatus(u16 index)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÓÒÒÆ6Î»ºóµÄÖµ
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // å³ç§»6ä½åçš„å€¼
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)¸ù¾İÃû×ÖÕÒµ½Ë÷ÒıµÄaddress
-	//(2)ÕÒµ½statusµÄ7,8Î»
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)æ ¹æ®åå­—æ‰¾åˆ°ç´¢å¼•çš„address
+	//(2)æ‰¾åˆ°statusçš„7,8ä½
 	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(3)½«³ıÁË7,8Î»µÄÆäËûÎ»ÇåÁã
+	//(3)å°†é™¤äº†7,8ä½çš„å…¶ä»–ä½æ¸…é›¶
 	newStatus = status & BIT_DATA_MASK;
 	newStatus = newStatus >> 6;
 	return newStatus;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡Ğ¡Ë÷Òı·¢ËÍ×´Ì¬
- * @index:Ë÷Òı
+ * Desc:è·å–å°ç´¢å¼•å‘é€çŠ¶æ€
+ * @index:ç´¢å¼•
  * @return : u8 status
  */
 u8 meter_getSmallIndexSendStatus(u16 index)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÓÒÒÆ4Î»ºóµÄÖµ
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // å³ç§»4ä½åçš„å€¼
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)¸ù¾İÃû×ÖÕÒµ½Ë÷ÒıµÄaddress
-	//(2)ÕÒµ½statusµÄ5,6Î»
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)æ ¹æ®åå­—æ‰¾åˆ°ç´¢å¼•çš„address
+	//(2)æ‰¾åˆ°statusçš„5,6ä½
 	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(3)½«³ıÁË5,6Î»µÄÆäËûÎ»ÇåÁã
+	//(3)å°†é™¤äº†5,6ä½çš„å…¶ä»–ä½æ¸…é›¶
 	newStatus = status & BIT_INDEX_MASK;
 	newStatus = newStatus >> 4;
 	return newStatus;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡Ğ¡Ë÷Òı1234Î»µÄÊ±¼ä×´Ì¬
+ * Desc:è·å–å°ç´¢å¼•1234ä½çš„æ—¶é—´çŠ¶æ€
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_getSmallIndexTimeStatus(u16 index)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÓÒÒÆºóµÄÖµ
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // å³ç§»åçš„å€¼
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)¸ù¾İÃû×ÖÕÒµ½Ë÷ÒıµÄaddress
-	//(2)ÕÒµ½statusµÄ5,6Î»
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)æ ¹æ®åå­—æ‰¾åˆ°ç´¢å¼•çš„address
+	//(2)æ‰¾åˆ°statusçš„5,6ä½
 	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(3)½«³ıÁË1234Î»µÄÆäËûÎ»ÇåÁã
+	//(3)å°†é™¤äº†1234ä½çš„å…¶ä»–ä½æ¸…é›¶
 	newStatus = status & BIT_TIME_MASK;
 	return newStatus;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñµÃĞ¡Ë÷ÒıÔÚÊı¾İÇø¶ÔÓ¦µÄµØÖ·
- * @index:Ë÷Òı
- * @return : u16 µØÖ·
+ * Desc:è·å¾—å°ç´¢å¼•åœ¨æ•°æ®åŒºå¯¹åº”çš„åœ°å€
+ * @index:ç´¢å¼•
+ * @return : u16 åœ°å€
  */
 u16 meter_getBreakeNetDataAddress(u16 index)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	u16 address;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (eefs_mbr_getName(i) == SMALLINDEX_NAME) {
@@ -370,24 +370,24 @@ u16 meter_getBreakeNetDataAddress(u16 index)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:·µ»Ø×îĞÂµÄ¶ÏÍøÊı¾İ
+ * Desc:è¿”å›æœ€æ–°çš„æ–­ç½‘æ•°æ®
  * @paramName:xxxxx
- * @return : u16 ¶ÏÍøÊı¾İ
+ * @return : u16 æ–­ç½‘æ•°æ®
  */
 u8 meter_disconnect_getData(u8 * retData)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	u8 status;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)Ñ­»·»ñÈ¡Ğ¡Ë÷ÒıÊı¾İ×´Ì¬
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)å¾ªç¯è·å–å°ç´¢å¼•æ•°æ®çŠ¶æ€
 	for (i = 0; i < SMALLINDEX_DATACOUNT; i++) {
 		status = meter_getSmallIndexCurrentStatus(i);
-		if (status == SMALLINDEX_CURRENTSTATUS) { // ×îĞÂÊı¾İ
+		if (status == SMALLINDEX_CURRENTSTATUS) { // æœ€æ–°æ•°æ®
 			meter_disconnect_getDataWithIndex(i, retData);
 		}
 	}
@@ -395,157 +395,157 @@ u8 meter_disconnect_getData(u8 * retData)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:¸ù¾İË÷Òı·µ»Ø¶ÏÍøÊı¾İ
- * @index:Ë÷Òı
- * @return : u16 ¶ÏÍøÊı¾İ
+ * Desc:æ ¹æ®ç´¢å¼•è¿”å›æ–­ç½‘æ•°æ®
+ * @index:ç´¢å¼•
+ * @return : u16 æ–­ç½‘æ•°æ®
  */
 u8 meter_disconnect_getDataWithIndex(u16 index, u8 * retData)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	u16 address;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)»ñÈ¡ÊäÈëÖµ¶ÔÓ¦µÄÊı¾İÇøÎ»ÖÃ
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)è·å–è¾“å…¥å€¼å¯¹åº”çš„æ•°æ®åŒºä½ç½®
 	address = meter_getBreakeNetDataAddress(index);
 	eefs_base_readBytes(address, retData, SMALLINDEX_CAPACITY);
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:¸ù¾İ½Ç±êÉèÖÃ5,6Î»·¢ËÍ×´Ì¬
+ * Desc:æ ¹æ®è§’æ ‡è®¾ç½®5,6ä½å‘é€çŠ¶æ€
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_setSmallIndexSendStatus(u16 index, u8 val)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÇåÁãºóµÄÖµ
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // æ¸…é›¶åçš„å€¼
 	u8 newVal;
 	u8 data;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
 	if (val > 3) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)»ñÈ¡Êı¾İÊ×µØÖ·
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)è·å–æ•°æ®é¦–åœ°å€
 	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(2)&ÔËËã, °ÑÎåÁùÎ»ÇåÁã: 11110000 & 11001111 = 11000000
+	//(2)&è¿ç®—, æŠŠäº”å…­ä½æ¸…é›¶: 11110000 & 11001111 = 11000000
 	newStatus = status & BIT_INDEX_UNMASK;
-	//(3)´«ÈëµÄÊı¾İ×óÒÆ4Î», ¶Ô×¼Î»ÖÃ:00000011 << 4 = 00110000
+	//(3)ä¼ å…¥çš„æ•°æ®å·¦ç§»4ä½, å¯¹å‡†ä½ç½®:00000011 << 4 = 00110000
 	newVal = val << 4;
-	//(4)ÉèÖÃÊı¾İ×´Ì¬: 11000000 | 00110000 = 11110000
+	//(4)è®¾ç½®æ•°æ®çŠ¶æ€: 11000000 | 00110000 = 11110000
 	data = newStatus | newVal;
-	//(5)Ğ´ÈëÊı¾İ×´Ì¬
+	//(5)å†™å…¥æ•°æ®çŠ¶æ€
 	eefs_base_writeByte(statusAddress, &data);
 
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:¸ù¾İ½Ç±êÉèÖÃ7,8Î»·¢ËÍ×´Ì¬
- * @index:½Ç±ê
- * @val:×´Ì¬
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * Desc:æ ¹æ®è§’æ ‡è®¾ç½®7,8ä½å‘é€çŠ¶æ€
+ * @index:è§’æ ‡
+ * @val:çŠ¶æ€
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_setSmallIndexCurrentStatus(u16 index, u8 val)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÇåÁãºóµÄÖµ
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // æ¸…é›¶åçš„å€¼
 	u8 newVal;
 	u8 data;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
 	if (val > 3) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)»ñÈ¡Êı¾İÊ×µØÖ·
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)è·å–æ•°æ®é¦–åœ°å€
 	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(2)&ÔËËã, °ÑÆß°ËÎ»ÇåÁã: 11110000 & 00111111 = 00110000
+	//(2)&è¿ç®—, æŠŠä¸ƒå…«ä½æ¸…é›¶: 11110000 & 00111111 = 00110000
 	newStatus = status & BIT_DATA_UNMASK;
-	//(3)´«ÈëµÄÊı¾İ×óÒÆ6Î», ¶Ô×¼Î»ÖÃ:00000011 << 6 = 11000000
+	//(3)ä¼ å…¥çš„æ•°æ®å·¦ç§»6ä½, å¯¹å‡†ä½ç½®:00000011 << 6 = 11000000
 	newVal = val << 6;
-	//(4)ÉèÖÃÊı¾İ×´Ì¬: 00110000 | 11000000 = 11110000
+	//(4)è®¾ç½®æ•°æ®çŠ¶æ€: 00110000 | 11000000 = 11110000
 	data = newStatus | newVal;
-	//(5)Ğ´ÈëÊı¾İ×´Ì¬
+	//(5)å†™å…¥æ•°æ®çŠ¶æ€
 	eefs_base_writeByte(statusAddress, &data);
 
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:¸ù¾İ½Ç±êÉèÖÃ1,2,3,4Î»µÄÊ±¼ä×´Ì¬
- * @index:Ë÷Òı
- * @val:ÊäÈëµÄ×´Ì¬Öµ
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * Desc:æ ¹æ®è§’æ ‡è®¾ç½®1,2,3,4ä½çš„æ—¶é—´çŠ¶æ€
+ * @index:ç´¢å¼•
+ * @val:è¾“å…¥çš„çŠ¶æ€å€¼
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_setSmallIndexCTimeStatus(u16 index, u8 val)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÇåÁãºóµÄÖµ
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // æ¸…é›¶åçš„å€¼
 	u8 data;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > SMALLINDEX_DATACOUNT - 1) {
 		return RET_FAILD;
 	}
 	if (val > 3) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)»ñÈ¡Êı¾İÊ×µØÖ·
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)è·å–æ•°æ®é¦–åœ°å€
 	statusAddress = meter_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(2)&ÔËËã, °Ñ1234Î»ÇåÁã: 00001111 & 11110000 = 00000000
+	//(2)&è¿ç®—, æŠŠ1234ä½æ¸…é›¶: 00001111 & 11110000 = 00000000
 	newStatus = status & BIT_TIME_UNMASK;
-	//(3)ÉèÖÃÊı¾İ×´Ì¬: 00110000 | 11000000 = 11110000
+	//(3)è®¾ç½®æ•°æ®çŠ¶æ€: 00110000 | 11000000 = 11110000
 	data = newStatus | val;
-	//(4)Ğ´ÈëÊı¾İ×´Ì¬
+	//(4)å†™å…¥æ•°æ®çŠ¶æ€
 	eefs_base_writeByte(statusAddress, &data);
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡½Ç±ê¶ÔÓ¦µÄ¶ÏÍøÊı¾İ, ²¢¸Ä±ä·¢ËÍ×´Ì¬, Êı¾İÎª1ÊÇÒÑ·¢ËÍ, 2ÎªÎ´·¢ËÍ
+ * Desc:è·å–è§’æ ‡å¯¹åº”çš„æ–­ç½‘æ•°æ®, å¹¶æ”¹å˜å‘é€çŠ¶æ€, æ•°æ®ä¸º1æ˜¯å·²å‘é€, 2ä¸ºæœªå‘é€
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_disconnect_getDataAndChangeStatus(u8 * retData)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)Ñ­»·»ñÈ¡¶ÏÍøÊı¾İ
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)å¾ªç¯è·å–æ–­ç½‘æ•°æ®
 	for (i = 0; i < SMALLINDEX_DATACOUNT; i++) {
-		if (meter_getSmallIndexSendStatus(i) == SMALLINDEX_NOSENDSTATUS) {// ÎªÄ¬ÈÏ×´Ì¬2, Ö¤Ã÷ÓĞÊı¾İ
+		if (meter_getSmallIndexSendStatus(i) == SMALLINDEX_NOSENDSTATUS) {// ä¸ºé»˜è®¤çŠ¶æ€2, è¯æ˜æœ‰æ•°æ®
 			meter_disconnect_getDataWithIndex(i, retData);
-			//(2)ÉèÖÃ½Ç±ê×´Ì¬
+			//(2)è®¾ç½®è§’æ ‡çŠ¶æ€
 			meter_setSmallIndexSendStatus(i, SMALLINDEX_SENDTATUS);
 			meter_setSmallIndexCurrentStatus(i, SMALLINDEX_DEFAULTSTATUS);
 			return RET_SUCCESS;
@@ -555,23 +555,23 @@ u8 meter_disconnect_getDataAndChangeStatus(u8 * retData)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:´´½¨ÔÂÊı¾İ¿Õ¼ä
+ * Desc:åˆ›å»ºæœˆæ•°æ®ç©ºé—´
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_create_monthCapacity(void)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	USERNODE usernode;
-	u16 index;              // ¼ÇÂ¼Ë÷ÒıÇøindex
+	u16 index;              // è®°å½•ç´¢å¼•åŒºindex
 
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)Ñ­»·±éÀúË÷ÒıÇø, ÕÒµ½Ò»¸öÃ»Ê¹ÓÃµÄË÷Òı
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)å¾ªç¯éå†ç´¢å¼•åŒº, æ‰¾åˆ°ä¸€ä¸ªæ²¡ä½¿ç”¨çš„ç´¢å¼•
 	usernode.name = MONTHDATA_NAME;
 	index = 0;
 	usernode.size = MONTHDATA_COUNT * MONTHDATA_CAPACITY;
@@ -580,7 +580,7 @@ u8 meter_create_monthCapacity(void)
 			eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
 		}
 		if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) {
-			eefs_create(i, usernode); // ´´½¨Ë÷ÒıÇø
+			eefs_create(i, usernode); // åˆ›å»ºç´¢å¼•åŒº
 			index = i;
 			i = MAX_INDEX;
 		}
@@ -591,88 +591,88 @@ u8 meter_create_monthCapacity(void)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:±£´æÔÂÊı¾İ
- * @month:ÔÂ·İ
- * @data:Òª±£´æµÄÊı¾İ
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * Desc:ä¿å­˜æœˆæ•°æ®
+ * @month:æœˆä»½
+ * @data:è¦ä¿å­˜çš„æ•°æ®
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_saveMonthData(u8 month, u8 * data)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
-	u16 address;        // Êı¾İÇøÊ×µØÖ·
-	u16 saveAddress;    // ±£´æµÄÎ»ÖÃ
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	u16 address;        // æ•°æ®åŒºé¦–åœ°å€
+	u16 saveAddress;    // ä¿å­˜çš„ä½ç½®
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (month <= 0 || month > 12) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
-	//(1)»ñÈ¡ÔÂ·İ¿Õ¼ä¶ÔÓ¦µÄÊı¾İÇøÊ×µØÖ·
+	//(1)è·å–æœˆä»½ç©ºé—´å¯¹åº”çš„æ•°æ®åŒºé¦–åœ°å€
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (eefs_mbr_getName(i) == MONTHDATA_NAME) {
 			address = eefs_mbr_getAddress(i);
 		}
 	}
-	//(2)»ñÈ¡±£´æµÄÎ»ÖÃ
+	//(2)è·å–ä¿å­˜çš„ä½ç½®
 	saveAddress = address + (month - 1) * MONTHDATA_CAPACITY;
-	//(3)Ğ´ÈëÊı¾İ
+	//(3)å†™å…¥æ•°æ®
 	eefs_base_writeBytes(saveAddress, data, MONTHDATA_CAPACITY);
 	return RET_SUCCESS;
 
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡ÔÂÊı¾İ
- * @month:ÔÂ·İ
- * @data:Òª±£´æµÄÊı¾İ
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * Desc:è·å–æœˆæ•°æ®
+ * @month:æœˆä»½
+ * @data:è¦ä¿å­˜çš„æ•°æ®
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_getMonthData(u8 month, u8 * ret_data)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
-	u16 address;        // Êı¾İÇøÊ×µØÖ·
-	u16 saveAddress;    // ±£´æµÄÎ»ÖÃ
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	u16 address;        // æ•°æ®åŒºé¦–åœ°å€
+	u16 saveAddress;    // ä¿å­˜çš„ä½ç½®
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
-	//(1)»ñÈ¡ÔÂ·İ¿Õ¼ä¶ÔÓ¦µÄÊı¾İÇøÊ×µØÖ·
+	//(1)è·å–æœˆä»½ç©ºé—´å¯¹åº”çš„æ•°æ®åŒºé¦–åœ°å€
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (eefs_mbr_getName(i) == MONTHDATA_NAME) {
 			address = eefs_mbr_getAddress(i);
 		}
 	}
-	//(2)»ñÈ¡±£´æµÄÎ»ÖÃ
+	//(2)è·å–ä¿å­˜çš„ä½ç½®
 	saveAddress = address + (month - 1) * MONTHDATA_CAPACITY;
-	//(2)¶ÁÈ¡Êı¾İ
+	//(2)è¯»å–æ•°æ®
 	eefs_base_readBytes(saveAddress, ret_data, MONTHDATA_CAPACITY);
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:´´½¨Ê§Ñ¹Êı¾İ¿Õ¼ä
+ * Desc:åˆ›å»ºå¤±å‹æ•°æ®ç©ºé—´
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_create_lostVoltCapacity(void)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	USERNODE usernode;
-	u16 index;              // ¼ÇÂ¼Ë÷ÒıÇøindex
+	u16 index;              // è®°å½•ç´¢å¼•åŒºindex
 
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)Ñ­»·±éÀúË÷ÒıÇø, ÕÒµ½Ò»¸öÃ»Ê¹ÓÃµÄË÷Òı
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)å¾ªç¯éå†ç´¢å¼•åŒº, æ‰¾åˆ°ä¸€ä¸ªæ²¡ä½¿ç”¨çš„ç´¢å¼•
 	usernode.name = LOSTVOLT_NAME;
 	index = 0;
 	usernode.size = LOSTVOLT_COUNT * (LOSTVOLT_CAPACITY + LOSTVOLT_DESCRIBE);
@@ -681,7 +681,7 @@ u8 meter_create_lostVoltCapacity(void)
 			eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
 		}
 		if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) {
-			eefs_create(i, usernode); // ´´½¨Ë÷ÒıÇø
+			eefs_create(i, usernode); // åˆ›å»ºç´¢å¼•åŒº
 			index = i;
 			i = MAX_INDEX;
 		}
@@ -691,36 +691,36 @@ u8 meter_create_lostVoltCapacity(void)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:±£´æÊ§Ñ¹Êı¾İ
+ * Desc:ä¿å­˜å¤±å‹æ•°æ®
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_saveLostVoltData(u8 * data)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	u16 address;
 	int i;
 	int j;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
-	//(1)È¡³öÊı¾İÇøÊ×µØÖ·
+	//(1)å–å‡ºæ•°æ®åŒºé¦–åœ°å€
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (eefs_mbr_getName(i) == LOSTVOLT_NAME) {
 			address = eefs_mbr_getAddress(i);
 		}
 	}
-	//(2)Ñ­»·±éÀúÃèÊöÎ», 1Îªµ±Ç°×´Ì¬, 0ÎªÒÔÇ°×´Ì¬
+	//(2)å¾ªç¯éå†æè¿°ä½, 1ä¸ºå½“å‰çŠ¶æ€, 0ä¸ºä»¥å‰çŠ¶æ€
 	for (j = 0; j < LOSTVOLT_COUNT; j++) {
 		if (meter_getLostVoltCurrentStatus(j) == 1) {
-			if (j == LOSTVOLT_COUNT - 1) {// Èç¹ûÊÇ×îºóÒ»¸ö, ±£´æµ½0
+			if (j == LOSTVOLT_COUNT - 1) {// å¦‚æœæ˜¯æœ€åä¸€ä¸ª, ä¿å­˜åˆ°0
 				meter_saveOnceLostVoltData(0, data);
 				return RET_SUCCESS;
 			}
-			else // ·ñÔò±£´æµ½ÏÂÒ»¸ö
+			else // å¦åˆ™ä¿å­˜åˆ°ä¸‹ä¸€ä¸ª
 			{
 				meter_saveOnceLostVoltData(j + 1, data);
 				return RET_SUCCESS;
@@ -734,25 +734,25 @@ u8 meter_saveLostVoltData(u8 * data)
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:±£´æÒ»´ÎÊ§Ñ¹Êı¾İÔÚindex´¦
+ * Desc:ä¿å­˜ä¸€æ¬¡å¤±å‹æ•°æ®åœ¨indexå¤„
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_saveOnceLostVoltData(u16 index, u8 * data)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	//    u8 status;
 	//    u8 lastStatus;
-	u16 address;     // Ğ¡Ë÷ÒıµØÖ·
-	u16 lastAddress; // ÉÏÒ»¸öµØÖ·
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// ---------- ÒµÎñ´¦Àí---------- //
+	u16 address;     // å°ç´¢å¼•åœ°å€
+	u16 lastAddress; // ä¸Šä¸€ä¸ªåœ°å€
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
 	lastAddress = 0;
 
-	//(1)¸ù¾İĞ¡Ë÷ÒıËã³öÕæÕıµÄµØÖ·
+	//(1)æ ¹æ®å°ç´¢å¼•ç®—å‡ºçœŸæ­£çš„åœ°å€
 	address = meter_getLostVoltDataAddress(index);
 	if (index == 0) {
 		lastAddress = meter_getLostVoltDataAddress(LOSTVOLT_COUNT - 1);
@@ -762,12 +762,12 @@ u8 meter_saveOnceLostVoltData(u16 index, u8 * data)
 		lastAddress = meter_getLostVoltDataAddress(index) - LOSTVOLT_CAPACITY - LOSTVOLT_DESCRIBE;
 	}
 
-	//(3)ÔÚnewAddress´¦´æÊı¾İ
+	//(3)åœ¨newAddresså¤„å­˜æ•°æ®
 	eefs_base_writeBytes(address, data, LOSTVOLT_CAPACITY);
 
-	//(4)Ğ´Èë×´Ì¬Î», 1,2ÎªÎªµ±Ç°×´Ì¬, 1Îªµ±Ç°, 0ÎªÒÔÇ°
+	//(4)å†™å…¥çŠ¶æ€ä½, 1,2ä¸ºä¸ºå½“å‰çŠ¶æ€, 1ä¸ºå½“å‰, 0ä¸ºä»¥å‰
 	meter_setLostVoltCurrentStatus(index, LOSTVOLT_CURRENTSTATUS);
-	// ¸øÉÏÒ»¸öindex¸üĞÂ×´Ì¬
+	// ç»™ä¸Šä¸€ä¸ªindexæ›´æ–°çŠ¶æ€
 	if (index == 0) {
 		meter_setLostVoltCurrentStatus(LOSTVOLT_COUNT - 1, LOSTVOLT_DEFAULTSTATUS);
 	}
@@ -775,28 +775,28 @@ u8 meter_saveOnceLostVoltData(u16 index, u8 * data)
 	{
 		meter_setLostVoltCurrentStatus(index - 1, LOSTVOLT_DEFAULTSTATUS);
 	}
-	// Ê±¼ä×´Ì¬
+	// æ—¶é—´çŠ¶æ€
 
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡Ê§Ñ¹Ğ¡Ë÷ÒıÊı¾İÇøÊ×µØÖ·
+ * Desc:è·å–å¤±å‹å°ç´¢å¼•æ•°æ®åŒºé¦–åœ°å€
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u16 meter_getLostVoltDataAddress(u16 index)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	u16 address;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > LOSTVOLT_COUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	address = 0;
 	for (i = 0; i < LOSTVOLT_COUNT; i++) {
 		if (eefs_mbr_getName(i) == LOSTVOLT_NAME) {
@@ -807,84 +807,84 @@ u16 meter_getLostVoltDataAddress(u16 index)
 	return address;
 }
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:»ñÈ¡Ê§Ñ¹1,2Î»µÄµ±Ç°×´Ì¬
+ * Desc:è·å–å¤±å‹1,2ä½çš„å½“å‰çŠ¶æ€
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_getLostVoltCurrentStatus(u16 index)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÓÒÒÆºóµÄÖµ
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // å³ç§»åçš„å€¼
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > LOSTVOLT_COUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)¸ù¾İÃû×ÖÕÒµ½Ë÷ÒıµÄaddress
-	//(2)ÕÒµ½statusµÄ1,2Î»
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)æ ¹æ®åå­—æ‰¾åˆ°ç´¢å¼•çš„address
+	//(2)æ‰¾åˆ°statusçš„1,2ä½
 	statusAddress = meter_getLostVoltDataAddress(index) + LOSTVOLT_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(3)½«³ıÁË12Î»µÄÆäËûÎ»ÇåÁã
+	//(3)å°†é™¤äº†12ä½çš„å…¶ä»–ä½æ¸…é›¶
 	newStatus = status & BIT_GENFLAG_MASK;
 	return newStatus;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc: ÉèÖÃÊ§Ñ¹1,2Î»µÄµ±Ç°×´Ì¬
- * @index:Ë÷Òı
- * @val:ÊäÈëµÄ×´Ì¬
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * Desc: è®¾ç½®å¤±å‹1,2ä½çš„å½“å‰çŠ¶æ€
+ * @index:ç´¢å¼•
+ * @val:è¾“å…¥çš„çŠ¶æ€
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_setLostVoltCurrentStatus(u16 index, u8 val)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	u16 statusAddress;      // statusÔÚÊı¾İÇøµÄÎ»ÖÃ
-	u8 status;              // statusÖµ
-	u8 newStatus;           // ÇåÁãºóµÄÖµ
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	u16 statusAddress;      // statusåœ¨æ•°æ®åŒºçš„ä½ç½®
+	u8 status;              // statuså€¼
+	u8 newStatus;           // æ¸…é›¶åçš„å€¼
 	u8 data;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > LOSTVOLT_COUNT - 1) {
 		return RET_FAILD;
 	}
 	if (val > 3) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)»ñÈ¡Êı¾İÊ×µØÖ·
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)è·å–æ•°æ®é¦–åœ°å€
 	statusAddress = meter_getLostVoltDataAddress(index) + SMALLINDEX_CAPACITY;
 	status = eefs_base_readByte(statusAddress);
-	//(2)&ÔËËã, °Ñ1,2Î»ÇåÁã: 00001111 & 11111100 = 00001100
+	//(2)&è¿ç®—, æŠŠ1,2ä½æ¸…é›¶: 00001111 & 11111100 = 00001100
 	newStatus = status & BIT_GENFLAG_UNMASK;
-	//(3)ÉèÖÃÊı¾İ×´Ì¬: 00110000 | 11000000 = 11110000
+	//(3)è®¾ç½®æ•°æ®çŠ¶æ€: 00110000 | 11000000 = 11110000
 	data = newStatus | val;
-	//(4)Ğ´ÈëÊı¾İ×´Ì¬
+	//(4)å†™å…¥æ•°æ®çŠ¶æ€
 	eefs_base_writeByte(statusAddress, &data);
 	return RET_SUCCESS;
 }
 
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:¸ù¾İ½Ç±êÈ¡Ê§Ñ¹Êı¾İ
+ * Desc:æ ¹æ®è§’æ ‡å–å¤±å‹æ•°æ®
  * @paramName:xxxxx
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_getLostVoltData(u16 index, u8 * retData)
 {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	u16 address;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
 	if (index > LOSTVOLT_COUNT - 1) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//(1)»ñÈ¡ÊäÈëÖµ¶ÔÓ¦µÄÊı¾İÇøÎ»ÖÃ
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//(1)è·å–è¾“å…¥å€¼å¯¹åº”çš„æ•°æ®åŒºä½ç½®
 	address = meter_getLostVoltDataAddress(index);
 	eefs_base_readBytes(address, retData, LOSTVOLT_CAPACITY);
 	return RET_SUCCESS;

@@ -3,15 +3,15 @@
 #include "meter_base.h"
 #include "malloc/_malloc.h"
 /*
- * Auth: ÎâêÏË§
+ * Auth: å´æ™—å¸…
  * Date: 2019-5-10
- * Desc:´´½¨Ö¸¶¨ÀàĞÍµÄÊı¾İ¿Õ¼ä
- * @meaterVer:´´½¨²ÎÊı
- * @index Ë÷Òı
- * @return : 1:³É¹¦ 0£ºÊ§°Ü
+ * Desc:åˆ›å»ºæŒ‡å®šç±»å‹çš„æ•°æ®ç©ºé—´
+ * @meaterVer:åˆ›å»ºå‚æ•°
+ * @index ç´¢å¼•
+ * @return : 1:æˆåŠŸ 0ï¼šå¤±è´¥
  */
 u8 meter_register(u16 index,MEATERVAR meaterVer) {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	USERNODE userNode; 
 	u8 dataStatus;
 	u8 netStatus;
@@ -19,13 +19,13 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 	u8 netStaus;
 	u8 offset;
 	u8 crcSize;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// (1)ÅĞ¶ÏindexÊÇ·ñºÏ·¨
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// (1)åˆ¤æ–­indexæ˜¯å¦åˆæ³•
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	// ¸³ÖµuserNode
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	// èµ‹å€¼userNode
 	if (meaterVer.crc == 1){
 		crcSize = DATA_CRC_SIZE;
 	}else{
@@ -47,10 +47,10 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 	return RET_SUCCESS;
 }  
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-10
- * Desc:ÅĞ¶ÏĞ´ÈëÀàĞÍ»ñÈ¡Êı¾İ×´Ì¬
- * @WRITE_TYPE Ğ´ÈëÀàĞÍ
+ * Desc:åˆ¤æ–­å†™å…¥ç±»å‹è·å–æ•°æ®çŠ¶æ€
+ * @WRITE_TYPE å†™å…¥ç±»å‹
  * @return : dateStatus
  */
 TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE) {
@@ -73,16 +73,16 @@ TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE) {
 }
 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-10
- * Desc:¸ù¾İË÷Òı»ñÈ¡Ğ´ÈëÀàĞÍ
- * @index Ë÷Òı
- * @return : WRITE_TYPE Ğ´ÈëÀàĞÍ
+ * Desc:æ ¹æ®ç´¢å¼•è·å–å†™å…¥ç±»å‹
+ * @index ç´¢å¼•
+ * @return : WRITE_TYPE å†™å…¥ç±»å‹
  */
 s8 meter_get_write_type(u16 index) {
-	//¾Ö²¿±äÁ¿
+	//å±€éƒ¨å˜é‡
 	s8 dataStatus;
-	//ÅĞ¶ÏĞ´ÈëÀàĞÍ
+	//åˆ¤æ–­å†™å…¥ç±»å‹
 	dataStatus = eefs_mbr_getDataStatus(index);
 
 	if (dataStatus == tpye_write_1)
@@ -104,53 +104,53 @@ s8 meter_get_write_type(u16 index) {
 	return RET_ERROR;
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-10
- * Desc:Êı¾İÑ­»·Ğ´Èë
- * @index Ë÷Òı
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:æ•°æ®å¾ªç¯å†™å…¥
+ * @index ç´¢å¼•
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 meter_circle_write(u16 index, u8* data, u16 len) {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
-	s8 writeType;                          //Ğ´ÈëÀàĞÍ
-	u16 writeAddr;                         //Ğ´ÈëµØÖ·
-	u16 dataSize;	                       //Êı¾İ´óĞ¡
-	u8 *datas;                             //ÁÙÊ±Êı×é
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
+	s8 writeType;                          //å†™å…¥ç±»å‹
+	u16 writeAddr;                         //å†™å…¥åœ°å€
+	u16 dataSize;	                       //æ•°æ®å¤§å°
+	u8 *datas;                             //ä¸´æ—¶æ•°ç»„
 	int i;
-	int zero;	                           //Ğ´ÈëÓÃ0
-	u8 indexStatusFlag;                    //Í¨ÓÃ±ê¼ÇÎ»/CRC
-	u8 crcOffset;                          //crcÆ«ÒÆÁ¿
-	u16 oldStatusAddr;                     //ÉÏÒ»¸öÊı¾İ×´Ì¬Î»µØÖ·
-	u8 ns;                                 //ĞÂ×´Ì¬
-	u8 os;                                 //¾É×´Ì¬
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// (1)ÅĞ¶ÏindexÊÇ·ñºÏ·¨
+	int zero;	                           //å†™å…¥ç”¨0
+	u8 indexStatusFlag;                    //é€šç”¨æ ‡è®°ä½/CRC
+	u8 crcOffset;                          //crcåç§»é‡
+	u16 oldStatusAddr;                     //ä¸Šä¸€ä¸ªæ•°æ®çŠ¶æ€ä½åœ°å€
+	u8 ns;                                 //æ–°çŠ¶æ€
+	u8 os;                                 //æ—§çŠ¶æ€
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// (1)åˆ¤æ–­indexæ˜¯å¦åˆæ³•
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	//»ñÈ¡µ±Ç°Êı¾İÍ¨ÓÃ±ê¼Ç(ÅĞ¶ÏCRC)
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	//è·å–å½“å‰æ•°æ®é€šç”¨æ ‡è®°(åˆ¤æ–­CRC)
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
 	if (indexStatusFlag == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
-	//ÉèÖÃÊÇ·ñĞèÒªCRCÆ«ÒÆÁ¿
+	//è®¾ç½®æ˜¯å¦éœ€è¦CRCåç§»é‡
 	if (indexStatusFlag == CRC_Y) {
 		crcOffset = DATA_CRC_SIZE;
 	}
 	else {
 		crcOffset = 0;
 	}
-	//»ñÈ¡Ğ´ÈëÀàĞÍ(´¦ÀíĞ´ÈëÊı¾İ³¤¶È)
+	//è·å–å†™å…¥ç±»å‹(å¤„ç†å†™å…¥æ•°æ®é•¿åº¦)
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR )
 	{
 		return RET_FAILD;
 	}
-	//´¦ÀíĞ´ÈëÊı¾İ³¤¶È
+	//å¤„ç†å†™å…¥æ•°æ®é•¿åº¦
 	dataSize = eefs_mbr_getDataSize(index)/writeType - crcOffset - DATA_STATUS_SIZE;
 	if (dataSize == 0 )
 	{
@@ -158,7 +158,7 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 	}
 	datas = malloc(dataSize);
 	zero = 0;
-	//²»¹»³¤¶È²¹0 ¶ÔÆëÊı¾İÇø³¤¶È
+	//ä¸å¤Ÿé•¿åº¦è¡¥0 å¯¹é½æ•°æ®åŒºé•¿åº¦
 	if (len< dataSize)
 	{
 		memcpy(datas,data,len);
@@ -167,25 +167,25 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 			memcpy(datas + len + i, &zero, 1);
 		}
 	}
-	else //´óÓÚ»òµÈÓÚÊı¾İÇø³¤¶È Ğ´ÈëÊı¾İÇø³¤¶ÈµÄÊı¾İ
+	else //å¤§äºæˆ–ç­‰äºæ•°æ®åŒºé•¿åº¦ å†™å…¥æ•°æ®åŒºé•¿åº¦çš„æ•°æ®
 	{
 		memcpy(datas, data, dataSize);
 	}
-	//ÕÒµ½µ±Ç°µÄĞ´ÈëÎ»ÖÃ
+	//æ‰¾åˆ°å½“å‰çš„å†™å…¥ä½ç½®
 	writeAddr = meter_get_write_address(index);
-	//Ğ´ÈëÊı¾İ
+	//å†™å…¥æ•°æ®
 	eefs_base_writeBytes(writeAddr,datas,dataSize);
-	//ĞŞ¸Ädatastatus×´Ì¬
+	//ä¿®æ”¹datastatusçŠ¶æ€
 	ns = DATA_NEW_POS_STATUS;
 	os = DATA_OLD_POS_STATUS;
 
 	if (eefs_base_writeByte(writeAddr + dataSize, &ns)!=RET_SUCCESS){ return RET_FAILD; }
 
-	//µÚÒ»¸öÇøÓòĞ´Èë ĞŞ¸ÄÉÏÒ»¸öÊı¾İ×´Ì¬ ¹Ì¶¨×îºóÒ»¸öÇøÓòµØÖ·µÄÊı¾İÎ»
+	//ç¬¬ä¸€ä¸ªåŒºåŸŸå†™å…¥ ä¿®æ”¹ä¸Šä¸€ä¸ªæ•°æ®çŠ¶æ€ å›ºå®šæœ€åä¸€ä¸ªåŒºåŸŸåœ°å€çš„æ•°æ®ä½
 	if (writeAddr == eefs_data_getHeadAddr(index)){
 		oldStatusAddr = writeAddr + (dataSize + crcOffset + DATA_STATUS_SIZE) * writeType - crcOffset - DATA_STATUS_SIZE;
 	}
-	//Ğ´Èë ÉÏÒ»¸öÊı¾İÇøĞŞ¸ÄÊı¾İÎ»×´Ì¬ 
+	//å†™å…¥ ä¸Šä¸€ä¸ªæ•°æ®åŒºä¿®æ”¹æ•°æ®ä½çŠ¶æ€ 
 	else{
 		oldStatusAddr = writeAddr - crcOffset -DATA_STATUS_SIZE;
 	}
@@ -197,41 +197,41 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 
 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-10
- * Desc:Êı¾İÑ­»·¶ÁÈ¡
- * @index Ë÷Òı
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:æ•°æ®å¾ªç¯è¯»å–
+ * @index ç´¢å¼•
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 meter_circle_read(u16 index, u8* retData) {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	u16 writeAddr;
 	u16 dataSize;
 	u8 indexStatusFlag;
 	u8 crcOffset;
 	s8 writeType;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// (1)ÅĞ¶ÏindexÊÇ·ñºÏ·¨
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// (1)åˆ¤æ–­indexæ˜¯å¦åˆæ³•
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-		//»ñÈ¡µ±Ç°Êı¾İÍ¨ÓÃ±ê¼Ç
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+		//è·å–å½“å‰æ•°æ®é€šç”¨æ ‡è®°
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
 	if (indexStatusFlag == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
-	//ÉèÖÃÊÇ·ñĞèÒªCRCÆ«ÒÆÁ¿
+	//è®¾ç½®æ˜¯å¦éœ€è¦CRCåç§»é‡
 	if (indexStatusFlag == CRC_Y) {
 		crcOffset = DATA_CRC_SIZE;
 	}
 	else {
 		crcOffset = 0;
 	}
-	//»ñÈ¡Ğ´ÈëÀàĞÍ
+	//è·å–å†™å…¥ç±»å‹
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR)
 	{
@@ -242,27 +242,27 @@ u8 meter_circle_read(u16 index, u8* retData) {
 	{
 		return RET_FAILD;
 	}
-	//ÕÒµ½µ±Ç°µÄ¶ÁÈ¡Î»ÖÃ
+	//æ‰¾åˆ°å½“å‰çš„è¯»å–ä½ç½®
 	writeAddr = meter_get_data_status_address(index)-(dataSize- crcOffset - DATA_STATUS_SIZE);
 	if (writeAddr == RET_FAILD)
 	{
 		return RET_FAILD;
 	}
-	//¶ÁÈ¡Êı¾İ TODO:CRC¼ìÑé 
+	//è¯»å–æ•°æ® TODO:CRCæ£€éªŒ 
 	if (eefs_base_readBytes(writeAddr, retData, dataSize - DATA_STATUS_SIZE - crcOffset) != RET_SUCCESS) { return RET_FAILD; }
 	return RET_SUCCESS;
 }
 
 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-10
- * Desc:»ñÈ¡µ±Ç°¿ÉÒÔĞ´ÈëÎ»ÖÃ
- * @index Ë÷Òı
- * @return : ¿ÉĞ´ÈëÇøÓòÊ×µØÖ·
+ * Desc:è·å–å½“å‰å¯ä»¥å†™å…¥ä½ç½®
+ * @index ç´¢å¼•
+ * @return : å¯å†™å…¥åŒºåŸŸé¦–åœ°å€
  */
 u16 meter_get_write_address(u16 index) {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	u8 indexStatusFlag;
 	s8 writeType;
@@ -272,12 +272,12 @@ u16 meter_get_write_address(u16 index) {
 	u8 offset;
 	u16 dataSize;
 	u16 writeAddr;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// (1)ÅĞ¶ÏindexÊÇ·ñºÏ·¨
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// (1)åˆ¤æ–­indexæ˜¯å¦åˆæ³•
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR)
 	{
@@ -285,13 +285,13 @@ u16 meter_get_write_address(u16 index) {
 	}
 	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	dataHeadAddr = eefs_data_getHeadAddr(index);
-	//»ñÈ¡µ±Ç°Êı¾İÍ¨ÓÃ±ê¼Ç
+	//è·å–å½“å‰æ•°æ®é€šç”¨æ ‡è®°
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
 	if (indexStatusFlag == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
-	//ÉèÖÃÊÇ·ñĞèÒªCRCÆ«ÒÆÁ¿
+	//è®¾ç½®æ˜¯å¦éœ€è¦CRCåç§»é‡
 	if (indexStatusFlag == CRC_Y) {
 		offset = DATA_CRC_SIZE;
 	}
@@ -302,7 +302,7 @@ u16 meter_get_write_address(u16 index) {
 	{
 		
 		writeDataStatusAddr = dataHeadAddr + dataSize * (i + 1) - offset - DATA_STATUS_SIZE;
-		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //ĞÂ¾ÉĞ´Èë×´Ì¬
+		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //æ–°æ—§å†™å…¥çŠ¶æ€
 		if (writeDataStatus == DATA_NEW_POS_STATUS) {
 			writeAddr = writeDataStatusAddr + DATA_STATUS_SIZE + offset;
 			if (writeAddr+dataSize >= eefs_data_getTailAddr(index)- DATA_DESCRIBE)
@@ -320,14 +320,14 @@ u16 meter_get_write_address(u16 index) {
 }
 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-10
- * Desc:»ñÈ¡µ±Ç°¿É¶ÁÊı¾İµÄ×´Ì¬Î»
- * @index Ë÷Òı
- * @return : ¶ÁÈ¡Êı¾İµÄ×´Ì¬Î»
+ * Desc:è·å–å½“å‰å¯è¯»æ•°æ®çš„çŠ¶æ€ä½
+ * @index ç´¢å¼•
+ * @return : è¯»å–æ•°æ®çš„çŠ¶æ€ä½
  */
 u16 meter_get_data_status_address(u16 index) {
-	// ---------- ¾Ö²¿±äÁ¿¶¨ÒåÇø---------- //
+	// ---------- å±€éƒ¨å˜é‡å®šä¹‰åŒº---------- //
 	int i;
 	u8 indexStatusFlag;
 	s8 writeType;
@@ -336,33 +336,33 @@ u16 meter_get_data_status_address(u16 index) {
 	u16 writeDataStatus;
 	u8 writeDataStatusAddr;
 	u8 offset;
-	// ---------- ÊäÈë²ÎÊıÌõ¼ş¼ì²â---------- //
-	// (1)ÅĞ¶ÏindexÊÇ·ñºÏ·¨
+	// ---------- è¾“å…¥å‚æ•°æ¡ä»¶æ£€æµ‹---------- //
+	// (1)åˆ¤æ–­indexæ˜¯å¦åˆæ³•
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
-	// ---------- ÒµÎñ´¦Àí---------- //
-	// ÕÒµ½µ±Ç°µÄĞ´ÈëÎ»ÖÃ
-	//»ñÈ¡µ±Ç°Êı¾İÍ¨ÓÃ±ê¼Ç
+	// ---------- ä¸šåŠ¡å¤„ç†---------- //
+	// æ‰¾åˆ°å½“å‰çš„å†™å…¥ä½ç½®
+	//è·å–å½“å‰æ•°æ®é€šç”¨æ ‡è®°
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
 	if (indexStatusFlag == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
-	//ÉèÖÃÊÇ·ñĞèÒªCRCÆ«ÒÆÁ¿
+	//è®¾ç½®æ˜¯å¦éœ€è¦CRCåç§»é‡
 	if (indexStatusFlag == CRC_Y) {
 		offset = DATA_CRC_SIZE;
 	}
 	else {
 		offset = 0;
 	}
-	//»ñÈ¡Ğ´ÈëÀàĞÍ
+	//è·å–å†™å…¥ç±»å‹
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
-	//ÕÒµ½µ±Ç°µÄĞ´ÈëÎ»ÖÃ
+	//æ‰¾åˆ°å½“å‰çš„å†™å…¥ä½ç½®
 	dataHeadAddr = eefs_data_getHeadAddr(index);
 	if (dataHeadAddr == RET_FAILD)
 	{
@@ -371,8 +371,8 @@ u16 meter_get_data_status_address(u16 index) {
 	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	for (i = 0; i < writeType; i++)
 	{
-		writeDataStatusAddr = dataHeadAddr + dataSize * i - offset;//ĞÂ¾É×´Ì¬Î»µØÖ·
-		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //ĞÂ¾ÉĞ´Èë×´Ì¬
+		writeDataStatusAddr = dataHeadAddr + dataSize * i - offset;//æ–°æ—§çŠ¶æ€ä½åœ°å€
+		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //æ–°æ—§å†™å…¥çŠ¶æ€
 		if (writeDataStatus == DATA_NEW_POS_STATUS)
 		{
 			return writeDataStatusAddr;

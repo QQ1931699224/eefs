@@ -5,126 +5,126 @@
 #include "single_phases_meter.h"
 
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ µôµç±êÖ¾,5×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ½ÓÊÕ
+ * Desc:è·å– æ‰ç”µæ ‡å¿—,5å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®æ¥æ”¶
  * @return : 0,1
  */
 u8 service_spm_getNoPowerFlag(u8* data) {
 	return meter_circle_read(NOPOWERFLAG_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë µôµç±êÖ¾,5×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ æ‰ç”µæ ‡å¿—,5å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_spm_setNoPowerFalg(u8* data, u16 len) {
 	return meter_circle_write(NOPOWERFLAG_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ ·¢ËÍ²ÎÊı£¬24×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ½ÓÊÕ
+ * Desc:è·å– å‘é€å‚æ•°ï¼Œ24å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®æ¥æ”¶
  * @return : 0,1
  */
 u8 service_spm_getSendParameter(u8* data) {
 	return meter_circle_read(SENDPARAMETER_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë ·¢ËÍ²ÎÊı£¬24×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ å‘é€å‚æ•°ï¼Œ24å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_spm_setSendParameter(u8* data, u16 len) {
 	return meter_circle_write(SENDPARAMETER_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ Éı¼¶²ÎÊı£¬415×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
+ * Desc:è·å– å‡çº§å‚æ•°ï¼Œ415å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_spm_getUpgrade(u8* data) {
 	return meter_circle_read(UPGRADE_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë Éı¼¶²ÎÊı£¬415×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ å‡çº§å‚æ•°ï¼Œ415å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_spm_setUpgrade(u8* data, u16 len) {
 	return meter_circle_write(UPGRADE_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ Ê×´ÎÅĞ¶Ï£¬4×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
+ * Desc:è·å– é¦–æ¬¡åˆ¤æ–­ï¼Œ4å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_spm_getFirstJudge(u8* data) {
 	return meter_circle_read(FIRSTJUDGE_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë Ê×´ÎÅĞ¶Ï£¬4×Ö½Ú£¬²»´øcrc£¬´æ1·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ é¦–æ¬¡åˆ¤æ–­ï¼Œ4å­—èŠ‚ï¼Œä¸å¸¦crcï¼Œå­˜1ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_spm_setFirstJudge(u8* data, u16 len) {
 	return meter_circle_write(FIRSTJUDGE_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ µçÄÜ£¬160×Ö½Ú´øcrc£¬´æ4·İ
- * @data Êı¾İ
+ * Desc:è·å– ç”µèƒ½ï¼Œ160å­—èŠ‚å¸¦crcï¼Œå­˜4ä»½
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_spm_getEnergy(u8* data) {
 	return meter_circle_read(ENERGY_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë µçÄÜ£¬160×Ö½Ú´øcrc£¬´æ4·İ
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ ç”µèƒ½ï¼Œ160å­—èŠ‚å¸¦crcï¼Œå­˜4ä»½
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_spm_setEnergy(u8* data, u16 len) {
 	return meter_circle_write(ENERGY_INDEX, data, len);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:»ñÈ¡ Ğ£±í²ÎÊı 78×Ö½Ú 1·İ ²»´øcrc
- * @data Êı¾İ
+ * Desc:è·å– æ ¡è¡¨å‚æ•° 78å­—èŠ‚ 1ä»½ ä¸å¸¦crc
+ * @data æ•°æ®
  * @return : 0,1
  */
 u8 service_spm_getCheckMeter(u8* data) {
 	return meter_circle_read(CHECKMETER_INDEX, data);
 }
 /*
- * Auth: ÕÅÌí³Ì
+ * Auth: å¼ æ·»ç¨‹
  * Date: 2019-5-21
- * Desc:Ğ´Èë Ğ£±í²ÎÊı 78×Ö½Ú 1·İ ²»´øcrc
- * @data Êı¾İ
- * @len ³¤¶È
+ * Desc:å†™å…¥ æ ¡è¡¨å‚æ•° 78å­—èŠ‚ 1ä»½ ä¸å¸¦crc
+ * @data æ•°æ®
+ * @len é•¿åº¦
  * @return : 0,1
  */
 u8 service_spm_setCheckMeter(u8* data, u16 len) {
