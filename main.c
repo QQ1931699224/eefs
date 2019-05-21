@@ -10,6 +10,7 @@
 #include <string.h>
 #include "eefs_lib.h"
 #include "meter_base.h"
+#include "three_phases_meter.h"
 
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
@@ -27,11 +28,13 @@ void testEefs_create(void);
 void testEefs_allCreate(void);
 void testEefs_setValueWithOffset(void);
 void testEefs_WRdata(void);
+void testEefs_three(void);
 
 
 int main(int argc, const char* argv[]) {
-	testEefs_WRdata();
-	
+	//testEefs_WRdata();
+	testEefs_three();
+
 	//testEefs_data_getSys();
 	//testEefs_mbr_create();
 	//testEefs_mbr_create1();
@@ -323,5 +326,78 @@ void testEefs_WRdata() {
 		meter_circle_write(0, 2048+i, 2);
 	}
 	meter_circle_read(0,data);
-	meter_circle_read(0, data);
+}
+
+void testEefs_three() {
+	MEATERVAR meaterVer;
+	MEATERVAR meaterVer1;
+	MEATERVAR meaterVer2;
+	MEATERVAR meaterVer3;
+	MEATERVAR meaterVer4;
+	u8 falg[] = {1,2,3,4,5};
+	u8 send[] = { 1,2,3,4,5,6,7 };
+	u8 up[] = { 1,2,3,4,5,6,7,9,9,9 };
+	u8 fj[] = { 1,2,3,4 };
+	u8 en[] = { 1,2,3,4,5,6,7,9,9,9,6,6,6 };
+
+	u8 data[5] = { 0 };
+	u8 data1[24] = { 0 };
+	u8 data2[415] = { 0 };
+	u8 data3[4] = { 0 };
+	u8 data4[160] = { 0 };
+
+	//掉电标志
+	meaterVer.name = 1024;
+	meaterVer.size = 5;
+	meaterVer.type = TYPE_WRITE_1;
+	meaterVer.crc = 2;
+	meaterVer.net = 1;
+	meter_register(0, meaterVer);
+	
+	meter_setNoPowerFalg(falg, strlen(falg));
+	meter_getNoPowerFlag(data);
+
+	//发送参数
+	meaterVer1.name = 1025;
+	meaterVer1.size = 24;
+	meaterVer1.type = TYPE_WRITE_1;
+	meaterVer1.crc = 2;
+	meaterVer1.net = 1;
+	meter_register(1, meaterVer1);
+
+	meter_setSendParameter(send,7);
+	meter_getSendParameter(data1);
+	//升级参数
+	meaterVer2.name = 1026;
+	meaterVer2.size = 415;
+	meaterVer2.type = TYPE_WRITE_1;
+	meaterVer2.crc = 2;
+	meaterVer2.net = 1;
+	meter_register(2, meaterVer2);
+
+	meter_setUpgrade(up,10);
+	meter_getUpgrade(data2);
+	////首次判断
+	meaterVer3.name = 1027;
+	meaterVer3.size = 4;
+	meaterVer3.type = TYPE_WRITE_1;
+	meaterVer3.crc = 2;
+	meaterVer3.net = 1;
+	meter_register(3, meaterVer3);
+
+	meter_setFirstJudge(fj, 4);
+	meter_getFirstJudge(data3);
+	////电能
+	meaterVer4.name = 1028;
+	meaterVer4.size = 160;
+	meaterVer4.type = TYPE_WRITE_4;
+	meaterVer4.crc = 1;
+	meaterVer4.net = 1;
+	meter_register(4, meaterVer4);
+
+	meter_setEnergy(en, 13);
+	meter_setEnergy(en, 13);
+	meter_setEnergy(en, 13);
+	meter_setEnergy(en, 13);
+	meter_getEnergy(data4);
 }

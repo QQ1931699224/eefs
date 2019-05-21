@@ -18,6 +18,7 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 	u8 dataStatus;
 	u8 netStatus;
 	u8 genFlag;
+	u8 netStaus;
 	u8 back;
 	u8 offset;
 	u8 crcSize;
@@ -43,9 +44,11 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 	dataStatus = meter_get_data_status(meaterVer.type);
 	netStatus = meaterVer.net;
 	genFlag = meaterVer.crc;
+	netStatus = meaterVer.net;
 	eefs_mbr_setDataStatus(index, dataStatus);
 	eefs_mbr_setNetStatus(index, netStatus);
 	eefs_mbr_setGenFlag(index, genFlag);
+	eefs_mbr_setNetStatus(index, netStatus);
 	return RET_SUCCESS;
 }  
 /*
@@ -145,16 +148,20 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 	//获取写入类型
 	writeType = meter_get_write_type(index);
 	//处理写入数据长度
-	dataSize = eefs_mbr_getSize(index)/writeType - offset - DATA_STATUS_SIZE;
+	dataSize = eefs_mbr_getDataSize(index)/writeType - offset - DATA_STATUS_SIZE;
 	datas = malloc(dataSize);
 	zero = 0;
 	if (len< dataSize)
 	{
-		memcpy(datas,&data,len);
+		memcpy(datas,data,len);
 		for (i = 0; i < (dataSize-len); i++)
 		{
 			memcpy(datas + len + i, &zero, 1);
 		}
+	}
+	else
+	{
+		memcpy(datas, data, dataSize);
 	}
 	//输入类型1单独区分
 	if (writeType == 1){
@@ -164,7 +171,7 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 		writeAddr = meter_get_write_address(index);
 	}
 	//写入数据
-	eefs_base_writeBytes(writeAddr,datas,len);
+	eefs_base_writeBytes(writeAddr,datas,dataSize);
 	//修改datastatus状态
 	ns = DATA_NEW_POS_STATUS;
 	os = DATA_OLD_POS_STATUS;
@@ -220,7 +227,7 @@ u8 meter_circle_read(u16 index, u8* retData) {
 	//获取写入类型
 	writeType = meter_get_write_type(index);
 
-	dataSize = eefs_mbr_getSize(index)/writeType;
+	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	//找到当前的读取位置
 	writeAddr = meter_get_data_status_address(index)-(dataSize- crcOffset - DATA_STATUS_SIZE);
 	//读取数据 TODO:CRC检验 
@@ -253,7 +260,7 @@ u16 meter_get_write_address(u16 index) {
 	}
 	// ---------- 业务处理---------- //
 	writeType = meter_get_write_type(index);
-	dataSize = eefs_mbr_getSize(index)/writeType;
+	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	dataHeadAddr = eefs_data_getHeadAddr(index);
 	//获取当前数据通用标记
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
@@ -324,7 +331,7 @@ u16 meter_get_data_status_address(u16 index) {
 	writeType = meter_get_write_type(index);
 	//找到当前的写入位置
 	dataHeadAddr = eefs_data_getHeadAddr(index);
-	dataSize = eefs_mbr_getSize(index)/writeType;
+	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	for (i = 0; i < writeType; i++)
 	{
 		writeDataStatusAddr = dataHeadAddr + dataSize * i - offset;//新旧状态位地址

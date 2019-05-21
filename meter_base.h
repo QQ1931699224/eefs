@@ -42,4 +42,5 @@ u16 meter_get_data_status_address(u16 index);                                   
 u16 meter_get_write_address(u16 index);                                              //获取当前可写入数据区首地址
 
 
+
 #endif

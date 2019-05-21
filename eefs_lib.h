@@ -138,6 +138,7 @@ u16 eefs_mbr_getIndexStatusHeadAddress(u16 index);                              
 
 u16 eefs_mbr_getSize(u16 index);                                                 // 获取索引对应的数据区大小
 u8 eefs_mbr_setSize(u16 index,u16 size);                                         // 设置索引对应的数据区大小
+u16 eefs_mbr_getDataSize(u16 index);                                             // 获取索引对应的数据区大小(不包含数据描述位)
 u8 eefs_mbr_check(u16 index);                                                    // 检查索引值是否合法，合法则返回索引首地址
 s8 eefs_mbr_getStatus(u16 index);                                                // 获取状态
 u8 eefs_mbr_setStatus(u16 index ,u8 val);                                        // 设置状态
