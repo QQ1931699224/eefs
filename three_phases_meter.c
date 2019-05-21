@@ -109,3 +109,24 @@ u8 meter_getEnergy(u8* data) {
 u8 meter_setEnergy(u8* data, u16 len) {
 	meter_circle_write(ENERGY_INDEX, data, len);
 }
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc:获取 校表参数 78字节 1份 不带crc
+ * @data 数据
+ * @return : 0,1
+ */
+u8 meter_getCheckMeter(u8* data) {
+	meter_circle_read(CHECKMETER_INDEX, data);
+}
+/*
+ * Auth: 张添程
+ * Date: 2019-5-10
+ * Desc:写入 校表参数 78字节 1份 不带crc
+ * @data 数据
+ * @len 长度
+ * @return : 0,1
+ */
+u8 meter_setCheckMeter(u8* data, u16 len) {
+	meter_circle_write(CHECKMETER_INDEX, data, len);
+}

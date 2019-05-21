@@ -334,17 +334,20 @@ void testEefs_three() {
 	MEATERVAR meaterVer2;
 	MEATERVAR meaterVer3;
 	MEATERVAR meaterVer4;
+	MEATERVAR meaterVer5;
 	u8 falg[] = {1,2,3,4,5};
 	u8 send[] = { 1,2,3,4,5,6,7 };
 	u8 up[] = { 1,2,3,4,5,6,7,9,9,9 };
 	u8 fj[] = { 1,2,3,4 };
 	u8 en[] = { 1,2,3,4,5,6,7,9,9,9,6,6,6 };
+	u8 jb[] = { 1,2,3,4,5,6,7,9,9,9,7,7,7,7 };
 
 	u8 data[5] = { 0 };
 	u8 data1[24] = { 0 };
 	u8 data2[415] = { 0 };
 	u8 data3[4] = { 0 };
 	u8 data4[160] = { 0 };
+	u8 data5[78] = { 0 };
 
 	//掉电标志
 	meaterVer.name = 1024;
@@ -354,7 +357,7 @@ void testEefs_three() {
 	meaterVer.net = 1;
 	meter_register(0, meaterVer);
 	
-	meter_setNoPowerFalg(falg, strlen(falg));
+	meter_setNoPowerFalg(falg,5);
 	meter_getNoPowerFlag(data);
 
 	//发送参数
@@ -400,4 +403,15 @@ void testEefs_three() {
 	meter_setEnergy(en, 13);
 	meter_setEnergy(en, 13);
 	meter_getEnergy(data4);
+
+	//校表
+	meaterVer5.name = 1029;
+	meaterVer5.size = 78;
+	meaterVer5.type = TYPE_WRITE_1;
+	meaterVer5.crc = 2;
+	meaterVer5.net = 1;
+	meter_register(5, meaterVer5);
+
+	meter_setCheckMeter(jb, 14);
+	meter_getCheckMeter(data5);
 }
