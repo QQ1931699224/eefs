@@ -358,6 +358,7 @@ void testEefs_three() {
 	meter_register(0, meaterVer);
 	
 	service_tpm_setNoPowerFalg(falg,5);
+	service_tpm_setNoPowerFalg(falg, 5);
 	service_tpm_getNoPowerFlag(data);
 
 	//发送参数

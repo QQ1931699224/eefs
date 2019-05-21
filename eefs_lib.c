@@ -267,7 +267,7 @@ s8 eefs_mbr_getDataStatus(u16 index)
     u8 data;        // 7,8位的数据
     // ---------- 输入参数条件检测---------- //
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
-        return RET_FAILD;
+        return RET_ERROR;
     }
     // ---------- 业务处理---------- //
     //(1)找到对应索引的status 11001100
@@ -642,7 +642,6 @@ u32 eefs_mbr_getName(u16 index) {
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
 		return RET_FAILD;
 	}
-
 	// ---------- 业务处理---------- //
 	// (1). 找到索引起始位置 找到name的位置
 	startIndex = eefs_mbr_getIndexHeadAddress(index);
