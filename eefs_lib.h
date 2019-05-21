@@ -12,7 +12,7 @@
 
 typedef enum {
   data_none = 0,
-    data_exist,
+    data_exist, 
     data_A,
     data_B
 }DATATYPE;
@@ -80,6 +80,9 @@ typedef signed char  s8;
 #define EE_SYS_FLAG_SIZE sizeof(u8);                                             //系统保留区标志位大小
 #define EE_SYS_VERSION_SIZE sizeof(u8);                                          //系统保留区版本号大小
 
+
+#define ZERO_INDEXSTATUS 0x00       // 索引状态为0
+#define DEFAULT_INDEXSTATUS 0x02    // 索引状态为2
 
                                                                                  // 索引区结构体
 typedef struct node{

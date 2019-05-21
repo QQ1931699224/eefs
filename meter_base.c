@@ -316,9 +316,9 @@ u16 meter_get_write_address(u16 index) {
 				return writeAddr;
 			}		
 		}
-		return dataHeadAddr;
+		
 	}
-
+	return dataHeadAddr;
 }
 
 /*
