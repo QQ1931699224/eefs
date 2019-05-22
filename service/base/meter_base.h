@@ -2,18 +2,18 @@
 #define meter_base_h
 #include <stdio.h>
 
-#define TYPE_WRITE_1 1                                                       //Ğ´ÈëÀàĞÍ1
-#define TYPE_WRITE_4 4                                                       //Ğ´ÈëÀàĞÍ4
-#define TYPE_WRITE_8 8                                                       //Ğ´ÈëÀàĞÍ8
-#define TYPE_WRITE_16 16											         //Ğ´ÈëÀàĞÍ16
+#define TYPE_WRITE_1 1                                                       //å†™å…¥ç±»å‹1
+#define TYPE_WRITE_4 4                                                       //å†™å…¥ç±»å‹4
+#define TYPE_WRITE_8 8                                                       //å†™å…¥ç±»å‹8
+#define TYPE_WRITE_16 16											         //å†™å…¥ç±»å‹16
 
-#define DATA_NEW_POS_STATUS 0x55 											 //ĞÂĞ´Èë×´Ì¬
-#define DATA_OLD_POS_STATUS 0xAA 											 //¾ÉĞ´Èë×´Ì¬
+#define DATA_NEW_POS_STATUS 0x55 											 //æ–°å†™å…¥çŠ¶æ€
+#define DATA_OLD_POS_STATUS 0xAA 											 //æ—§å†™å…¥çŠ¶æ€
 
-#define DATA_CRC_SIZE 2                                                      //CRC´óĞ¡
-#define DATA_STATUS_SIZE 1                                                   //ĞÂ¾ÉĞ´Èë×´Ì¬´óĞ¡
-#define CRC_Y 1                                                              //Í¨ÓÃ±ê¼ÇÎ»ÓĞCRC
-#define CRC_N 2                                                              //Í¨ÓÃ±ê¼ÇÎ»ÎŞCRC
+#define DATA_CRC_SIZE 2                                                      //CRCå¤§å°
+#define DATA_STATUS_SIZE 1                                                   //æ–°æ—§å†™å…¥çŠ¶æ€å¤§å°
+#define CRC_Y 1                                                              //é€šç”¨æ ‡è®°ä½æœ‰CRC
+#define CRC_N 2                                                              //é€šç”¨æ ‡è®°ä½æ— CRC
 
 typedef enum {
 	tpye_write_1, 
@@ -32,14 +32,14 @@ typedef struct meaterVar {
 	u8 net;
 }MEATERVAR;
 
-u8 meter_register(u16 index,MEATERVAR meaterVer);                                    //´´½¨Ö¸¶¨ÀàĞÍµÄÊı¾İ¿Õ¼ä
-u8 meter_circle_write(u16 index, u8* data, u16 len);                                 //Êı¾İĞ´Èë
-u8 meter_circle_read(u16 index, u8* retData);                                        //Êı¾İ¶ÁÈ¡
+u8 meter_register(u16 index,MEATERVAR meaterVer);                                    //åˆ›å»ºæŒ‡å®šç±»å‹çš„æ•°æ®ç©ºé—´
+u8 meter_circle_write(u16 index, u8* data, u16 len);                                 //æ•°æ®å†™å…¥
+u8 meter_circle_read(u16 index, u8* retData);                                        //æ•°æ®è¯»å–
 
-TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE);                                     //ÅĞ¶ÏĞ´ÈëÀàĞÍ»ñÈ¡Êı¾İ×´Ì¬
-s8 meter_get_write_type(u16 index);                                                  //¸ù¾İË÷Òı»ñÈ¡Ğ´ÈëÀàĞÍ
-u16 meter_get_data_status_address(u16 index);                                        //»ñÈ¡×îĞÂ¿É¶ÁÊı¾İÇøµÄ×´Ì¬Î»µØÖ·
-u16 meter_get_write_address(u16 index);                                              //»ñÈ¡µ±Ç°¿ÉĞ´ÈëÊı¾İÇøÊ×µØÖ·
+TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE);                                     //åˆ¤æ–­å†™å…¥ç±»å‹è·å–æ•°æ®çŠ¶æ€
+s8 meter_get_write_type(u16 index);                                                  //æ ¹æ®ç´¢å¼•è·å–å†™å…¥ç±»å‹
+u16 meter_get_data_status_address(u16 index);                                        //è·å–æœ€æ–°å¯è¯»æ•°æ®åŒºçš„çŠ¶æ€ä½åœ°å€
+u16 meter_get_write_address(u16 index);                                              //è·å–å½“å‰å¯å†™å…¥æ•°æ®åŒºé¦–åœ°å€
 
 
 
