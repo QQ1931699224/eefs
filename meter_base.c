@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "eefs_lib.h"
 #include "meter_base.h"
-#include "malloc/_malloc.h"
+#include <stdlib.h>
+
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
