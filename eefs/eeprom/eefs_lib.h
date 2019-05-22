@@ -111,18 +111,18 @@ typedef struct dataStruct {
 
 
 
-u16 isEffectiveAddress(u16 address);                                             // 判断地址合法性
+u16 eefs_data_dataSectionisEffectiveAddress(u16 address);                                             // 判断地址合法性
 u8 eefs_base_writeByte(u16 address,u8* data);                                    //在eeprom的指定位置写入1个字节
 u8 eefs_base_readByte(u16 address);                                              //在eeprom的指定位置读取1个字节
 u8 eefs_base_writeBytes(u16 address, u8* data, u16 dataLen);                     //在eeprom的指定位置写入dataLen个字节
 u8 eefs_base_readBytes(u16 address, u8* retData, u16 retLen);                    //从eeprom的指定位置读取retLen个字节
 
 
-u16 getAddress(u16 size);                                                        // 获取模拟地址
+                                                       // 获取模拟地址
 u8 eefs_mbr_CheckAddress(u16 address);                                           // 检查地址合法性
-u16 getIndexAddress(u16 index);                                                  // 返回索引地址
+
 u8 eefs_mbr_CheckIndex(u16 index);                                               // 判断index是否合法
-u8 writeDataToIndex(u16 address, NODE node);                                     // 写入数据到索引区
+u8 eefs_mbr_writeDataToIndex(u16 address, NODE node);                                     // 写入数据到索引区
 u8 eefs_mbr_load(void);                                                          // 向全局数组中载入index的status值
 u8 eefs_mbr_create(u16 index, USERNODE node);                                    // 添加新索引
 u8 eefs_mbr_update(u16 index, u32 name, u8 status);                              // 更新索引
@@ -158,7 +158,7 @@ u16 eefs_data_getHeadAddr(u16 index);                                           
 u16 eefs_data_getTailAddr(u16 index);                                            //获取节点数据的数据区尾地址
 u16 eefs_data_getTotalCapacity(void);                                            //获取数据区总容量
 u16 eefs_data_getUsedCapacity(void);                                             //获取已使用总容量
-u16 eefs_data_getUnusedCapacity(void);                                           //获取未使用空间总容量
+u16 eefs_data_getUnusedCapacity(void);                                           //获取数据区未使用空间总容量
 u16 eefs_data_findUnusedAddr(u16 size);                                          //返回可以使用的一个合适的地址
 u8 eefs_data_create(u16 addr, u16 size);                                         //创建数据区，并初始化
 u8 eefs_data_update(u16 addr, u16 size);                                         //更新数据区全部内容
@@ -193,6 +193,5 @@ u16 eefs_sys_getUsedCapacity(void);                                             
 u8 eefs_sys_setUsedCapacity(u16 size);                                           //设置已使用空间容量
 u16 eefs_sys_getUnusedCapacity(void);                                                //获取未使用空间容量
 u8 eefs_sys_setUnusedCapacity(u16 size);                                         //设置未使用空间容量
-
 
 #endif /* WriteOrReadByte_h */

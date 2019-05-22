@@ -120,6 +120,9 @@ u8 eefs_mbr_load(void)
     // ---------- 业务处理---------- //
     //(1)循环取出数据
     for (i = 0; i < MAX_INDEX; i++) {
+        if (eefs_mbr_getStatus(i) == RET_FAILD) {
+            return RET_FAILD;
+        }
         data = eefs_mbr_getStatus(i);
         G_STATUS_LISI[i] = data;
     }
@@ -147,18 +150,18 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
     }
     // (2)判断node size
     // TODO:该处判断应该用剩余空间容量函数的返回值进行判断
-    if (userNode.size > EE_MAX_CAPACITY - EE_SYS_CAPACITY) {
+    if (userNode.size > eefs_data_getUnusedCapacity()) {
         return ERR_INVALIDPARAM;
     }
     
     // ---------- 业务处理---------- //
     //(1)获取数据存放地址
-    address = getAddress(userNode.size);
+    address = eefs_data_findUnusedAddr(userNode.size);
     if (eefs_mbr_CheckAddress(address) != RET_SUCCESS) {
         return RET_FAILD;
     }
     //(2)获取索引的位置
-    indexAddress = getIndexAddress(index);
+    indexAddress = eefs_mbr_getIndexHeadAddress(index);
     //(3)给node结构体赋值
     node.name = userNode.name;
     node.address = address;
@@ -166,7 +169,7 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
     node.status = STATUS_INITVALUE;
     //(4)写入数据到索引区, 返回成功
     G_STATUS_LISI[index] = node.status;
-    return writeDataToIndex(indexAddress, node);
+    return eefs_mbr_writeDataToIndex(indexAddress, node);
 }
 
 /*
@@ -189,18 +192,6 @@ u8 eefs_mbr_CheckIndex(u16 index)
     }
 }
 
-/*
- * Auth: 吴晗帅
- * Date: 2019-5-13
- * Desc:获取模拟地址
- * @paramName:无
- * @return : u16模拟地址
- */
-
-u16 getAddress(u16 size)
-{
-    return eefs_data_findUnusedAddr(size);
-}
 
 /*
  * Auth: 吴晗帅
@@ -212,7 +203,6 @@ u16 getAddress(u16 size)
 
 u8 eefs_mbr_CheckAddress(u16 address)
 {
-    // TODO:后期根据业务完善
     // 地址在系统预留空间与最大容量之间
     if (address >= EE_SYS_CAPACITY && address < EE_MAX_CAPACITY) {
         return RET_SUCCESS;
@@ -223,18 +213,6 @@ u8 eefs_mbr_CheckAddress(u16 address)
     }
 }
 
-/*
- * Auth: 吴晗帅
- * Date: 2019-5-10
- * Desc:获取索引在大数组中的位置
- * @index:索引号
- * @return : 索引在大数组中的位置
- */
-
-u16 getIndexAddress(u16 index)
-{
-    return EE_START_INDEX + index * INDEX_SIZE;
-}
 
 /*
  * Auth: 吴晗帅
@@ -244,7 +222,7 @@ u16 getIndexAddress(u16 index)
  * @node:写入的结构体
  * @return : 1:成功 0：失败
  */
-u8 writeDataToIndex(u16 myAddress, NODE node)
+u8 eefs_mbr_writeDataToIndex(u16 myAddress, NODE node)
 {
     u8 data[INDEX_SIZE]; // 索引区中的单个索引
     memcpy(data, (u8 *)&node, INDEX_SIZE);
@@ -335,7 +313,7 @@ u8 eefs_mbr_setStatus(u16 index ,u8 val)
     
     // ---------- 业务处理---------- //
     //(1)找到索引状态的起始位置
-    startIndex = getIndexAddress(index);
+    startIndex = eefs_mbr_getIndexHeadAddress(index);
     startStatus = startIndex + STATUS_OFFSET;
     //(2)设置索引状态
     //writeByte(startStatus, &val, 1);
@@ -588,7 +566,7 @@ u8 eefs_mbr_delete(u16 index)
     }
     // ---------- 业务处理---------- //
     //(1)将indexStatus变为2
-    eefs_mbr_setIndexStatus(index, 2);
+    eefs_mbr_setIndexStatus(index, DEFAULT_INDEXSTATUS);
     return RET_SUCCESS;
 }
 
@@ -617,7 +595,7 @@ u8 eefs_mbr_reset(u16 index)
     }
     // ---------- 业务处理---------- //
     //(1)找到起始索引位置
-    startAddress = getIndexAddress(index);
+    startAddress = eefs_mbr_getIndexHeadAddress(index);
     
     //(2)循环赋0
     for (i = 0; i < INDEX_SIZE; i++) {
@@ -1079,7 +1057,7 @@ u16 eefs_mbr_getDataSize(u16 index)
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
- * Desc:获取未使用空间总容量
+ * Desc:获取数据区未使用空间总容量
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
@@ -1129,7 +1107,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
     n = 0;
     effectiveAddress = EE_START_DATA;
 	for (i = 0; i < MAX_INDEX; i++) {
-		if (isEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
+		if (eefs_data_dataSectionisEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
 			data.address = eefs_data_getHeadAddr(i);
 			data.index = i;
 			dataList[n] = data;
@@ -1190,7 +1168,7 @@ u16 eefs_data_findUnusedAddr(u16 size)
  * @address:地址
  * @return : 1:有效 0：无效
  */
-u16 isEffectiveAddress(u16 address)
+u16 eefs_data_dataSectionisEffectiveAddress(u16 address)
 {
 	if (address < EE_START_DATA || address > EE_MAX_CAPACITY) {
 		return 0;
@@ -1201,8 +1179,8 @@ u16 isEffectiveAddress(u16 address)
 	}
 }
 
-u8 eefs_data_create(u16 addr, u16 size); //创建数据区，并初始化
-u8 eefs_data_update(u16 addr, u16 size); //更新数据区全部内容
+//u8 eefs_data_create(u16 addr, u16 size); //创建数据区，并初始化
+//u8 eefs_data_update(u16 addr, u16 size); //更新数据区全部内容
 
 /*
  * Auth: 吴晗帅
@@ -1484,6 +1462,9 @@ u8 eefs_getValueWithOffset(u32 name, u16 offset, u8 *ret_data, u16 len)
     // ---------- 业务处理---------- //
     //(1)找到name对应的index, size
     for (i = 0; i < MAX_INDEX; i++) {
+        if (eefs_mbr_getName(i) == RET_FAILD || eefs_mbr_getAddress(i) == RET_FAILD || eefs_mbr_getSize(i) == RET_FAILD) {
+            return RET_FAILD;
+        }
         if (name == eefs_mbr_getName(i)) {
             address = eefs_mbr_getAddress(i);
             size = eefs_mbr_getSize(i);

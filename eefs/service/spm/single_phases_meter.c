@@ -144,22 +144,27 @@ u8 service_spm_create_breakeNetCapacity(void)
     // ---------- 局部变量定义区---------- //
     int i;
     USERNODE usernode;
-    u16 index;              // 记录索引区index
-    
+    s8 indexStatus;
+    u8 isSuccess;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     //(1)循环遍历索引区, 找到一个没使用的索引
     usernode.name = SMALLINDEX_NAME;
-    index = 0;
     usernode.size = (SMALLINDEX_CAPACITY + SMALLINDEX_STATUSCAPACITY + SMALLINDEX_CRCCAPACITY) * SMALLINDEX_DATACOUNT;
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getIndexStatus(i) == ZERO_INDEXSTATUS) {
-            eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+        indexStatus = eefs_mbr_getIndexStatus(i);
+        if (indexStatus == RET_ERROR) {
+            return RET_FAILD;
         }
-        if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) {
+        if (indexStatus == ZERO_INDEXSTATUS) {
+            isSuccess = eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+            if (isSuccess == RET_FAILD) {
+                return RET_FAILD;
+            }
+        }
+        if (indexStatus == DEFAULT_INDEXSTATUS) {
             eefs_create(i, usernode); // 创建索引区
-            index = i;
             i = MAX_INDEX;
         }
     }
@@ -177,50 +182,47 @@ u8 service_spm_create_breakeNetCapacity(void)
 u8 service_spm_saveOnceBreakeNetData(u16 index, SMALLINDEXNODE smallNode)
 {
     // ---------- 局部变量定义区---------- //
-    //    u8 status;
-    //    u8 lastStatus;
-    u16 address;     // 首地址
-    u16 lastAddress; // 上一个地址
-    u16 newAddress; // 写入的地址
+    u16 address;     // 真正的地址
     // ---------- 输入参数条件检测---------- //
     if (index > SMALLINDEX_DATACOUNT - 1) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
     address = 0;
-    lastAddress = 0;
-    newAddress = 0;
-    
-    //(1)循环找出数据区的首地址
-    address = service_spm_getBreakeNetDataAddress(0);
-    //(2)根据小索引算出真正的地址
-    newAddress = service_spm_getBreakeNetDataAddress(index);
-    if (index == 0) {
-        lastAddress = service_spm_getBreakeNetDataAddress(SMALLINDEX_DATACOUNT - 1);
+    //(1)根据小索引算出真正的地址
+    address = service_spm_getBreakeNetDataAddress(index);
+    if (address == RET_FAILD) {
+        return RET_FAILD;
     }
-    else
-    {
-        lastAddress = service_spm_getBreakeNetDataAddress(index) - SMALLINDEX_CAPACITY - SMALLINDEX_STATUSCAPACITY - SMALLINDEX_CRCCAPACITY;
-    }
-    
-    //(3)在newAddress处存数据
-    eefs_base_writeBytes(newAddress, (u8*)& smallNode, SMALLINDEX_CAPACITY);
+    //(2)在newAddress处存数据
+    eefs_base_writeBytes(address, (u8*)& smallNode, SMALLINDEX_CAPACITY);
     
     //(4)写入状态位(7,8位=1为当前数据, 0为以前数据, 1234位控制年月日时分, 5,6位控制发送状态,2为默认状态, 1为发送状态)
     // 写入当前状态
-    service_spm_setSmallIndexCurrentStatus(index, SMALLINDEX_CURRENTSTATUS);
+    if (service_spm_setSmallIndexCurrentStatus(index, SMALLINDEX_CURRENTSTATUS) == RET_FAILD) {
+        return RET_FAILD;
+    }
     // 写入默认发送状态
-    service_spm_setSmallIndexSendStatus(index, SMALLINDEX_NOSENDSTATUS);
+    if (service_spm_setSmallIndexSendStatus(index, SMALLINDEX_NOSENDSTATUS) == RET_FAILD) {
+        return RET_FAILD;
+    }
+    if (service_spm_setSmallIndexSendStatus(index, SMALLINDEX_NOSENDSTATUS) == RET_FAILD) {
+        return RET_FAILD;
+    }
+    
     // 给上一个index更新状态
     if (index == 0) {
-        service_spm_setSmallIndexCurrentStatus(SMALLINDEX_DATACOUNT - 1, SMALLINDEX_DEFAULTSTATUS);
+        if (service_spm_setSmallIndexCurrentStatus(SMALLINDEX_DATACOUNT - 1, SMALLINDEX_DEFAULTSTATUS) == RET_FAILD) {
+            return RET_FAILD;
+        }
     }
     else
     {
-        service_spm_setSmallIndexCurrentStatus(index - 1, SMALLINDEX_DEFAULTSTATUS);
+        if (service_spm_setSmallIndexCurrentStatus(index - 1, SMALLINDEX_DEFAULTSTATUS) == RET_FAILD) {
+            return RET_FAILD;
+        }
     }
     // 时间状态
-    
     return RET_SUCCESS;
 }
 
@@ -235,24 +237,39 @@ u8 service_spm_saveBreakeNetData(SMALLINDEXNODE node)
 {
     // ---------- 局部变量定义区---------- //
     int j;
+    u8 result;
+    u8 saveResult;
     // ---------- 输入参数条件检测---------- //
-    
     // ---------- 业务处理---------- //
     //(1)遍历小索引区, 找到status的7,8位为1的小索引
     for (j = 0; j < SMALLINDEX_DATACOUNT; j++) {
-        if (service_spm_getSmallIndexCurrentStatus(j) == SMALLINDEX_CURRENTSTATUS) {  // 是当前发送状态
+        result = service_spm_getSmallIndexCurrentStatus(j);
+        if (result == RET_FAILD) {
+            return RET_FAILD;
+        }
+        if (result == SMALLINDEX_CURRENTSTATUS) {  // 是当前发送状态
             if (j == SMALLINDEX_DATACOUNT - 1) {// 如果是最后一个, 保存到0
-                service_spm_saveOnceBreakeNetData(0, node);
+                
+                saveResult = service_spm_saveOnceBreakeNetData(0, node);
+                if (saveResult == RET_FAILD) {
+                    return RET_FAILD;
+                }
                 return RET_SUCCESS;
             }
             else // 否则保存到下一个
             {
-                service_spm_saveOnceBreakeNetData(j + 1, node);
+                saveResult = service_spm_saveOnceBreakeNetData(j + 1, node);
+                if (saveResult == RET_FAILD) {
+                    return RET_FAILD;
+                }
                 return RET_SUCCESS;
             }
         }
     }
-    service_spm_saveOnceBreakeNetData(0, node);
+    saveResult = service_spm_saveOnceBreakeNetData(0, node);
+    if (saveResult == RET_FAILD) {
+        return RET_FAILD;
+    }
     return RET_SUCCESS;
     
 }
@@ -268,6 +285,7 @@ u8 service_spm_getSmallIndexCurrentStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
     u16 statusAddress;      // status在数据区的位置
+    u16 smallIndexAddress;  // 小索引在数据区的位置
     u8 status;              // status值
     u8 newStatus;           // 右移6位后的值
     // ---------- 输入参数条件检测---------- //
@@ -275,9 +293,14 @@ u8 service_spm_getSmallIndexCurrentStatus(u16 index)
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
-    //(1)根据名字找到索引的address
+    //(1)小索引在数据区的位置
+    smallIndexAddress = service_spm_getBreakeNetDataAddress(index);
+    if (smallIndexAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     //(2)找到status的7,8位
-    statusAddress = service_spm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+    statusAddress =  smallIndexAddress + SMALLINDEX_CAPACITY;
+    
     status = eefs_base_readByte(statusAddress);
     //(3)将除了7,8位的其他位清零
     newStatus = status & BIT_DATA_MASK;
@@ -296,6 +319,7 @@ u8 service_spm_getSmallIndexSendStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
     u16 statusAddress;      // status在数据区的位置
+    u16 smallIndexAddress;  // 小索引在数据区的位置
     u8 status;              // status值
     u8 newStatus;           // 右移4位后的值
     // ---------- 输入参数条件检测---------- //
@@ -303,9 +327,13 @@ u8 service_spm_getSmallIndexSendStatus(u16 index)
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
-    //(1)根据名字找到索引的address
+    //(1)小索引在数据区的位置
+    smallIndexAddress = service_spm_getBreakeNetDataAddress(index);
+    if (smallIndexAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     //(2)找到status的5,6位
-    statusAddress = service_spm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+    statusAddress = smallIndexAddress + SMALLINDEX_CAPACITY;
     status = eefs_base_readByte(statusAddress);
     //(3)将除了5,6位的其他位清零
     newStatus = status & BIT_INDEX_MASK;
@@ -324,6 +352,7 @@ u8 service_spm_getSmallIndexTimeStatus(u16 index)
 {
     // ---------- 局部变量定义区---------- //
     u16 statusAddress;      // status在数据区的位置
+    u16 smallIndexAddress;  // 小索引在数据区的位置
     u8 status;              // status值
     u8 newStatus;           // 右移后的值
     // ---------- 输入参数条件检测---------- //
@@ -331,9 +360,13 @@ u8 service_spm_getSmallIndexTimeStatus(u16 index)
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
-    //(1)根据名字找到索引的address
+    //(1)小索引在数据区的位置
+    smallIndexAddress = service_spm_getBreakeNetDataAddress(index);
+    if (smallIndexAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     //(2)找到status的5,6位
-    statusAddress = service_spm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+    statusAddress = smallIndexAddress + SMALLINDEX_CAPACITY;
     status = eefs_base_readByte(statusAddress);
     //(3)将除了1234位的其他位清零
     newStatus = status & BIT_TIME_MASK;
@@ -361,6 +394,9 @@ u16 service_spm_getBreakeNetDataAddress(u16 index)
     for (i = 0; i < MAX_INDEX; i++) {
         if (eefs_mbr_getName(i) == SMALLINDEX_NAME) {
             address = eefs_mbr_getAddress(i);
+            if (address == RET_FAILD) {
+                return RET_FAILD;
+            }
         }
     }
     address = address + index * SMALLINDEX_CAPACITY + index * SMALLINDEX_STATUSCAPACITY + index * SMALLINDEX_CRCCAPACITY;
@@ -385,6 +421,9 @@ u8 service_spm_disconnect_getData(u8 * retData)
     //(1)循环获取小索引数据状态
     for (i = 0; i < SMALLINDEX_DATACOUNT; i++) {
         status = service_spm_getSmallIndexCurrentStatus(i);
+        if (status == RET_FAILD) {
+            return RET_FAILD;
+        }
         if (status == SMALLINDEX_CURRENTSTATUS) { // 最新数据
             service_spm_disconnect_getDataWithIndex(i, retData);
         }
@@ -410,6 +449,9 @@ u8 service_spm_disconnect_getDataWithIndex(u16 index, u8 * retData)
     // ---------- 业务处理---------- //
     //(1)获取输入值对应的数据区位置
     address = service_spm_getBreakeNetDataAddress(index);
+    if (address == RET_FAILD) {
+        return RET_FAILD;
+    }
     eefs_base_readBytes(address, retData, SMALLINDEX_CAPACITY);
     return RET_SUCCESS;
 }
@@ -439,6 +481,9 @@ u8 service_spm_setSmallIndexSendStatus(u16 index, u8 val)
     // ---------- 业务处理---------- //
     //(1)获取数据首地址
     statusAddress = service_spm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+    if (statusAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     status = eefs_base_readByte(statusAddress);
     //(2)&运算, 把五六位清零: 11110000 & 11001111 = 11000000
     newStatus = status & BIT_INDEX_UNMASK;
@@ -478,6 +523,9 @@ u8 service_spm_setSmallIndexCurrentStatus(u16 index, u8 val)
     // ---------- 业务处理---------- //
     //(1)获取数据首地址
     statusAddress = service_spm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+    if (statusAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     status = eefs_base_readByte(statusAddress);
     //(2)&运算, 把七八位清零: 11110000 & 00111111 = 00110000
     newStatus = status & BIT_DATA_UNMASK;
@@ -516,6 +564,9 @@ u8 service_spm_setSmallIndexCTimeStatus(u16 index, u8 val)
     // ---------- 业务处理---------- //
     //(1)获取数据首地址
     statusAddress = service_spm_getBreakeNetDataAddress(index) + SMALLINDEX_CAPACITY;
+    if (statusAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     status = eefs_base_readByte(statusAddress);
     //(2)&运算, 把1234位清零: 00001111 & 11110000 = 00000000
     newStatus = status & BIT_TIME_UNMASK;
@@ -537,15 +588,29 @@ u8 service_spm_disconnect_getDataAndChangeStatus(u8 * retData)
 {
     // ---------- 局部变量定义区---------- //
     int i;
+    u8 sendStatus;
+    u8 breakNetData;
     // ---------- 输入参数条件检测---------- //
     // ---------- 业务处理---------- //
     //(1)循环获取断网数据
     for (i = 0; i < SMALLINDEX_DATACOUNT; i++) {
-        if (service_spm_getSmallIndexSendStatus(i) == SMALLINDEX_NOSENDSTATUS) {// 为默认状态2, 证明有数据
-            service_spm_disconnect_getDataWithIndex(i, retData);
+        sendStatus = service_spm_getSmallIndexSendStatus(i);
+        if (sendStatus == RET_FAILD) {
+            return RET_FAILD;
+        }
+        if (sendStatus == SMALLINDEX_NOSENDSTATUS) {// 为默认状态2, 证明有数据
+            breakNetData = service_spm_disconnect_getDataWithIndex(i, retData);
+            if (breakNetData == RET_FAILD) {
+                return RET_FAILD;
+            }
             //(2)设置角标状态
-            service_spm_setSmallIndexSendStatus(i, SMALLINDEX_SENDTATUS);
-            service_spm_setSmallIndexCurrentStatus(i, SMALLINDEX_DEFAULTSTATUS);
+            if (service_spm_setSmallIndexSendStatus(i, SMALLINDEX_SENDTATUS) == RET_FAILD) {
+                return RET_FAILD;
+            }
+            if (service_spm_setSmallIndexCurrentStatus(i, SMALLINDEX_DEFAULTSTATUS)) {
+                return RET_FAILD;
+            }
+            
             return RET_SUCCESS;
         }
     }
@@ -564,22 +629,28 @@ u8 service_spm_create_monthCapacity(void)
     // ---------- 局部变量定义区---------- //
     int i;
     USERNODE usernode;
-    u16 index;              // 记录索引区index
-    
+    s8 indexStatus;
+    u8 isSuccess;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     //(1)循环遍历索引区, 找到一个没使用的索引
-    usernode.name = MONTHDATA_NAME;
-    index = 0;
     usernode.size = MONTHDATA_COUNT * MONTHDATA_CAPACITY;
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getIndexStatus(i) == ZERO_INDEXSTATUS) {
-            eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+        indexStatus = eefs_mbr_getIndexStatus(i);
+        if (indexStatus == RET_ERROR) {
+            return RET_FAILD;
         }
-        if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) {
-            eefs_create(i, usernode); // 创建索引区
-            index = i;
+        if (indexStatus == ZERO_INDEXSTATUS) {
+            isSuccess = eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+            if (isSuccess == RET_FAILD) {
+                return RET_FAILD;
+            }
+        }
+        if (indexStatus == DEFAULT_INDEXSTATUS) {
+            if (eefs_create(i, usernode) == RET_FAILD) {
+                return RET_FAILD;
+            }
             i = MAX_INDEX;
         }
     }
@@ -602,6 +673,7 @@ u8 service_spm_saveMonthData(u8 month, u8 * data)
     int i;
     u16 address;        // 数据区首地址
     u16 saveAddress;    // 保存的位置
+    u32 name;
     // ---------- 输入参数条件检测---------- //
     if (month <= 0 || month > 12) {
         return RET_FAILD;
@@ -610,8 +682,15 @@ u8 service_spm_saveMonthData(u8 month, u8 * data)
     address = 0;
     //(1)获取月份空间对应的数据区首地址
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getName(i) == MONTHDATA_NAME) {
+        name = eefs_mbr_getName(i);
+        if (name == RET_FAILD) {
+            return RET_FAILD;
+        }
+        if (name == MONTHDATA_NAME) {
             address = eefs_mbr_getAddress(i);
+            if (address == RET_FAILD) {
+                return RET_FAILD;
+            }
         }
     }
     //(2)获取保存的位置
@@ -636,14 +715,22 @@ u8 service_spm_getMonthData(u8 month, u8 * ret_data)
     int i;
     u16 address;        // 数据区首地址
     u16 saveAddress;    // 保存的位置
+    u32 name;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     address = 0;
     //(1)获取月份空间对应的数据区首地址
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getName(i) == MONTHDATA_NAME) {
+        name = eefs_mbr_getName(i);
+        if (name == RET_FAILD) {
+            return RET_FAILD;
+        }
+        if (name == MONTHDATA_NAME) {
             address = eefs_mbr_getAddress(i);
+            if (address == RET_FAILD) {
+                return RET_FAILD;
+            }
         }
     }
     //(2)获取保存的位置
@@ -665,22 +752,27 @@ u8 service_spm_create_lostVoltCapacity(void)
     // ---------- 局部变量定义区---------- //
     int i;
     USERNODE usernode;
-    u16 index;              // 记录索引区index
-    
+    s8 indexStatus;
+    s8 isSuccess;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     //(1)循环遍历索引区, 找到一个没使用的索引
     usernode.name = LOSTVOLT_NAME;
-    index = 0;
     usernode.size = LOSTVOLT_COUNT * (LOSTVOLT_CAPACITY + LOSTVOLT_DESCRIBE);
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getIndexStatus(i) == ZERO_INDEXSTATUS) {
-            eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+        indexStatus = eefs_mbr_getIndexStatus(i);
+        if (indexStatus == RET_ERROR) {
+            return RET_FAILD;
         }
-        if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) {
+        if (indexStatus == ZERO_INDEXSTATUS) {
+            isSuccess = eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+            if (isSuccess == RET_FAILD) {
+                return RET_FAILD;
+            }
+        }
+        if (indexStatus == DEFAULT_INDEXSTATUS) {
             eefs_create(i, usernode); // 创建索引区
-            index = i;
             i = MAX_INDEX;
         }
     }
@@ -692,41 +784,47 @@ u8 service_spm_create_lostVoltCapacity(void)
  * Auth: 吴晗帅
  * Date: 2019-5-10
  * Desc:保存失压数据
- * @paramName:xxxxx
+ * @data:传入的数据
  * @return : 1:成功 0：失败
  */
 u8 service_spm_saveLostVoltData(u8 * data)
 {
     // ---------- 局部变量定义区---------- //
-    u16 address;
-    int i;
     int j;
+    u8 currentStatus;
+    u8 saveResult;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
-    address = 0;
-    //(1)取出数据区首地址
-    for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getName(i) == LOSTVOLT_NAME) {
-            address = eefs_mbr_getAddress(i);
-        }
-    }
     //(2)循环遍历描述位, 1为当前状态, 0为以前状态
     for (j = 0; j < LOSTVOLT_COUNT; j++) {
-        if (service_spm_getLostVoltCurrentStatus(j) == 1) {
+        currentStatus = service_spm_getLostVoltCurrentStatus(j);
+        if (currentStatus == RET_FAILD) {
+            return RET_FAILD;
+        }
+        if (currentStatus == 1) {
             if (j == LOSTVOLT_COUNT - 1) {// 如果是最后一个, 保存到0
-                service_spm_saveOnceLostVoltData(0, data);
+                saveResult = service_spm_saveOnceLostVoltData(0, data);
+                if (saveResult == RET_FAILD) {
+                    return RET_FAILD;
+                }
                 return RET_SUCCESS;
             }
             else // 否则保存到下一个
             {
-                service_spm_saveOnceLostVoltData(j + 1, data);
+                saveResult = service_spm_saveOnceLostVoltData(j + 1, data);
+                if (saveResult == RET_FAILD) {
+                    return RET_FAILD;
+                }
                 return RET_SUCCESS;
             }
         }
     }
     
-    service_spm_saveOnceLostVoltData(0, data);
+    saveResult = service_spm_saveOnceLostVoltData(0, data);
+    if (saveResult == RET_FAILD) {
+        return RET_FAILD;
+    }
     return RET_SUCCESS;
     
 }
@@ -741,37 +839,41 @@ u8 service_spm_saveLostVoltData(u8 * data)
 u8 service_spm_saveOnceLostVoltData(u16 index, u8 * data)
 {
     // ---------- 局部变量定义区---------- //
-    //    u8 status;
-    //    u8 lastStatus;
     u16 address;     // 小索引地址
-    u16 lastAddress; // 上一个地址
+    u8 setStatusResult;
     // ---------- 输入参数条件检测---------- //
+    if (index > LOSTVOLT_COUNT - 1) {
+        return RET_FAILD;
+    }
     // ---------- 业务处理---------- //
     address = 0;
-    lastAddress = 0;
     
     //(1)根据小索引算出真正的地址
     address = service_spm_getLostVoltDataAddress(index);
-    if (index == 0) {
-        lastAddress = service_spm_getLostVoltDataAddress(LOSTVOLT_COUNT - 1);
+    if (address == RET_FAILD) {
+        return RET_FAILD;
     }
-    else
-    {
-        lastAddress = service_spm_getLostVoltDataAddress(index) - LOSTVOLT_CAPACITY - LOSTVOLT_DESCRIBE;
-    }
-    
-    //(3)在newAddress处存数据
+    //(2)在newAddress处存数据
     eefs_base_writeBytes(address, data, LOSTVOLT_CAPACITY);
     
-    //(4)写入状态位, 1,2为为当前状态, 1为当前, 0为以前
-    service_spm_setLostVoltCurrentStatus(index, LOSTVOLT_CURRENTSTATUS);
+    //(3)写入状态位, 1,2为为当前状态, 1为当前, 0为以前
+    setStatusResult = service_spm_setLostVoltCurrentStatus(index, LOSTVOLT_CURRENTSTATUS);
+    if (setStatusResult == RET_FAILD) {
+        return RET_FAILD;
+    }
     // 给上一个index更新状态
     if (index == 0) {
-        service_spm_setLostVoltCurrentStatus(LOSTVOLT_COUNT - 1, LOSTVOLT_DEFAULTSTATUS);
+        setStatusResult = service_spm_setLostVoltCurrentStatus(LOSTVOLT_COUNT - 1, LOSTVOLT_DEFAULTSTATUS);
+        if (setStatusResult == RET_FAILD) {
+            return RET_FAILD;
+        }
     }
     else
     {
-        service_spm_setLostVoltCurrentStatus(index - 1, LOSTVOLT_DEFAULTSTATUS);
+        setStatusResult = service_spm_setLostVoltCurrentStatus(index - 1, LOSTVOLT_DEFAULTSTATUS);
+        if (setStatusResult == RET_FAILD) {
+            return RET_FAILD;
+        }
     }
     // 时间状态
     
@@ -790,6 +892,7 @@ u16 service_spm_getLostVoltDataAddress(u16 index)
     // ---------- 局部变量定义区---------- //
     int i;
     u16 address;
+    u32 name;
     // ---------- 输入参数条件检测---------- //
     if (index > LOSTVOLT_COUNT - 1) {
         return RET_FAILD;
@@ -797,8 +900,15 @@ u16 service_spm_getLostVoltDataAddress(u16 index)
     // ---------- 业务处理---------- //
     address = 0;
     for (i = 0; i < LOSTVOLT_COUNT; i++) {
-        if (eefs_mbr_getName(i) == LOSTVOLT_NAME) {
+        name = eefs_mbr_getName(i);
+        if (name == RET_FAILD) {
+            return RET_FAILD;
+        }
+        if (name == LOSTVOLT_NAME) {
             address = eefs_mbr_getAddress(i);
+            if (address == RET_FAILD) {
+                return RET_FAILD;
+            }
         }
     }
     address = address + index * LOSTVOLT_CAPACITY + index * LOSTVOLT_DESCRIBE;
@@ -817,14 +927,18 @@ u8 service_spm_getLostVoltCurrentStatus(u16 index)
     u16 statusAddress;      // status在数据区的位置
     u8 status;              // status值
     u8 newStatus;           // 右移后的值
+    u16 smallIndexAddress;  // 小索引地址
     // ---------- 输入参数条件检测---------- //
     if (index > LOSTVOLT_COUNT - 1) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
-    //(1)根据名字找到索引的address
-    //(2)找到status的1,2位
-    statusAddress = service_spm_getLostVoltDataAddress(index) + LOSTVOLT_CAPACITY;
+    //(1)找到status
+    smallIndexAddress = service_spm_getLostVoltDataAddress(index);
+    if (smallIndexAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
+    statusAddress = smallIndexAddress + LOSTVOLT_CAPACITY;
     status = eefs_base_readByte(statusAddress);
     //(3)将除了12位的其他位清零
     newStatus = status & BIT_GENFLAG_MASK;
@@ -846,6 +960,7 @@ u8 service_spm_setLostVoltCurrentStatus(u16 index, u8 val)
     u8 status;              // status值
     u8 newStatus;           // 清零后的值
     u8 data;
+    u16 smallIndexAddress;  // 小索引地址
     // ---------- 输入参数条件检测---------- //
     if (index > LOSTVOLT_COUNT - 1) {
         return RET_FAILD;
@@ -855,7 +970,11 @@ u8 service_spm_setLostVoltCurrentStatus(u16 index, u8 val)
     }
     // ---------- 业务处理---------- //
     //(1)获取数据首地址
-    statusAddress = service_spm_getLostVoltDataAddress(index) + SMALLINDEX_CAPACITY;
+    smallIndexAddress = service_spm_getLostVoltDataAddress(index);
+    if (smallIndexAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
+    statusAddress = smallIndexAddress + SMALLINDEX_CAPACITY;
     status = eefs_base_readByte(statusAddress);
     //(2)&运算, 把1,2位清零: 00001111 & 11111100 = 00001100
     newStatus = status & BIT_GENFLAG_UNMASK;
@@ -884,6 +1003,9 @@ u8 service_spm_getLostVoltData(u16 index, u8 * retData)
     // ---------- 业务处理---------- //
     //(1)获取输入值对应的数据区位置
     address = service_spm_getLostVoltDataAddress(index);
+    if (address == RET_FAILD) {
+        return RET_FAILD;
+    }
     eefs_base_readBytes(address, retData, LOSTVOLT_CAPACITY);
     return RET_SUCCESS;
 }
