@@ -3,8 +3,8 @@
 #include "service/base/meter_base.h"
 #include <stdlib.h>
 /*
- * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Auth: 张添程
+ * Date: 2019-5-21
  * Desc:创建指定类型的数据空间
  * @meaterVer:创建参数
  * @index 索引
@@ -23,22 +23,23 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 		return RET_FAILD;
 	}
 	// ---------- 业务处理---------- //
-	// 赋值userNode
-	if (meaterVer.crc == 1){
+	// 赋值userNode 判断是否有CRC偏移量
+	if (meaterVer.crc == CRC_Y){
 		crcSize = DATA_CRC_SIZE;
 	}else{
 		crcSize = 0;
 	}
 	userNode.name = meaterVer.name;
+	//用户给的空间转换为真是数据空间 type为写入类型 多段存储
 	userNode.size = (meaterVer.size + crcSize + DATA_STATUS_SIZE) * meaterVer.type;
 	if (eefs_create(index, userNode) != RET_SUCCESS)
 	{
 		return RET_FAILD;
 	}
+	//获取对应索引的状态位数值 写入索引状态位
 	dataStatus = meter_get_data_status(meaterVer.type);
 	netStatus = meaterVer.net;
 	genFlag = meaterVer.crc;
-	netStatus = meaterVer.net;
 	eefs_mbr_setDataStatus(index, dataStatus);
 	eefs_mbr_setNetStatus(index, netStatus);
 	eefs_mbr_setGenFlag(index, genFlag);
@@ -46,8 +47,8 @@ u8 meter_register(u16 index,MEATERVAR meaterVer) {
 }  
 /*
  * Auth: 张添程
- * Date: 2019-5-10
- * Desc:判断写入类型获取数据状态
+ * Date: 2019-5-21
+ * Desc:判断写入类型获取数据位状态
  * @WRITE_TYPE 写入类型
  * @return : dateStatus
  */
@@ -74,7 +75,7 @@ TYPE_WRITE meter_get_data_status(u8 WRITE_TYPE) {
 
 /*
  * Auth: 张添程
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:根据索引获取写入类型
  * @index 索引
  * @return : WRITE_TYPE 写入类型
@@ -105,8 +106,8 @@ s8 meter_get_write_type(u16 index) {
 }
 /*
  * Auth: 张添程
- * Date: 2019-5-10
- * Desc:数据循环写入
+ * Date: 2019-5-21
+ * Desc:根据索引 往数据区写数据 数据循环写入
  * @index 索引
  * @data 数据
  * @len 长度
@@ -144,7 +145,7 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 	else {
 		crcOffset = 0;
 	}
-	//获取写入类型(处理写入数据长度)
+	//获取写入类型(还原用户写入长度)
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR )
 	{
@@ -198,8 +199,8 @@ u8 meter_circle_write(u16 index, u8* data, u16 len) {
 
 /*
  * Auth: 张添程
- * Date: 2019-5-10
- * Desc:数据循环读取
+ * Date: 2019-5-21
+ * Desc:根据索引读取数据区用户写入的数据 数据循环读取
  * @index 索引
  * @data 数据
  * @len 长度
@@ -218,7 +219,7 @@ u8 meter_circle_read(u16 index, u8* retData) {
 		return RET_FAILD;
 	}
 	// ---------- 业务处理---------- //
-		//获取当前数据通用标记
+		//获取当前数据通用标记(判断CRC)
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
 	if (indexStatusFlag == RET_ERROR)
 	{
@@ -231,32 +232,33 @@ u8 meter_circle_read(u16 index, u8* retData) {
 	else {
 		crcOffset = 0;
 	}
-	//获取写入类型
+	//获取写入类型(还原用户写入长度)
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
-	dataSize = eefs_mbr_getDataSize(index)/writeType;
+	//用户写入长度 用于返回
+	dataSize = eefs_mbr_getDataSize(index)/writeType - crcOffset - DATA_STATUS_SIZE;
 	if (dataSize == 0)
 	{
 		return RET_FAILD;
 	}
 	//找到当前的读取位置
-	writeAddr = meter_get_data_status_address(index)-(dataSize- crcOffset - DATA_STATUS_SIZE);
+	writeAddr = meter_get_data_status_address(index)-dataSize;
 	if (writeAddr == RET_FAILD)
 	{
 		return RET_FAILD;
 	}
 	//读取数据 TODO:CRC检验 
-	if (eefs_base_readBytes(writeAddr, retData, dataSize - DATA_STATUS_SIZE - crcOffset) != RET_SUCCESS) { return RET_FAILD; }
+	if (eefs_base_readBytes(writeAddr, retData, dataSize) != RET_SUCCESS) { return RET_FAILD; }
 	return RET_SUCCESS;
 }
 
 
 /*
  * Auth: 张添程
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:获取当前可以写入位置
  * @index 索引
  * @return : 可写入区域首地址
@@ -278,11 +280,13 @@ u16 meter_get_write_address(u16 index) {
 		return RET_FAILD;
 	}
 	// ---------- 业务处理---------- //
+	//获取写入类型
 	writeType = meter_get_write_type(index);
 	if (writeType == RET_ERROR)
 	{
 		return RET_FAILD;
 	}
+	//获取数据区分块大小
 	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	dataHeadAddr = eefs_data_getHeadAddr(index);
 	//获取当前数据通用标记
@@ -300,12 +304,12 @@ u16 meter_get_write_address(u16 index) {
 	}
 	for (i = 0; i < writeType; i++)
 	{
-		
-		writeDataStatusAddr = dataHeadAddr + dataSize * (i + 1) - offset - DATA_STATUS_SIZE;
+		//获取数据区分块的数据位地址
+		writeDataStatusAddr = dataHeadAddr + dataSize * (i + 1) - offset - DATA_STATUS_SIZE;//通过偏移 获取新旧状态位地址
 		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //新旧写入状态
 		if (writeDataStatus == DATA_NEW_POS_STATUS) {
 			writeAddr = writeDataStatusAddr + DATA_STATUS_SIZE + offset;
-			if (writeAddr+dataSize >= eefs_data_getTailAddr(index)- DATA_DESCRIBE)
+			if (writeAddr+dataSize >= eefs_data_getTailAddr(index)- DATA_DESCRIBE) //写入地址超区域返回首地址
 			{
 				return dataHeadAddr;
 			}
@@ -314,14 +318,13 @@ u16 meter_get_write_address(u16 index) {
 				return writeAddr;
 			}		
 		}
-		
 	}
-	return dataHeadAddr;
+	return dataHeadAddr;//默认返回数据头地址
 }
 
 /*
  * Auth: 张添程
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:获取当前可读数据的状态位
  * @index 索引
  * @return : 读取数据的状态位
@@ -343,7 +346,7 @@ u16 meter_get_data_status_address(u16 index) {
 	}
 	// ---------- 业务处理---------- //
 	// 找到当前的写入位置
-	//获取当前数据通用标记
+	// 获取当前数据通用标记
 	indexStatusFlag = eefs_mbr_getGenFlag(index);
 	if (indexStatusFlag == RET_ERROR)
 	{
@@ -368,16 +371,17 @@ u16 meter_get_data_status_address(u16 index) {
 	{
 		return RET_FAILD;
 	}
+	//区块长度
 	dataSize = eefs_mbr_getDataSize(index)/writeType;
 	for (i = 0; i < writeType; i++)
 	{
-		writeDataStatusAddr = dataHeadAddr + dataSize * i - offset;//新旧状态位地址
-		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //新旧写入状态
+		writeDataStatusAddr = dataHeadAddr + dataSize * i - offset;//通过偏移 获取新旧状态位地址
+		writeDataStatus = eefs_base_readByte(writeDataStatusAddr);  //读取新旧写入状态
 		if (writeDataStatus == DATA_NEW_POS_STATUS)
 		{
 			return writeDataStatusAddr;
 		}
 	}
-	return eefs_data_getHeadAddr(index) + dataSize - offset - DATA_STATUS_SIZE;
+	return eefs_data_getHeadAddr(index) + dataSize - offset - DATA_STATUS_SIZE; //默认返回第一区块的状态位地址
 }
 
