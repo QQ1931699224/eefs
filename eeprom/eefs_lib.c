@@ -6,8 +6,7 @@
 //  Copyright © 2019 吴晗帅. All rights reserved.
 //
 
-#include "eefs_lib.h"
-
+#include "eeprom/eefs_lib.h"
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 

@@ -1,8 +1,14 @@
 #include <stdio.h>
+<<<<<<< HEAD:meter_base.c
 #include "eefs_lib.h"
 #include "meter_base.h"
 #include <stdlib.h>
 
+=======
+#include "eeprom/eefs_lib.h"
+#include "service/base/meter_base.h"
+#include <stdlib.h>
+>>>>>>> f5f3a6007ef19d9099a139162421d200fa9f79b6:service/base/meter_base.c
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10

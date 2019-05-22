@@ -4,8 +4,8 @@
 #ifndef three_phases_meter_h
 #define three_phases_meter_h
 #include <stdio.h>
-#include "meter_base.h"
-#include "eefs_lib.h" 
+#include "service/base/meter_base.h"
+#include "eeprom/eefs_lib.h" 
 
 #define NOPOWERFLAG_INDEX 0                                                             //掉电标志索引
 #define SENDPARAMETER_INDEX  1                                                          //发送参数索引

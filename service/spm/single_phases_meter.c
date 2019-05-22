@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <string.h>
-#include "eefs_lib.h"
-#include "meter_base.h"
-#include "single_phases_meter.h"
+#include "eeprom/eefs_lib.h"
+#include "service/base/meter_base.h"
+#include "service/spm/single_phases_meter.h"
 
 /*
  * Auth: 张添程
