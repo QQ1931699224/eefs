@@ -41,8 +41,7 @@ typedef signed char  s8;
 #define BIT_GENFLAG_UNMASK 0xFC                                                  // (11111100)通用状态位掩码
 
 
-                                                                                 // 地址
-#define TEMP_ADDRESS 2048                                                        // 模拟的数据区首地址
+
 #define EE_START_DATA 2048                                                       // 数据区起始地址
 #define EE_START_INDEX 64                                                        // 索引起始地址
                                                                                  // 空间

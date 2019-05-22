@@ -151,7 +151,7 @@ u8 eefs_mbr_create(u16 index, USERNODE userNode)
     // (2)判断node size
     // TODO:该处判断应该用剩余空间容量函数的返回值进行判断
     if (userNode.size > eefs_data_getUnusedCapacity()) {
-        return ERR_INVALIDPARAM;
+        return RET_FAILD;
     }
     
     // ---------- 业务处理---------- //
@@ -973,7 +973,7 @@ u16 eefs_data_getTailAddr(u16 index)
  */
 u16 eefs_data_getTotalCapacity(void)
 {
-	return EE_MAX_CAPACITY - TEMP_ADDRESS;
+	return EE_MAX_CAPACITY - EE_START_DATA;
 }
 
 /*
@@ -988,12 +988,17 @@ u16 eefs_data_getUsedCapacity(void)
 	// ---------- 局部变量定义区---------- //
 	int i;
 	u16 capacity = 0;   // 总容量
+    u16 size;
 	// ---------- 输入参数条件检测---------- //
 
 	// ---------- 业务处理---------- //
 	//(1)遍历索引区, 取出size相加
 	for (i = 0; i < MAX_INDEX; i++) {
-		capacity += eefs_mbr_getSize(i);
+        size = eefs_mbr_getSize(i);
+        if (size == RET_FAILD) {
+            return RET_FAILD;
+        }
+		capacity += size;
 	}
 	return capacity;
 }
@@ -1073,6 +1078,9 @@ u16 eefs_data_getUnusedCapacity(void)
 	capacity = eefs_data_getTotalCapacity();
 	//(2)获取已使用的容量
 	usedCapacity = eefs_data_getUsedCapacity();
+    if (usedCapacity == RET_FAILD) {
+        return RET_FAILD;
+    }
 	//(3)总容量 - 已使用的容量
 	unUsedCapacity = capacity - usedCapacity;
 	return unUsedCapacity;
@@ -1097,8 +1105,13 @@ u16 eefs_data_findUnusedAddr(u16 size)
     u16 effectiveAddress;   // 有效地址
 	u16 nextAddress;        // 下一个有效地址
 	DATAStRUCT dataList[MAX_INDEX];    // 结构体数组
+    u16 usedCapacity;
 	// ---------- 输入参数条件检测---------- //
-	if (eefs_data_getUsedCapacity() == 0) { // 如果已使用空间为0
+    usedCapacity = eefs_data_getUsedCapacity();
+    if (usedCapacity == RET_FAILD) {
+        return RET_FAILD;
+    }
+	if (usedCapacity == 0) { // 如果已使用空间为0
 		return EE_START_DATA;
 	}
 	// ---------- 业务处理---------- //
@@ -1109,6 +1122,9 @@ u16 eefs_data_findUnusedAddr(u16 size)
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (eefs_data_dataSectionisEffectiveAddress(eefs_data_getHeadAddr(i)) == 1) { // 有效
 			data.address = eefs_data_getHeadAddr(i);
+            if (data.address == RET_FAILD) {
+                return RET_FAILD;
+            }
 			data.index = i;
 			dataList[n] = data;
 			n++;
@@ -1152,6 +1168,9 @@ u16 eefs_data_findUnusedAddr(u16 size)
             else
             {
                 effectiveAddress = eefs_data_getTailAddr(dataList[j].index);
+                if (effectiveAddress == RET_FAILD) {
+                    return RET_FAILD;
+                }
             }
 		}
 	}
@@ -1195,17 +1214,31 @@ u8 eefs_createAll(USERNODE list[], u8 len)
     int i;
     int j;
     j = 0;
+    s8 indexStatus;
+    u8 setIndexStatusResult;
+    u8 createResult;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     //(1)循环遍历数组取出结构体
     for (i = 0; i < MAX_INDEX; i++) {
-        if (eefs_mbr_getIndexStatus(i) == ZERO_INDEXSTATUS) {
-            eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+        indexStatus = eefs_mbr_getIndexStatus(i);
+        if (indexStatus == RET_ERROR) {
+            return RET_FAILD;
         }
-        if (eefs_mbr_getIndexStatus(i) == DEFAULT_INDEXSTATUS) { // 如果索引状态为2, 可以使用
+        if (indexStatus == ZERO_INDEXSTATUS) {
+            setIndexStatusResult = eefs_mbr_setIndexStatus(i, DEFAULT_INDEXSTATUS);
+            if (setIndexStatusResult == RET_FAILD) {
+                return RET_FAILD;
+            }
+            
+        }
+        if (indexStatus == DEFAULT_INDEXSTATUS) { // 如果索引状态为2, 可以使用
             USERNODE node = list[j];
-            eefs_create(i, node);
+            createResult = eefs_create(i, node);
+            if (createResult == RET_FAILD) {
+                return RET_FAILD;
+            }
             if (j == len - 1) {
                 return RET_SUCCESS;
             }
@@ -1225,6 +1258,7 @@ u8 eefs_create(u16 index, USERNODE node)
 {
     // ---------- 局部变量定义区---------- //
     int i;
+    u8 result;
     // ---------- 输入参数条件检测---------- //
     // (1)判断index是否合法
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
@@ -1233,7 +1267,7 @@ u8 eefs_create(u16 index, USERNODE node)
     // (2)判断node size
     // TODO:该处判断应该用剩余空间容量函数的返回值进行判断
     if (node.size > EE_MAX_CAPACITY - EE_SYS_CAPACITY) {
-        return ERR_INVALIDPARAM;
+        return RET_FAILD;
     }
     // ---------- 业务处理---------- //
     //(1)循环判断是否已经包含name
@@ -1243,7 +1277,10 @@ u8 eefs_create(u16 index, USERNODE node)
         }
     }
     //(2)创建索引
-    eefs_mbr_create(index, node);
+    result = eefs_mbr_create(index, node);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
     return RET_SUCCESS;
 }
 /*
@@ -1260,22 +1297,37 @@ u8 eefs_delete(u16 index)
     u16 address;
     u16 size;
     u8 status;
-    name = 0;
-    address = 0;
-    size = 0;
-    status = 0x20;
+    u8 result;
+    
+    
     // ---------- 输入参数条件检测---------- //
     // (1)判断index是否合法
     if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
+    name = 0;
+    address = 0;
+    size = 0;
+    status = 0x20;
     //(1)将索引空间赋为初始值
-    eefs_mbr_setName(index, name);
-    eefs_mbr_setAddress(index, address);
-    eefs_mbr_setSize(index, size);
+    result = eefs_mbr_setName(index, name);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
+    result = eefs_mbr_setAddress(index, address);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
+    result = eefs_mbr_setSize(index, size);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
     eefs_mbr_setStatus(index, status);
-    eefs_reset(index);
+    result = eefs_reset(index);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
     return RET_SUCCESS;
 }
 
@@ -1317,12 +1369,16 @@ u8 eefs_deleteAll(void)
 {
     // ---------- 局部变量定义区---------- //
     int i;
+    u8 result;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     //(1)循环删除所有索引空间
     for (i = 0; i < MAX_INDEX; i++) {
-        eefs_delete(i);
+        result = eefs_delete(i);
+        if (result == RET_FAILD) {
+            return RET_FAILD;
+        }
     }
     return RET_SUCCESS;
 }
@@ -1349,8 +1405,14 @@ u8 eefs_reset(u16 index)
     // ---------- 业务处理---------- //
     //(1)根据索引找到数据空间首地址
     firstAddress = eefs_data_getHeadAddr(index);
+    if (firstAddress == RET_FAILD) {
+        return RET_FAILD;
+    }
     //(2)根据索引获取数据size
     size = eefs_mbr_getSize(index);
+    if (size == RET_FAILD) {
+        return RET_FAILD;
+    }
     //(3)将这段空间清空
     //在指定位置写入dataLen个字节
     data = 0x00;
@@ -1389,12 +1451,15 @@ u8 eefs_init(void);        //初始化全部空间
 u8 eefs_setValue(u32 name, u8 *data, u16 len)
 {
     // ---------- 局部变量定义区---------- //
-    
+    u8 result;
     // ---------- 输入参数条件检测---------- //
     
     // ---------- 业务处理---------- //
     //(1)偏移量为0
-    eefs_setValueWithOffset(name, 0, data, len);
+    result = eefs_setValueWithOffset(name, 0, data, len);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
     return RET_SUCCESS;
 }
 
@@ -1407,7 +1472,11 @@ u8 eefs_setValue(u32 name, u8 *data, u16 len)
  */
 u8 eefs_getValue(u32 name, u8 *ret_data, u16 len)
 {
-    eefs_getValueWithOffset(name, 0, ret_data, len);
+    u8 result;
+    result = eefs_getValueWithOffset(name, 0, ret_data, len);
+    if (result == RET_FAILD) {
+        return RET_FAILD;
+    }
     return RET_SUCCESS;
 }
 /*
@@ -1431,8 +1500,17 @@ u8 eefs_setValueWithOffset(u32 name, u16 offset,u8 *data, u16 len)
     //(1)循环获取name对应的index, address
     for (i = 0; i < MAX_INDEX; i++) {
         if (name == eefs_mbr_getName(i)) {
+            if (name == RET_FAILD) {
+                return RET_FAILD;
+            }
             address = eefs_mbr_getAddress(i);
+            if (address == RET_FAILD) {
+                return RET_FAILD;
+            }
             size = eefs_mbr_getSize(i);
+            if (size == RET_FAILD) {
+                return RET_FAILD;
+            }
             if (offset + len > size) {
                 return RET_FAILD;
             }
@@ -1466,8 +1544,17 @@ u8 eefs_getValueWithOffset(u32 name, u16 offset, u8 *ret_data, u16 len)
             return RET_FAILD;
         }
         if (name == eefs_mbr_getName(i)) {
+            if (name == RET_FAILD) {
+                return RET_FAILD;
+            }
             address = eefs_mbr_getAddress(i);
+            if (address == RET_FAILD) {
+                return RET_FAILD;
+            }
             size = eefs_mbr_getSize(i);
+            if (size == RET_FAILD) {
+                return RET_FAILD;
+            }
             if (offset + len > size) {
                 return RET_FAILD;
             }
