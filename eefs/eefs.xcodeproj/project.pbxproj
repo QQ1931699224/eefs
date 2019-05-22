@@ -35,10 +35,10 @@
 		1C06EE3A2294DAA600491864 /* single_phases_meter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = single_phases_meter.c; sourceTree = "<group>"; };
 		1C06EE3C2294DAA600491864 /* three_phases_meter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = three_phases_meter.h; sourceTree = "<group>"; };
 		1C06EE3D2294DAA600491864 /* three_phases_meter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = three_phases_meter.c; sourceTree = "<group>"; };
-		1C06EE3F2294DAA600491864 /* meter_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = meter_base.h; sourceTree = "<group>"; };
 		1C06EE402294DAA600491864 /* meter_base.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = meter_base.c; sourceTree = "<group>"; };
 		1C06EE422294DAA600491864 /* eefs_lib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = eefs_lib.c; sourceTree = "<group>"; };
 		1C06EE432294DAA600491864 /* eefs_lib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eefs_lib.h; sourceTree = "<group>"; };
+		1C06EE482294EEAC00491864 /* meter_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = meter_base.h; sourceTree = "<group>"; };
 		1C8B5FB8228ABEC800A0B177 /* eefs */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = eefs; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -94,7 +94,7 @@
 		1C06EE3E2294DAA600491864 /* base */ = {
 			isa = PBXGroup;
 			children = (
-				1C06EE3F2294DAA600491864 /* meter_base.h */,
+				1C06EE482294EEAC00491864 /* meter_base.h */,
 				1C06EE402294DAA600491864 /* meter_base.c */,
 			);
 			path = base;
