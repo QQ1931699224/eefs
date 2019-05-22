@@ -1,7 +1,12 @@
 #include <stdio.h>
+#include "eefs_lib.h"
+#include "meter_base.h"
+#include <stdlib.h>
+
 #include "eeprom/eefs_lib.h"
 #include "service/base/meter_base.h"
 #include <stdlib.h>
+
 /*
  * Auth: 张添程
  * Date: 2019-5-21

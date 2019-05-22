@@ -371,10 +371,10 @@ u16 service_tpm_getBreakeNetDataAddress(u16 index)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:返回最新的断网数据
  * @paramName:xxxxx
- * @return : u16 断网数据
+ * @return : u8 断网数据
  */
 u8 service_tpm_disconnect_getData(u8 * retData)
 {
@@ -396,7 +396,7 @@ u8 service_tpm_disconnect_getData(u8 * retData)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:根据索引返回断网数据
  * @index:索引
  * @return : u16 断网数据
@@ -418,7 +418,7 @@ u8 service_tpm_disconnect_getDataWithIndex(u16 index, u8 * retData)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:根据角标设置5,6位发送状态
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
@@ -456,7 +456,7 @@ u8 service_tpm_setSmallIndexSendStatus(u16 index, u8 val)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:根据角标设置7,8位发送状态
  * @index:角标
  * @val:状态
@@ -495,7 +495,7 @@ u8 service_tpm_setSmallIndexCurrentStatus(u16 index, u8 val)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:根据角标设置1,2,3,4位的时间状态
  * @index:索引
  * @val:输入的状态值
@@ -530,7 +530,7 @@ u8 service_tpm_setSmallIndexCTimeStatus(u16 index, u8 val)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:获取角标对应的断网数据, 并改变发送状态, 数据为1是已发送, 2为未发送
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
@@ -556,7 +556,7 @@ u8 service_tpm_disconnect_getDataAndChangeStatus(u8 * retData)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:创建月数据空间
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
@@ -592,7 +592,7 @@ u8 service_tpm_create_monthCapacity(void)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:保存月数据
  * @month:月份
  * @data:要保存的数据
@@ -626,7 +626,7 @@ u8 service_tpm_saveMonthData(u8 month, u8 * data)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:获取月数据
  * @month:月份
  * @data:要保存的数据
@@ -657,7 +657,7 @@ u8 service_tpm_getMonthData(u8 month, u8 * ret_data)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:创建失压数据空间
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
@@ -692,9 +692,9 @@ u8 service_tpm_create_lostVoltCapacity(void)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:保存失压数据
- * @paramName:xxxxx
+ * @data:传入的数据
  * @return : 1:成功 0：失败
  */
 u8 service_tpm_saveLostVoltData(u8 * data)
@@ -735,9 +735,10 @@ u8 service_tpm_saveLostVoltData(u8 * data)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:保存一次失压数据在index处
- * @paramName:xxxxx
+ * @index:索引
+ * @data:传入的数据
  * @return : 1:成功 0：失败
  */
 u8 service_tpm_saveOnceLostVoltData(u16 index, u8 * data)
@@ -782,9 +783,9 @@ u8 service_tpm_saveOnceLostVoltData(u16 index, u8 * data)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:获取失压小索引数据区首地址
- * @paramName:xxxxx
+ * @index:索引
  * @return : 1:成功 0：失败
  */
 u16 service_tpm_getLostVoltDataAddress(u16 index)
@@ -808,9 +809,9 @@ u16 service_tpm_getLostVoltDataAddress(u16 index)
 }
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:获取失压1,2位的当前状态
- * @paramName:xxxxx
+ * @index:索引
  * @return : 1:成功 0：失败
  */
 u8 service_tpm_getLostVoltCurrentStatus(u16 index)
@@ -835,7 +836,7 @@ u8 service_tpm_getLostVoltCurrentStatus(u16 index)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc: 设置失压1,2位的当前状态
  * @index:索引
  * @val:输入的状态
@@ -870,9 +871,10 @@ u8 service_tpm_setLostVoltCurrentStatus(u16 index, u8 val)
 
 /*
  * Auth: 吴晗帅
- * Date: 2019-5-10
+ * Date: 2019-5-21
  * Desc:根据角标取失压数据
- * @paramName:xxxxx
+ * @index:索引
+ * @retData:返回的失压数据
  * @return : 1:成功 0：失败
  */
 u8 service_tpm_getLostVoltData(u16 index, u8 * retData)

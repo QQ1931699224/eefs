@@ -6,7 +6,7 @@
 //  Copyright © 2019 吴晗帅. All rights reserved.
 //
 
-#include "eefs_lib.h"
+#include "eeprom/eefs_lib.h"
 u8 G_LIST[EE_MAX_CAPACITY];
 u8 G_STATUS_LISI[MAX_INDEX];
 
@@ -805,8 +805,8 @@ u16 eefs_data_getDescHeadAddress(u16 index) {
  */
 u16 eefs_data_getDesc(u16 index) {
 	// ---------- 局部变量定义区---------- //
-	u16 startIndex;         // 该数据位的起始位置
-	u16 desc;                // 数据的数据位信息
+	u16 startIndex;         // 该索引的起始位置
+	u16 desc;                // 索引的name信息
 	u8 descs[DESC_SIZE];
 	// ---------- 输入参数条件检测---------- //
 	if (eefs_mbr_CheckIndex(index) != RET_SUCCESS) {
@@ -814,7 +814,7 @@ u16 eefs_data_getDesc(u16 index) {
 	}
 
 	// ---------- 业务处理---------- //
-	// (1). 找到索引起始位置 找到数据描述的位置
+	// (1). 找到索引起始位置 找到name的位置
 	startIndex = eefs_data_getDescHeadAddress(index);
 	// (2).读取desc的2字节
 	eefs_base_readBytes(startIndex, descs, DESC_SIZE);
@@ -1528,7 +1528,6 @@ u8 eefs_sys_getFlag() {
  * @value:信息
  * @return : 1:成功
  */
-
 u8 eefs_sys_setFlag(u8 value) {
 	// ---------- 局部变量定义区---------- //
 	u16 flagOffset;       // 系统描述区的Flag的位置
@@ -1572,14 +1571,12 @@ u8 eefs_sys_getVersion() {
  * Desc:系统保留区版本号写入
  * @return : 1:成功
  */
-
 u8 eefs_sys_setVersion() {
 	// ---------- 局部变量定义区---------- //
 	u16 flagOffset;       // 系统描述区的Flag的位置
 	u8 lastVersion;
 	u8 nowVersion;
 	// ---------- 输入参数条件检测---------- //
-
 	// ---------- 业务处理---------- //
 	// (1). 找到SYS起始位置
 
@@ -1593,7 +1590,6 @@ u8 eefs_sys_setVersion() {
 	eefs_base_writeByte(flagOffset, &nowVersion);
 	return RET_SUCCESS;
 }
-
 
 /*
  * Auth:张添程
@@ -1640,7 +1636,6 @@ u8 eefs_sys_setUsedCapacity(u16 size) {
 	eefs_base_writeBytes(startIndex, datas, USEDCAPACITY_SIZE);
 	return RET_SUCCESS;
 }
-
 
 /*
  * Auth:张添程
