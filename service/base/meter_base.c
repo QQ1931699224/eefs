@@ -389,4 +389,3 @@ u16 meter_get_data_status_address(u16 index) {
 	}
 	return eefs_data_getHeadAddr(index) + dataSize - offset - DATA_STATUS_SIZE; //默认返回第一区块的状态位地址
 }
-
