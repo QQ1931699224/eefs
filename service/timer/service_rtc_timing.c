@@ -21,24 +21,32 @@ TIMING_FREQ timerList[SERVICE_RTC_TIMING_MAXCOUNT];
  * @u8 (* service_rtc_callBack)(void):回调函数(函数指针)
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_timing_create(u8 index, u8 hour, u8 minite, u8 second, void (* service_rtc_callBack)(void))
+u8 service_rtc_timing_create(TIMING_TIMING timing, void (* service_rtc_callBack)(void))
 {
     // ---------- 局部变量定义区---------- //
-    TIMING_FREQ timer = timerList[index];
+    int i;
+    TIMING_FREQ timer;
+    u8 index;
     // ---------- 输入参数条件检测---------- //
-    if (index > SERVICE_RTC_TIMING_MAXCOUNT - 1) {
-        return RET_FAILD;
-    }
-    if (hour > 23 || minite > 59 || second > 59) {
-        return RET_FAILD;
-    }
-    if (timer.status != DISCONTINUE_USE) {
+    if (timing.timer_hour > 23 || timing.timer_minite > 59 || timing.timer_second > 59) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
-    timer.timer_hour = hour;
-    timer.timer_minite = minite;
-    timer.timer_second = second;
+    index = '\0';
+    for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++) {
+        if (timerList[i].status == DISCONTINUE_USE)
+        {
+            index = i;
+            timer = timerList[i];
+        }
+        else
+        {
+            return RET_FAILD;
+        }
+    }
+    timer.timer_hour = timing.timer_hour;
+    timer.timer_minite = timing.timer_minite;
+    timer.timer_second = timing.timer_second;
     timer.sendStatus = SERVICE_RTC_TIMING_NOTSEND;   // 未发送
     timer.service_rtc_callBack = service_rtc_callBack;
     timer.status = SUSPEND;
@@ -66,7 +74,7 @@ u8 service_rtc_timing_loop(void)
     for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++) {
         TIMING_FREQ timer = timerList[i];
         if (timer.status != IN_OPERATION) {
-            return RET_FAILD;
+            continue;
         }
         // 当前总的秒数
         currentAllSeconds = rtc_getHour() * 3600 + rtc_getMinite() * 60 + rtc_getSecond();
@@ -110,12 +118,15 @@ void service_rtc_callBack(void)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_timing_start(void)
+u8 service_rtc_timing_start(TIMING_TIMING timing)
 {
     int i;
     for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++)
     {
-        timerList[i].status = IN_OPERATION;
+        if (timerList[i].timer_hour == timing.timer_hour && timerList[i].timer_minite == timing.timer_minite && timerList[i].timer_second == timing.timer_second) {
+            timerList[i].status = IN_OPERATION;
+        }
+        
     }
     return RET_SUCCESS;
 }
@@ -127,12 +138,15 @@ u8 service_rtc_timing_start(void)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_timing_stop(void)
+u8 service_rtc_timing_stop(TIMING_TIMING timing)
 {
     int i;
     for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++)
     {
-        timerList[i].status = SUSPEND;
+        if (timerList[i].timer_hour == timing.timer_hour && timerList[i].timer_minite == timing.timer_minite && timerList[i].timer_second == timing.timer_second) {
+            timerList[i].status = SUSPEND;
+        }
+        
     }
     return RET_SUCCESS;
 }
@@ -144,12 +158,15 @@ u8 service_rtc_timing_stop(void)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_timing_delete(void)
+u8 service_rtc_timing_delete(TIMING_TIMING timing)
 {
     int i;
     for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++)
     {
-        timerList[i].status = DISCONTINUE_USE;
+        if (timerList[i].timer_hour == timing.timer_hour && timerList[i].timer_minite == timing.timer_minite && timerList[i].timer_second == timing.timer_second) {
+            timerList[i].status = DISCONTINUE_USE;
+        }
+        
     }
     return RET_SUCCESS;
 }
