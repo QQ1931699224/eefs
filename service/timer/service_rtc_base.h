@@ -52,25 +52,18 @@ u8 service_rtc_timing_start(void);              // 开始
 u8 service_rtc_timing_stop(void);               // 停止
 u8 service_rtc_timing_delete(void);             // 删除
 
-u8 FREQ_Init(void);                             //初始化计时器空间
-u8 FREQ_Create(u32 freq, void (*todo)(void));   //创建定时器
-u8 FREQ_Loop(void);                             //执行计时
-u8 FREQ_Start(u32 freq);//启动计时器
-u8 FREQ_Stop(u32 freq);//暂停
-u8 FREQ_Delete(u32 freq);//删除/停用
-s8 FREQ_getIndex(void);//获取可用索引
+u8 service_rtc_freq_init(void);                                                                                        //初始化计时器空间
+u8 service_rtc_freq_create(u32 freq, void (*todo)(void));                                                              //创建定时器
+u8 service_rtc_freq_loop(void);                                                                                        //执行计时
+u8 service_rtc_freq_start(u32 freq);                                                                                   //启动计时器
+u8 service_rtc_freq_stop(u32 freq);                                                                                    //暂停
+u8 service_rtc_freq_delete(u32 freq);                                                                                  //删除/停用
+s8 service_rtc_freq_getIndex(void);                                                                                    //获取可用索引
 u8 SYS_TIMER0_TODO(void);
 u8 isLastDayNow(void);
 
-u8 getLastDayByMonth(u16 year, u8 mounth);//获取当月最大日
-u8 RTC_LeapYear(u16 year);//判断是否是闰年
-u8 isLastDayOfMonth(u8 yearHead, u8 yearEnd, u8 mounth, u8 day);//判断是否是当月最后一天
+u8 service_rtc_base_getLastDayByMonth(u16 year, u8 mounth);                                                            //获取当月最大日
+u8 service_rtc_base_isLeapYear(u16 year);                                                                              //判断是否是闰年
+u8 service_rtc_base_isLastDayOfMonth(u8 yearHead, u8 yearEnd, u8 mounth, u8 day);                                      //判断是否是当月最后一天
 
 #endif
-
-
-
-
-
-
-
