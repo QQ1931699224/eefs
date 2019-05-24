@@ -21,15 +21,18 @@ TIMING_FREQ timerList[SERVICE_RTC_TIMING_MAXCOUNT];
  * @u8 (* service_rtc_callBack)(void):回调函数(函数指针)
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_timing_freq_create(u8 index, u8 hour, u8 minite, u8 second, u8 (* service_rtc_callBack)(void))
+u8 service_rtc_timing_create(u8 index, u8 hour, u8 minite, u8 second, void (* service_rtc_callBack)(void))
 {
     // ---------- 局部变量定义区---------- //
-    TIMING_FREQ timer;
+    TIMING_FREQ timer = timerList[index];
     // ---------- 输入参数条件检测---------- //
     if (index > SERVICE_RTC_TIMING_MAXCOUNT - 1) {
         return RET_FAILD;
     }
     if (hour > 23 || minite > 59 || second > 59) {
+        return RET_FAILD;
+    }
+    if (timer.status != DISCONTINUE_USE) {
         return RET_FAILD;
     }
     // ---------- 业务处理---------- //
@@ -38,7 +41,7 @@ u8 service_rtc_timing_freq_create(u8 index, u8 hour, u8 minite, u8 second, u8 (*
     timer.timer_second = second;
     timer.sendStatus = SERVICE_RTC_TIMING_NOTSEND;   // 未发送
     timer.service_rtc_callBack = service_rtc_callBack;
-    timer.status = SERVICE_RTC_TIMING_STOP;
+    timer.status = SUSPEND;
     timerList[index] = timer;
     return RET_SUCCESS;
 }
@@ -50,7 +53,7 @@ u8 service_rtc_timing_freq_create(u8 index, u8 hour, u8 minite, u8 second, u8 (*
  * @paramName:无
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_timing_freq_loop(void)
+u8 service_rtc_timing_loop(void)
 {
     // ---------- 局部变量定义区---------- //
     int i;
@@ -62,7 +65,9 @@ u8 service_rtc_timing_freq_loop(void)
     //(1)循环遍历所有定时器
     for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++) {
         TIMING_FREQ timer = timerList[i];
-        timer.status = SERVICE_RTC_TIMING_RUNING;
+        if (timer.status != IN_OPERATION) {
+            return RET_FAILD;
+        }
         // 当前总的秒数
         currentAllSeconds = rtc_getHour() * 3600 + rtc_getMinite() * 60 + rtc_getSecond();
         // 设置的总的秒数
@@ -92,9 +97,59 @@ u8 service_rtc_timing_freq_loop(void)
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
  */
-u8 service_rtc_callBack(void)
+void service_rtc_callBack(void)
 {
     printf("%d时%d分%d秒 回调函数成功\n", rtc_getHour(), rtc_getMinite(), rtc_getSecond());
     
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-23
+ * Desc:开始
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 service_rtc_timing_start(void)
+{
+    int i;
+    for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++)
+    {
+        timerList[i].status = IN_OPERATION;
+    }
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-23
+ * Desc:停止
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 service_rtc_timing_stop(void)
+{
+    int i;
+    for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++)
+    {
+        timerList[i].status = SUSPEND;
+    }
+    return RET_SUCCESS;
+}
+
+/*
+ * Auth: 吴晗帅
+ * Date: 2019-5-23
+ * Desc:删除
+ * @paramName:xxxxx
+ * @return : 1:成功 0：失败
+ */
+u8 service_rtc_timing_delete(void)
+{
+    int i;
+    for (i = 0; i < SERVICE_RTC_TIMING_MAXCOUNT; i++)
+    {
+        timerList[i].status = DISCONTINUE_USE;
+    }
     return RET_SUCCESS;
 }

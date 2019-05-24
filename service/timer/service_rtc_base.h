@@ -19,7 +19,7 @@ typedef struct
     u8 timer_second;
     u8 status;
     u8 sendStatus;
-    u8 (* service_rtc_callBack)(void);
+    void (* service_rtc_callBack)(void);
 }TIMING_FREQ;
 
 typedef struct freq {
@@ -38,9 +38,6 @@ typedef struct freq {
 #define DISCONTINUE_USE 0                                                                   // 停用/已删除
 
 #define SERVICE_RTC_TIMING_MAXCOUNT 2      // 定时器数量
-#define SERVICE_RTC_TIMING_STOP 0      // 定时器停止
-#define SERVICE_RTC_TIMING_RUNING 1      // 定时器运行
-#define SERVICE_RTC_TIMING_SUSPEND 2      // 定时器暂停
 #define SERVICE_RTC_TIMING_SEND 1      // 定时器发送
 #define SERVICE_RTC_TIMING_NOTSEND 0      // 定时器未发送
 #define SERVICE_RTC_ONEDAYSECONDS 86400      // 一天的秒数
@@ -48,12 +45,16 @@ typedef struct freq {
 extern FREQ G_TIMER_LISI[TIMER_MAX_INDEX];
 extern TIMING_FREQ timerList[SERVICE_RTC_TIMING_MAXCOUNT]; // 定时器数组
 
-u8 service_rtc_callBack(void);                  // 定时器回调函数
-u8 service_rtc_timing_freq_create(u8 index, u8 hour, u8 minite, u8 second, u8 (* service_rtc_callBack)(void));         // 定时器初始化
-u8 service_rtc_timing_freq_loop(void);          // 定时器工作
-u8 FREQ_Init(void);//初始化计时器空间
-u8 FREQ_Create(u32 freq, void (*todo)(void)); //创建定时器
-u8 FREQ_Loop(void);//执行计时
+void service_rtc_callBack(void);                  // 定时器回调函数
+u8 service_rtc_timing_create(u8 index, u8 hour, u8 minite, u8 second, void (* service_rtc_callBack)(void));               // 定时器初始化
+u8 service_rtc_timing_loop(void);               // 定时器工作
+u8 service_rtc_timing_start(void);              // 开始
+u8 service_rtc_timing_stop(void);               // 停止
+u8 service_rtc_timing_delete(void);             // 删除
+
+u8 FREQ_Init(void);                             //初始化计时器空间
+u8 FREQ_Create(u32 freq, void (*todo)(void));   //创建定时器
+u8 FREQ_Loop(void);                             //执行计时
 u8 FREQ_Start(u32 freq);//启动计时器
 u8 FREQ_Stop(u32 freq);//暂停
 u8 FREQ_Delete(u32 freq);//删除/停用
