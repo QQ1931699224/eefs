@@ -53,7 +53,7 @@ extern FREQ G_TIMER_LISI[TIMER_MAX_INDEX];
 extern TIMING_FREQ timerList[SERVICE_RTC_TIMING_MAXCOUNT]; // 定时器数组
 
 
-void service_rtc_callBack(void);                  // 定时器回调函数
+
 u8 service_rtc_timing_create(TIMING_TIMING timing, void (* service_rtc_callBack)(void));               // 定时器初始化
 u8 service_rtc_timing_loop(void);               // 定时器工作
 u8 service_rtc_timing_start(TIMING_TIMING timing);              // 开始

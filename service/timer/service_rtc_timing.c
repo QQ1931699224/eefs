@@ -91,24 +91,11 @@ u8 service_rtc_timing_loop(void)
             if (currentAllSeconds >= setAllSeconds) {
                 timer.sendStatus = SERVICE_RTC_TIMING_SEND; // 把状态设为已发送
                 timerList[i] = timer;
-                service_rtc_callBack();
+                timerList[i].service_rtc_callBack();
             }
         }
     }
     return RET_SUCCESS;
-}
-
-/*
- * Auth: 吴晗帅
- * Date: 2019-5-23
- * Desc:定时器回调函数
- * @paramName:xxxxx
- * @return : 1:成功 0：失败
- */
-void service_rtc_callBack(void)
-{
-    //printf("%d时%d分%d秒 回调函数成功\n", rtc_getHour(), rtc_getMinite(), rtc_getSecond());
-    
 }
 
 /*
