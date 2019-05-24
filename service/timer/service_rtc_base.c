@@ -14,11 +14,13 @@ Lastday.CPP
  * @year 年
  */
 u8 service_rtc_base_isLeapYear(u16 year) {
-	if (((year % 4 == 0) && (year % 100 != 0)) || ((year % 4 == 0) && (year % 400 == 0))) {
+	if ( ( (year % 4 == 0) && (year % 100 != 0) ) || ( (year % 4 == 0) && (year % 400 == 0) ) ) {
 		return RET_SUCCESS;
 	}
 	return RET_FAILD;
 }
+
+
 
 
 /*
@@ -38,7 +40,7 @@ u8 service_rtc_base_isLastDayOfMonth(u8 yearHead, u8 yearEnd,u8 mounth, u8 days)
 	year = tools_HexValue2Dec(yearHead) * 100 + tools_HexValue2Dec(yearEnd);
 	mounth = tools_HexValue2Dec(mounth);
 	day = tools_HexValue2Dec(days);
-	if (day== service_rtc_base_getLastDayByMonth(year,mounth))
+	if (day == service_rtc_base_getLastDayByMonth(year,mounth))
 	{
 		return RET_SUCCESS;
 	}

@@ -36,7 +36,7 @@ typedef struct freq {
 	void (*callback)(void);                                                                 //回调函数
 }FREQ;
 
-#define SYS_TIMER_0_INTERVAL 7200                                                            //0号定时器扫描间隔
+#define SYS_TIMER_0_INTERVAL 600                                                           //0号定时器扫描间隔
 
 #define TIMER_MAX_INDEX 8  //定时器数组最大值
 
@@ -52,12 +52,14 @@ typedef struct freq {
 extern FREQ G_TIMER_LISI[TIMER_MAX_INDEX];
 extern TIMING_FREQ timerList[SERVICE_RTC_TIMING_MAXCOUNT]; // 定时器数组
 
+
 void service_rtc_callBack(void);                  // 定时器回调函数
 u8 service_rtc_timing_create(TIMING_TIMING timing, void (* service_rtc_callBack)(void));               // 定时器初始化
 u8 service_rtc_timing_loop(void);               // 定时器工作
 u8 service_rtc_timing_start(TIMING_TIMING timing);              // 开始
 u8 service_rtc_timing_stop(TIMING_TIMING timing);               // 停止
 u8 service_rtc_timing_delete(TIMING_TIMING timing);             // 删除
+
 
 u8 service_rtc_freq_init(void);                                                                                        //初始化计时器空间
 u8 service_rtc_freq_create(u32 freq, void (*todo)(void));                                                              //创建定时器
@@ -66,8 +68,6 @@ u8 service_rtc_freq_start(u32 freq);                                            
 u8 service_rtc_freq_stop(u32 freq);                                                                                    //暂停
 u8 service_rtc_freq_delete(u32 freq);                                                                                  //删除/停用
 s8 service_rtc_freq_getIndex(void);                                                                                    //获取可用索引
-u8 SYS_TIMER0_TODO(void);
-u8 isLastDayNow(void);
 
 u8 service_rtc_base_getLastDayByMonth(u16 year, u8 mounth);                                                            //获取当月最大日
 u8 service_rtc_base_isLeapYear(u16 year);                                                                              //判断是否是闰年

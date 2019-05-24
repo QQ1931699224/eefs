@@ -107,7 +107,7 @@ u8 service_rtc_timing_loop(void)
  */
 void service_rtc_callBack(void)
 {
-    printf("%d时%d分%d秒 回调函数成功\n", rtc_getHour(), rtc_getMinite(), rtc_getSecond());
+    //printf("%d时%d分%d秒 回调函数成功\n", rtc_getHour(), rtc_getMinite(), rtc_getSecond());
     
 }
 

@@ -21,31 +21,12 @@ u8 service_rtc_freq_init() {
 	int i;
 	for (i = 0; i < TIMER_MAX_INDEX; i++)
 	{
-		if (i == 0)
-		{
-			service_rtc_freq_create(SYS_TIMER_0_INTERVAL, SYS_TIMER0_TODO);
-			//continue;
-		}
-		else
-		{
-			G_TIMER_LISI[i].status = DISCONTINUE_USE;
-		}
+		G_TIMER_LISI[i].status = DISCONTINUE_USE;
 	}
 	return RET_ERROR;
 }
 
-//TODO 判断当前是否是当月最后一天
-u8 isLastDayNow() {
-	return  service_rtc_base_isLastDayOfMonth(0x20, 0x19, 0x01, 0x23);
-}
-//TODO 0号计时器回调函数
-u8 SYS_TIMER0_TODO() {
-	if (isLastDayNow() == RET_SUCCESS)
-	{
-		printf("ok");
-	}
-    return RET_SUCCESS;
-}
+
 
 /*
  * Auth: 张添程
