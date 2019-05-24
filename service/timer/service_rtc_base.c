@@ -74,6 +74,7 @@ u8 getLastDayByMonth(u16 year,u8 mounth) {
 	case 12:
 		return 31;
 	default:
+            return RET_FAILD;
 		break;
 	}
 }

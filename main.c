@@ -13,7 +13,6 @@
 #include "service/tpm/three_phases_meter.h"
 #include "HAL/hal_rtc.h"
 #include "service/timer/service_rtc_base.h"
-
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
 void testEefs_mbr_getIndexStatus(void);
@@ -38,12 +37,11 @@ void testLostVoltData(void);
 void prn(void);
 void testTimeFreq(void);
 void testBase(void);
-
+void testTiming(void);
 
 int main(int argc, const char* argv[]) {
-	//prn();
+    testTiming();
 	//testTimeFreq();
-	testBase();
     //testLostVoltData();
 //    testMonthData();
 //    testSmallIndex();
@@ -565,48 +563,27 @@ void testLostVoltData(void)
 	service_tpm_getLostVoltData(0, retData);
 	printf("%s", G_LIST);
 }
-
-
 /*
  * Auth: 吴晗帅
  * Date: 2019-5-10
  * Desc:测试失压数据
  * @paramName:xxxxx
  * @return : 1:成功 0：失败
- */
-void testTimeFreq(void) {
-	int i;
+ */	
+void testTiming(void) {
+	u8 result;
 	FREQ_Init();
-	FREQ_Create(5,prn);
+	FREQ_Create(5, prn);
 	FREQ_Start(5);
-	i = 0;
-	while (1==1) {
+	while (1) {
 		FREQ_Loop();
-		if (Get_Current_Timer0_Counter()%20 == 0)
-		{ 
-			if (G_TIMER_LISI[0].status == IN_OPERATION)
-			{
-				FREQ_Stop(5);
-			}
-			else if(G_TIMER_LISI[0].status == SUSPEND)
-			{
-				FREQ_Start(5);
-			}
-		}
-		i++;
-	}	
-
+	}
 }
-
 
 void prn(void) {
-	u32 t;
+	u32 t = 0;
 	t = Get_Current_Timer0_Counter();
-	printf("time=%d\n",t);
-}
-
-void testBase(void) {
-	u16 t;
-	t = isLastDayOfMonth(0x20,0x04,0x02,0x29);
 	printf("time=%d\n", t);
 }
+
+

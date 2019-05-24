@@ -44,6 +44,7 @@ u8 SYS_TIMER0_TODO() {
 	{
 		printf("ok");
 	}
+    return RET_SUCCESS;
 }
 
 /*
@@ -56,11 +57,10 @@ u8 SYS_TIMER0_TODO() {
  * @todo 回调函数
  * @return : dateStatus
  */
-u8 FREQ_Create(u32 freq, void (*todo)()) {
+u8 FREQ_Create(u32 freq, void (*todo)(void)) {
 	// ---------- 局部变量定义区---------- //
 	FREQ fq;					//计时器
 	int i;
-	u8 index;
 	// ---------- 输入参数条件检测---------- //
 	//校验是否有这个频率的定时器
 	for (i = 0; i < TIMER_MAX_INDEX; i++)
@@ -91,7 +91,7 @@ u8 FREQ_Create(u32 freq, void (*todo)()) {
  * @todo 回调函数
  * @return : dateStatus
  */
-u8 FREQ_Loop() {
+u8 FREQ_Loop(void) {
 	// ---------- 局部变量定义区---------- //
 	int i;
 	u32 nowTime; //当前时间
@@ -117,6 +117,7 @@ u8 FREQ_Loop() {
 			}
 		}
 	}
+    return RET_SUCCESS;
 }
 /*
  * Auth: 张添程
