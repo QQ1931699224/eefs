@@ -11,7 +11,7 @@
 #include "eeprom/eefs_lib.h"
 #include "service/base/meter_base.h"
 #include "service/tpm/three_phases_meter.h"
-
+#include "service/timer/service_rtc_base.h"
 void testEefs_mbr_create(void);
 void testEefs_mbr_getDataStatus(void);
 void testEefs_mbr_getIndexStatus(void);
@@ -33,11 +33,11 @@ void testEefs_three(void);
 void testSmallIndex(void);
 void testMonthData(void);
 void testLostVoltData(void);
-
+void testTiming(void);
 
 int main(int argc, const char* argv[]) {
-
-    testLostVoltData();
+    testTiming();
+//    testLostVoltData();
 //    testMonthData();
 //    testSmallIndex();
 
@@ -558,3 +558,31 @@ void testLostVoltData(void)
 	service_tpm_getLostVoltData(0, retData);
 	printf("%s", G_LIST);
 }
+
+void logMessage(void)
+{
+    printf("输出");
+}
+
+void testTiming(void)
+{
+    u8 result;
+    FREQ_Init();
+    FREQ_Create(5, logMessage);
+    FREQ_Start(5);
+    
+    service_rtc_timing_freq_create(0, 10, 32, 30, service_rtc_callBack);
+    service_rtc_timing_freq_create(1, 10, 32, 50, service_rtc_callBack);
+//    service_rtc_timing_freq_create(2, 17, 12, 10, service_rtc_callBack);
+//    service_rtc_timing_freq_create(3, 17, 12, 15, service_rtc_callBack);
+//    service_rtc_timing_freq_create(4, 17, 12, 20, service_rtc_callBack);
+
+    while (1) {
+        FREQ_Loop();
+        result = service_rtc_timing_freq_loop();
+    };
+    
+//    printf("%s", (char *)timerList);
+}
+
+

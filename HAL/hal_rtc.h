@@ -5,7 +5,7 @@
 #define hal_rtc_h
 
 #define DEFAULT_YEAR_HEAD 0x20
-
+#include "eeprom/eefs_lib.h"
 typedef struct
 {
 	u8 YR_HEAD;
@@ -18,28 +18,27 @@ typedef struct
 	u8 DW;
 }DATATIME;
 
+
 /* 获取当前系统时间，返回DATATIME结构体值 */
-DATATIME rtc_getDataTime();
+DATATIME rtc_getDataTime(void);
 /* meter_rtc_getDataTime方法的另一种表达，获取当前系统时间，返回DATATIME结构体值 */
-DATATIME rtc_now();
+DATATIME rtc_now(void);
 /* 获取当前年份后2位 */
-u8 rtc_getYear();
+u8 rtc_getYear(void);
 /* 获取当前月份 */
-u8 rtc_getMonth();
+u8 rtc_getMonth(void);
 /* 获取当前几号 */
-u8 rtc_getDay();
+u8 rtc_getDay(void);
 /* 获取当前小时 */
-u8 rtc_getHour();
+u8 rtc_getHour(void);
 /* 获取当前分钟 */
-u8 rtc_getMinite();
+u8 rtc_getMinite(void);
 /* 获取当前秒数 */
-u8 rtc_getSecond();
+u8 rtc_getSecond(void);
 /* 获取星期 */
-u8 rtc_getDW();
+u8 rtc_getDW(void);
 
-
-
-
-#define
+u32 timerElapse_ms(u32 sTime, u32 eTime); //获取时间差
+u32 Get_Current_Timer0_Counter(void); //获取当前时间
 
 #endif
